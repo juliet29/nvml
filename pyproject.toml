@@ -1,0 +1,20 @@
+[project]
+name = "nvml"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "juliet29", email = "jnwagwu@stanford.edu" }
+]
+requires-python = ">=3.13"
+dependencies = [
+    "altair>=6.2.1",
+    "cyclopts>=4.18.0",
+    "loguru>=0.7.3",
+    "rich>=15.0.0",
+    "torch>=2.12.1",
+]
+
+[build-system]
+requires = ["uv_build>=0.11.21,<0.12.0"]
+build-backend = "uv_build"
