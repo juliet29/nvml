@@ -29,7 +29,7 @@ class ModelAndDetails(NamedTuple):
 
 
 class Data(NamedTuple):
-    # TODO: should distinguish test and train datat with hard boundaries..
+    # TODO: should distinguish test and train data with hard boundaries..
     X: torch.Tensor
     Y: torch.Tensor
 
