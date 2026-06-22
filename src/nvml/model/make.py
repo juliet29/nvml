@@ -28,12 +28,6 @@ class ModelAndDetails(NamedTuple):
     optimizer: Optimizer
 
 
-class Data(NamedTuple):
-    # TODO: should distinguish test and train data with hard boundaries..
-    X: torch.Tensor
-    Y: torch.Tensor
-
-
 def init_model():
     model = LinearRegressionModel()
 

@@ -1,8 +1,15 @@
 from pathlib import Path
 
+import numpy as np
 import polars as pl
+import torch
+from loguru import logger
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from torch.utils.data import Dataset
 
 from nvml.constants import DataNames as dn
+from nvml.model.interfaces import PolarsData
 
 
 def collect_metrics_data(path: Path):
@@ -35,8 +42,40 @@ def arrange_data(metrics_path: Path, qois_path: Path):
 
     X = df.select(pl.exclude(dnq.case_name, dnq.zone_dimless_flow))
     y = df.select(dnq.zone_dimless_flow)
-    return X, y
+    return PolarsData(X, y)
 
 
-def df_to_torch(df: pl.DataFrame):
-    pass
+class QOIDataset(Dataset):
+    def __init__(self, X: np.ndarray, y: np.ndarray, mean: np.ndarray, std: np.ndarray):
+        self.X = torch.as_tensor(X, dtype=torch.float32)
+        self.y = torch.as_tensor(y, dtype=torch.float32)
+        self.mean = torch.as_tensor(mean, dtype=torch.float32)
+        self.std = torch.as_tensor(std, dtype=torch.float32)
+
+    def __len__(self):
+        return len(self.X)
+
+    def __getitem__(self, i):
+        return (self.X[i] - self.mean) / self.std, self.y[i]
+
+
+def create_train_test_dataset(pd: PolarsData, seed: int):
+
+    # split into train and  test
+    X_train, X_test, y_train, y_test = train_test_split(
+        pd.Xnp, pd.ynp, train_size=0.8, random_state=seed
+    )
+    logger.info("Split data")
+
+    # compute scaling stats using X_train only, using scikit learn for stratified sampling. scaling happens within the dataset
+    scaler = StandardScaler()
+    scaler.fit(X_train)
+
+    mean, std = scaler.mean_, scaler.scale_
+
+    logger.info(f"Fit scaler with X_train -- mean: {mean} --- std: {std}")
+
+    train_ds = QOIDataset(X_train, y_train, mean, std)  # pyright: ignore[reportArgumentType]
+    test_ds = QOIDataset(X_test, y_test, mean, std)  # pyright: ignore[reportArgumentType]
+
+    return train_ds, test_ds
