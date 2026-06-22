@@ -9,6 +9,7 @@ from utils4plans.logconfig import logset
 
 from nvml.constants import FileNames
 from nvml.model.data import arrange_data, create_train_test_dataset
+from nvml.model.make import evaluate, init_model, train_model
 from nvml.paths import StoragePaths
 
 app = App()
@@ -30,7 +31,9 @@ def fc():
     SEED = 12345
     df = arrange_data(metrics_path, qois_path)
     train, test = create_train_test_dataset(df, SEED)
-    return train, test
+    mad = init_model(train)
+    train_model(train, mad, 500)
+    evaluate(test, mad)
 
 
 def main():
