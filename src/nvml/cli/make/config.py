@@ -34,3 +34,6 @@ jun24config = MakeConfig(
     case_names=["100268", "100275", "100306"],
     data_store=PATH_TO_PROJECT_STORAGE / "jun24",
 )
+
+
+CONFIGS_DICT = {"jun24": jun24config}

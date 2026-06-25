@@ -7,7 +7,10 @@ from loguru import logger
 from rich.pretty import pretty_repr
 from utils4plans.logconfig import logset
 
+from nvml.cli.make.create import create
+
 app = App()
+app.command(create)
 
 
 def keep():
