@@ -25,8 +25,15 @@ class MakeConfig(NamedTuple):
     def make_json_path(self, case_name: str):
         return self.data_store / case_name / self.data_folder_name / self.json_file_name
 
-    # def make_graph_reqs(self):
-    #     return []
+    # used in studies
+    def get_one_case(self, ix: int = 0):
+        return self.case_names[ix]
+
+    def get_one_case_data(self, ix: int = 0):
+        return self.make_case_data(self.case_names[ix])
+
+    def get_one_graph_path(self, ix: int = 0):
+        return self.make_json_path(self.case_names[ix])
 
 
 jun24config = MakeConfig(
