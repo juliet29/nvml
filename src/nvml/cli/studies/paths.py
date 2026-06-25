@@ -5,3 +5,8 @@ from pathlib import Path
 class StoragePaths:
     base = Path(os.environ["DIR_STORAGE"])
     nvflow_latest = base / "nvflow/260508_1101"
+
+
+class ProjectPaths:
+    base = Path(os.environ["DIR_STORAGE"])
+    graphs = base / "nvml/jun24"

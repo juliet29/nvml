@@ -16,3 +16,4 @@ class DataNames:
 class FileNames:
     metrics_path = "cons/metrics.csv"
     qois_path = "cons/qois.csv"
+    graph_json_path = "data/out.json"

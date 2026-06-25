@@ -26,4 +26,4 @@ utils4plans = { path = "../utils4plans/", editable = true }
 
 [project.scripts]
 nvml = "nvml.cli.make.main:main"
-nvmls = "nvml.cli.study:main"
+nvmls = "nvml.cli.studies.study:main"
