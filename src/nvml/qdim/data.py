@@ -6,7 +6,7 @@ from plyze import FlowGraphModel
 from plyze.flow_graph.create.main import make_ambient_data
 from plyze.qoi_flow_graph.zone_data import collate_ambient_data, collate_zone_data
 
-from nvml.constants import DataNames
+from nvml.constants import DataNames as dn
 
 
 # TODO: move io stuff elsewhere
@@ -31,13 +31,11 @@ class WindDirectionBins:
 
 
 def add_wind_sector_coord(ds: xr.Dataset):
-    dnq = DataNames.qois
-    dnv = DataNames.variables
     wdb = WindDirectionBins()
 
-    shifted = (ds[dnq.wind_dir] + 22.5) % 360  # ← this is what unifies North
+    shifted = (ds[dn.wind_dir] + 22.5) % 360  # ← this is what unifies North
     sector = pd.cut(shifted, bins=wdb.edges, labels=wdb.labels, include_lowest=True)
     new_ds = ds.assign_coords(
-        {dnq.wind_sector: (dnv.datetime, sector)}
+        {dn.wind_sector: (dn.datetime, sector)}
     )  # says that the new sector coord is indexed along the datetime coord
     return new_ds

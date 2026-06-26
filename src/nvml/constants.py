@@ -1,22 +1,17 @@
-class MetricNames:
-    pass
-
-
-class QOINames:
+class DataNames:
+    # qois
     zone_dimless_flow = "zone_dimless_flow"
+    zone_inflow = "zone_inflow"
+
+    # ambient qois
     wind_dir = "wind_direction"
     wind_sector = "wind_sector"
+    t_out = "t_out"
 
-
-class VariableNames:
+    # coordinates
+    case_name = "case_name"
     space_name = "space_names"
     datetime = "datetimes"
-    case_name = "case_name"
-
-
-class DataNames:
-    variables = VariableNames
-    qois = QOINames
 
 
 class FileNames:
