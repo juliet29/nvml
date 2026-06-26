@@ -17,3 +17,4 @@ class TempFiguresPaths:
 
 class ProjectPaths:  # for now assuming all are temp
     graphs = BASE / "jun24"
+    figs = TempFiguresPaths

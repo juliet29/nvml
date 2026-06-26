@@ -21,27 +21,25 @@ def collect_metrics_data(path: Path):
 
 
 def collect_qoi_data(path: Path):
-    dnq = dn.variables
     df = pl.read_csv(path)
     # take the median value across the sample times, the sum across the values for zones to produce one number per case
     df_agg = (
-        df.group_by(dnq.case_name, dnq.space_name)
-        .agg(pl.col(dnq.zone_dimless_flow).median())
-        .group_by(dnq.case_name)
-        .agg(pl.col(dnq.zone_dimless_flow).sum())
-        # .select(dnq.zone_dimless_flow)
+        df.group_by(dn.case_name, dn.space_name)
+        .agg(pl.col(dn.zone_dimless_flow).median())
+        .group_by(dn.case_name)
+        .agg(pl.col(dn.zone_dimless_flow).sum())
+        # .select(dn.zone_dimless_flow)
     )
     return df_agg
 
 
 def arrange_data(metrics_path: Path, qois_path: Path):
-    dnq = dn.variables
     metrics = collect_metrics_data(metrics_path)
     qoi = collect_qoi_data(qois_path)
-    df = metrics.join(qoi, on=dnq.case_name)
+    df = metrics.join(qoi, on=dn.case_name)
 
-    X = df.select(pl.exclude(dnq.case_name, dnq.zone_dimless_flow))
-    y = df.select(dnq.zone_dimless_flow)
+    X = df.select(pl.exclude(dn.case_name, dn.zone_dimless_flow))
+    y = df.select(dn.zone_dimless_flow)
     return PolarsData(X, y)
 
 

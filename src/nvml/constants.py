@@ -5,6 +5,7 @@ class DataNames:
 
     # ambient qois
     wind_dir = "wind_direction"
+    wind_speed = "wind_speed"
     wind_sector = "wind_sector"
     t_out = "t_out"
 

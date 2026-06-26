@@ -1,7 +1,9 @@
 from cyclopts import App
 
 from nvml.cli.config import CONFIGS_DICT
-from nvml.qdim.corr_plot import plot_comparison_corr_plot
+from nvml.cli.studies.paths import ProjectPaths
+from nvml.constants import DataNames as dn
+from nvml.qdim.corr_plot import make_comparison_plot
 from nvml.qdim.data import add_wind_sector_coord, get_ambient_data_as_ds, graph_to_ds
 
 qdim = App("qdim")
@@ -34,4 +36,5 @@ def fe():
     path = cfg.make_json_path(cfg.get_one_case())
     qoi_ds = graph_to_ds(path)
 
-    plot_comparison_corr_plot(ambient_ds, qoi_ds, "N", "temp")
+    savedir = ProjectPaths.figs.qdim_corr
+    make_comparison_plot(ambient_ds, qoi_ds, dn.wind_speed, savedir)
