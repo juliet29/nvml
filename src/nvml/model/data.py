@@ -21,7 +21,7 @@ def collect_metrics_data(path: Path):
 
 
 def collect_qoi_data(path: Path):
-    dnq = dn.qois
+    dnq = dn.variables
     df = pl.read_csv(path)
     # take the median value across the sample times, the sum across the values for zones to produce one number per case
     df_agg = (
@@ -35,7 +35,7 @@ def collect_qoi_data(path: Path):
 
 
 def arrange_data(metrics_path: Path, qois_path: Path):
-    dnq = dn.qois
+    dnq = dn.variables
     metrics = collect_metrics_data(metrics_path)
     qoi = collect_qoi_data(qois_path)
     df = metrics.join(qoi, on=dnq.case_name)

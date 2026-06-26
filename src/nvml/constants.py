@@ -3,13 +3,19 @@ class MetricNames:
 
 
 class QOINames:
+    zone_dimless_flow = "zone_dimless_flow"
+    wind_dir = "wind_direction"
+    wind_sector = "wind_sector"
+
+
+class VariableNames:
     space_name = "space_names"
     datetime = "datetimes"
-    zone_dimless_flow = "zone_dimless_flow"
     case_name = "case_name"
 
 
 class DataNames:
+    variables = VariableNames
     qois = QOINames
 
 
