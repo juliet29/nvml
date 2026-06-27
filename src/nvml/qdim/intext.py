@@ -1,5 +1,4 @@
 from pathlib import Path
-from typing import NamedTuple
 
 import polars as pl
 from plan2eplus.ezcase.ez import EZ
@@ -10,10 +9,12 @@ from rich.pretty import pretty_repr
 from utils4plans.lists import get_unique_one
 
 from nvml.constants import DataNames
+from nvml.qdim.interfaces import EdgeAndNormal, ZoneAndOutwardNormals
 
 """Properties derived from the graph, idf, or both"""
 
 CardinalNames = ["EAST", "SOUTH", "NORTH", "WEST"]
+# TODO: redundant, could use WallNormal values, .. but explicit
 
 
 def is_external(G: FlowGraph, node: str):
@@ -36,13 +37,7 @@ def make_int_ext_series(G: FlowGraph):
     return pl.DataFrame(ds)
 
 
-# incident angles
-
-
-class EdgeAndNormal(NamedTuple):
-    u: str
-    v: str
-    normal_drn: WallNormal
+# TODO: move -> calculating zone normal values
 
 
 def find_subsurface_by_edge(candidate_surfaces: list[Subsurface], edge: Edge):
@@ -80,12 +75,13 @@ def get_zone_outward_normals(
     return res
 
 
-def get_subsurface_normals(G: FlowGraph, idf_path: Path):
+def get_normals_for_windows_across_zones(G: FlowGraph, idf_path: Path):
     case = EZ(idf_path)
     windows = [i for i in case.objects.subsurfaces if i.subsurface_type == "Window"]
 
     external_zones = [i for i in G.zone_nodes if is_external(G, i.name)]
     zone_outward_normals = [
-        (i.name, get_zone_outward_normals(case, G, i, windows)) for i in external_zones
+        ZoneAndOutwardNormals(i.name, get_zone_outward_normals(case, G, i, windows))
+        for i in external_zones
     ]
     return zone_outward_normals
