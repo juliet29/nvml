@@ -3,6 +3,7 @@ from plyze import FlowGraphModel
 
 from nvml.cli.config import CONFIGS_DICT
 from nvml.cli.studies.paths import ProjectPaths
+from nvml.qdim.angles import wind_angles_to_vector
 from nvml.qdim.intext import get_subsurface_normals
 from nvml.qdim.io import get_ambient_data_as_ds, graph_to_ds
 from nvml.qdim.wind import add_wind_sector_coord, prep_comparison_data
@@ -41,6 +42,16 @@ def fd():
 
 
 @qdim.command()
+def fda():
+    ds = get_ambient_data_as_ds(cfg.get_one_case_data().sql)
+    # return wind_angles_to_vector(ds.wind_speed[0].values)
+    return wind_angles_to_vector(180)
+
+    wind_angles_to_vector(res.wind_s)
+    return res
+
+
+@qdim.command()
 def fe():
     res = get_ambient_data_as_ds(cfg.get_one_case_data().sql)
     ambient_ds = add_wind_sector_coord(res)
@@ -57,7 +68,8 @@ def fe():
 
 @qdim.command()
 def ff():
-    graph_path = cfg.make_json_path(cfg.get_one_case())
-    idf_path = cfg.get_one_case_data().idf
+    case_name = cfg.get_one_case(1)
+    graph_path = cfg.make_json_path(case_name)
+    idf_path = cfg.make_case_data(case_name).idf
     G = FlowGraphModel.read(graph_path)
     return get_subsurface_normals(G, idf_path)
