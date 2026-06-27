@@ -1,7 +1,12 @@
+from pathlib import Path
+
 import polars as pl
+from plan2eplus.ezcase.ez import EZ
 from plyze.flow_graph.interfaces import FlowGraph, ZoneNode
 
 from nvml.constants import DataNames
+
+"""Properties derived from the graph, idf, or both"""
 
 CardinalNames = ["EAST", "SOUTH", "NORTH", "WEST"]
 
@@ -24,3 +29,10 @@ def make_int_ext_series(G: FlowGraph):
     ds = [handle(i) for i in G.zone_nodes]
 
     return pl.DataFrame(ds)
+
+
+# incident angles
+def get_subsurface_normals(G: FlowGraph, idf_path: Path):
+    case = EZ(idf_path)
+
+    pass

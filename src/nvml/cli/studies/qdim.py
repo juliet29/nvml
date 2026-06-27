@@ -3,7 +3,6 @@ from plyze import FlowGraphModel
 
 from nvml.cli.config import CONFIGS_DICT
 from nvml.cli.studies.paths import ProjectPaths
-from nvml.qdim.intext import make_int_ext_series
 from nvml.qdim.io import get_ambient_data_as_ds, graph_to_ds
 from nvml.qdim.wind import add_wind_sector_coord, prep_comparison_data
 
@@ -17,7 +16,8 @@ cfg = CONFIGS_DICT["jun24"]
 def fb():
     path = cfg.make_json_path(cfg.get_one_case())
     G = FlowGraphModel.read(path)
-    return make_int_ext_series(G)
+    return G
+    # return make_int_ext_series(G)
     # sn = res.select("space_names").unique()
     # dt = res.select("datetimes").unique()
     # return res
