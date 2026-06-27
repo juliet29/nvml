@@ -36,6 +36,12 @@ class MakeConfig(NamedTuple):
         return self.make_json_path(self.case_names[ix])
 
 
+test_create_config = MakeConfig(
+    eplus_model_source=PATH_TO_STORAGE / "msherlock_v1/data",
+    case_names=["100268"],
+    data_store=PATH_TO_PROJECT_STORAGE / "test_create",
+)
+
 jun24config = MakeConfig(
     eplus_model_source=PATH_TO_STORAGE / "msherlock_v1/data",
     case_names=["100268", "100275", "100306"],
@@ -43,4 +49,4 @@ jun24config = MakeConfig(
 )
 
 
-CONFIGS_DICT = {"jun24": jun24config}
+CONFIGS_DICT = {"jun24": jun24config, "test_create": test_create_config}

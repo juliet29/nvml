@@ -1,4 +1,7 @@
 class DataNames:
+    # properties
+    is_external = "is_external"
+
     # qois
     zone_dimless_flow = "zone_dimless_flow"
     zone_inflow = "zone_inflow"

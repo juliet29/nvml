@@ -6,7 +6,7 @@ from plyze import CaseData, FlowGraphModel
 from plyze.flow_graph.create.main import make_flow_graph
 from rich.pretty import pretty_repr
 
-from nvml.cli.make.config import CONFIGS_DICT
+from nvml.cli.config import CONFIGS_DICT
 
 create = App("create")
 
