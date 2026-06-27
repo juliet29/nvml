@@ -3,10 +3,9 @@ from plyze import FlowGraphModel
 
 from nvml.cli.config import CONFIGS_DICT
 from nvml.cli.studies.paths import ProjectPaths
-from nvml.constants import DataNames
 from nvml.qdim.intext import make_int_ext_series
 from nvml.qdim.io import get_ambient_data_as_ds, graph_to_ds
-from nvml.qdim.wind import add_wind_sector_coord, plot, prep_comparison_data
+from nvml.qdim.wind import add_wind_sector_coord, prep_comparison_data
 
 qdim = App("qdim")
 
@@ -52,4 +51,6 @@ def fe():
 
     G = FlowGraphModel.read(json_path)
     df = prep_comparison_data(G, ambient_ds, qoi_ds)
-    plot(df, savedir, DataNames.t_out)
+    return df
+
+    # plot(df, savedir, DataNames.t_out)
