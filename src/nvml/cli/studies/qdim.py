@@ -3,6 +3,7 @@ from plyze import FlowGraphModel
 
 from nvml.cli.config import CONFIGS_DICT
 from nvml.cli.studies.paths import ProjectPaths
+from nvml.qdim.intext import get_subsurface_normals
 from nvml.qdim.io import get_ambient_data_as_ds, graph_to_ds
 from nvml.qdim.wind import add_wind_sector_coord, prep_comparison_data
 
@@ -53,4 +54,10 @@ def fe():
     df = prep_comparison_data(G, ambient_ds, qoi_ds)
     return df
 
-    # plot(df, savedir, DataNames.t_out)
+
+@qdim.command()
+def ff():
+    graph_path = cfg.make_json_path(cfg.get_one_case())
+    idf_path = cfg.get_one_case_data().idf
+    G = FlowGraphModel.read(graph_path)
+    return get_subsurface_normals(G, idf_path)

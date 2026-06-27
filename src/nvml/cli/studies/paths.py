@@ -1,13 +1,14 @@
-import os
 from pathlib import Path
+
+PATH_TO_STORAGE = "/oak/stanford/groups/risheej/jnwagwu/storage"
 
 
 class StoragePaths:
-    base = Path(os.environ["DIR_STORAGE"])
-    nvflow_latest = base / "nvflow/260508_1101"
+    base = Path(PATH_TO_STORAGE)
+    nvflow_latest = base / "nvflow/260508_1101"  # has idf, sql models..
 
 
-BASE = Path(os.environ["DIR_STORAGE"]) / "nvml"
+BASE = Path(PATH_TO_STORAGE) / "nvml"
 
 
 class TempFiguresPaths:

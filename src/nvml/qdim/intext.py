@@ -2,7 +2,10 @@ from pathlib import Path
 
 import polars as pl
 from plan2eplus.ezcase.ez import EZ
-from plyze.flow_graph.interfaces import FlowGraph, ZoneNode
+from plan2eplus.ops.subsurfaces.ezobject import Subsurface
+from plyze.flow_graph.interfaces import Edge, FlowGraph, ZoneNode
+from rich.pretty import pretty_repr
+from utils4plans.lists import get_unique_one
 
 from nvml.constants import DataNames
 
@@ -32,7 +35,54 @@ def make_int_ext_series(G: FlowGraph):
 
 
 # incident angles
+def find_subsurface_by_edge(candidate_surfaces: list[Subsurface], edge: Edge):
+    cs_edges = [s.edge for s in candidate_surfaces]
+    for s in candidate_surfaces:
+        sa, sb = s.edge
+        u, v = edge.u, edge.v
+        if sa == u and sb == v:
+            return s
+    raise LookupError(f"Could not find a match for {edge} in {pretty_repr(cs_edges)}")
+
+
+def get_zone_outward_normals(
+    case: EZ, G: FlowGraph, node: ZoneNode, potential_subsurfaces: list[Subsurface]
+):
+    def handle_edge(edge: Edge):
+        # TODO: handle north south...
+        s = find_subsurface_by_edge(candidate_subsurfaces, edge)
+        wall_normal = s.surface.direction
+        return wall_normal
+
+    edge_names = list(G.edges(node.name))
+    edges = [i for i in G.edges_with_data if i in edge_names]
+    window_edges = [i for i in edges if i.data.surface_type == "Window"]
+
+    # logger.debug(edges)
+    # breakpoint()
+    # TODO: filter to edges fo the correct type => which means getting the edges..
+
+    # logger.debug(node.data.idf_name)
+    # logger.debug([i.zone_name for i in case.objects.zones])
+    # # raise Exception
+    zone = get_unique_one(
+        case.objects.zones, lambda x: x.zone_name.upper() == node.data.idf_name
+    )
+    zone_subsurface_names = zone.subsurface_names
+
+    candidate_subsurfaces = [
+        i for i in potential_subsurfaces if i.subsurface_name in zone_subsurface_names
+    ]
+    res = [(edge, handle_edge(edge)) for edge in window_edges]
+    return res
+
+
 def get_subsurface_normals(G: FlowGraph, idf_path: Path):
     case = EZ(idf_path)
+    windows = [i for i in case.objects.subsurfaces if i.subsurface_type == "Window"]
 
-    pass
+    external_zones = [i for i in G.zone_nodes if is_external(G, i.name)]
+    zone_outward_normals = [
+        (i, get_zone_outward_normals(case, G, i, windows)) for i in external_zones
+    ]
+    return zone_outward_normals
