@@ -10,10 +10,12 @@ def _():
     import xarray as xr
     import numpy as np
     import matplotlib.pyplot as plt
+    import polars as pl
 
     from nvml.constants import DataNames as dn
-    from nvml.cli.config import CONFIGS_DICT   
+    from nvml.utils import dataset_to_polars
 
+    from nvml.cli.config import CONFIGS_DICT   
     from nvml.cli.studies.qdim import ff
 
     from nvml.qdim.io import get_ambient_data_as_ds
@@ -27,6 +29,7 @@ def _():
         ff,
         get_ambient_data_as_ds,
         np,
+        pl,
         plt,
         wind_angle_da_to_vectors,
     )
@@ -89,7 +92,22 @@ def _(ia):
 
 
 @app.cell
+def _(iam, pl):
+    iam.name="incident_factor"
+    pl.from_pandas(iam.to_dataframe().reset_index())
+    return
+
+
+@app.cell
+def _():
+    import polars as pl
+
+    return (pl,)
+
+
+@app.cell
 def _(iam, np):
+    # change incidenct factor to degrees
     id = np.rad2deg(np.arccos(iam))
     id
     return (id,)

@@ -1,5 +1,3 @@
-from pathlib import Path
-
 import polars as pl
 from plan2eplus.ezcase.ez import EZ
 from plan2eplus.geometry.directions import WallNormal
@@ -75,8 +73,7 @@ def get_zone_outward_normals(
     return res
 
 
-def get_normals_for_windows_across_zones(G: FlowGraph, idf_path: Path):
-    case = EZ(idf_path)
+def get_normals_for_windows_across_zones(G: FlowGraph, case: EZ):
     windows = [i for i in case.objects.subsurfaces if i.subsurface_type == "Window"]
 
     external_zones = [i for i in G.zone_nodes if is_external(G, i.name)]

@@ -1,6 +1,7 @@
 class DataNames:
     # properties
     is_external = "is_external"
+    incident_factor = "incident_factor"
 
     # qois
     zone_dimless_flow = "zone_dimless_flow"
