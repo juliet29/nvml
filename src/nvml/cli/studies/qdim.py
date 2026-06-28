@@ -11,7 +11,7 @@ from nvml.qdim.incident import (
     wind_angle_da_to_vectors,
 )
 from nvml.qdim.intext import get_normals_for_windows_across_zones
-from nvml.qdim.io import get_ambient_data_as_ds, graph_to_ds
+from nvml.io import get_ambient_data_as_ds, graph_to_ds
 from nvml.qdim.wind import (
     add_incidence_data,
     add_wind_sector_coord,

@@ -8,11 +8,13 @@ from rich.pretty import pretty_repr
 from utils4plans.logconfig import logset
 
 from nvml.cli.studies.create import create
+from nvml.cli.studies.flow import flow
 from nvml.cli.studies.qdim import qdim
 
 app = App()
 app.command(qdim)
 app.command(create)
+app.command(flow)
 
 
 def keep():

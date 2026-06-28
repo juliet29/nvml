@@ -18,7 +18,7 @@ def _():
     from nvml.cli.config import CONFIGS_DICT   
     from nvml.cli.studies.qdim import ff
 
-    from nvml.qdim.io import get_ambient_data_as_ds
+    from nvml.io import get_ambient_data_as_ds
     from nvml.qdim.angles import wind_angles_to_vector
     from nvml.qdim.incident import wind_angle_da_to_vectors
 
