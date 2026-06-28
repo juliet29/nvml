@@ -76,9 +76,39 @@ def _(cda, wdv):
 
 
 @app.cell
+def _(ia):
+    type(ia.dims)
+    return
+
+
+@app.cell
+def _(ia):
+    iam = ia.min(dim="edge_num")
+    iam
+    return (iam,)
+
+
+@app.cell
+def _(iam, np):
+    id = np.rad2deg(np.arccos(iam))
+    id
+    return (id,)
+
+
+@app.cell
+def _(id, plt):
+    def _():
+        fig2, ax = plt.subplots()
+        id.plot(hue="space_names", ax=ax)
+    _()
+    plt.show()
+    return
+
+
+@app.cell
 def _(ia, plt):
     fig2, ax = plt.subplots()
-    ia.isel(edge_num=0).plot(hue="space_names", ax=ax)
+    ia.min(dim="edge_num").plot(hue="space_names", ax=ax)
     return
 
 

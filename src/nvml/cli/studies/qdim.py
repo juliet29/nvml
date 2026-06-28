@@ -5,6 +5,7 @@ from nvml.cli.config import CONFIGS_DICT
 from nvml.cli.studies.paths import ProjectPaths
 from nvml.constants import DataNames
 from nvml.qdim.incident import (
+    calculate_incidence_factor,
     make_zone_outward_normal_da,
     wind_angle_da_to_vectors,
 )
@@ -67,8 +68,12 @@ def ff():
     idf_path = cfg.make_case_data(case_name).idf
     G = FlowGraphModel.read(graph_path)
     zons = get_normals_for_windows_across_zones(G, idf_path)
-    da = make_zone_outward_normal_da(zons)
-    return da
+    zone_da = make_zone_outward_normal_da(zons)
+
+    ds = get_ambient_data_as_ds(cfg.get_one_case_data().sql)
+    wind_da = wind_angle_da_to_vectors(ds[DataNames.wind_dir])
+    incidence_factor = calculate_incidence_factor(zone_da, wind_da)
+    return incidence_factor
 
 
 @qdim.command()
