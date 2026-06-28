@@ -62,7 +62,7 @@ def fe():
 
 @qdim.command()
 def ff():
-    case_name = cfg.get_one_case(2)
+    case_name = cfg.get_one_case(0)
     graph_path = cfg.make_json_path(case_name)
     idf_path = cfg.make_case_data(case_name).idf
     G = FlowGraphModel.read(graph_path)

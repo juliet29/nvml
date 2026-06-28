@@ -27,4 +27,4 @@ def wind_angle_da_to_vectors(angles: xr.DataArray):
         angles,
         input_core_dims=[[dn.datetime]],
         output_core_dims=[[dn.datetime, dn.xy_vector]],
-    )
+    ).assign_coords({dn.xy_vector: ["x", "y"]})

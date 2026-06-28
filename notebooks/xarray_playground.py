@@ -9,6 +9,7 @@ def _():
     import marimo as mo 
     import xarray as xr
     import numpy as np
+    import matplotlib.pyplot as plt
 
     from nvml.constants import DataNames as dn
     from nvml.cli.config import CONFIGS_DICT   
@@ -21,7 +22,14 @@ def _():
 
 
 
-    return CONFIGS_DICT, get_ambient_data_as_ds, wind_angle_da_to_vectors
+    return (
+        CONFIGS_DICT,
+        ff,
+        get_ambient_data_as_ds,
+        np,
+        plt,
+        wind_angle_da_to_vectors,
+    )
 
 
 @app.cell
@@ -41,6 +49,58 @@ def _(ads):
 @app.cell
 def _(wd, wind_angle_da_to_vectors):
     wdv = wind_angle_da_to_vectors(wd)
+    wdv
+    return (wdv,)
+
+
+@app.cell
+def _(plt, wdv):
+    fig, axs = plt.subplots(ncols=2)
+    wdv.isel({"xy_vector": 0}).plot.hist(ax=axs[0])
+    wdv.isel({"xy_vector": 1}).plot.hist(ax=axs[1])
+    return
+
+
+@app.cell
+def _(ff):
+    cda = ff()
+    cda
+    return (cda,)
+
+
+@app.cell
+def _(cda, wdv):
+    ia = cda @ wdv.T
+    ia
+    return (ia,)
+
+
+@app.cell
+def _(ia, plt):
+    fig2, ax = plt.subplots()
+    ia.isel(edge_num=0).plot(hue="space_names", ax=ax)
+    return
+
+
+@app.cell
+def _(np, plt, wdv):
+    def _(np, plt, wdv):
+      t = wdv.datetimes.values
+      u = wdv.sel(xy_vector="x").values
+      v = wdv.sel(xy_vector="y").values
+
+      fig, ax = plt.subplots(figsize=(12, 2.5))
+      s = slice(None, None, 200)   # every 12th timestep
+      ax.quiver(t[s], np.zeros_like(u[s]), u[s], v[s], angles="uv",
+      pivot="mid")
+
+      #ax.quiver(t, np.zeros_like(u), u, v, angles="uv", pivot="mid")
+      ax.set_yticks([])
+      ax.set_xlabel("datetime")
+      return
+
+    fig3 = _(np, plt, wdv)
+    plt.show()
     return
 
 
