@@ -16,7 +16,7 @@ from nvml.qdim.incident import (
     wind_angle_da_to_vectors,
 )
 from nvml.qdim.intext import get_normals_for_windows_across_zones, make_int_ext_series
-from nvml.utils import dataarray_to_polars, dataset_to_polars, save_seaborn_fig
+from nvml.utils import save_seaborn_fig, xr_to_polars
 
 
 class WindDirectionBins:
@@ -64,7 +64,7 @@ def prep_comparison_data(
     joined = xr.merge([qois, ambient], join="inner")
     logger.debug(joined)
     int_ext_df = make_int_ext_series(G)
-    df = dataset_to_polars(joined).join(other=int_ext_df, on=dn.space_name)
+    df = xr_to_polars(joined).join(other=int_ext_df, on=dn.space_name)
 
     return df
 
@@ -78,13 +78,13 @@ def add_incidence_data(
 
     if_da = calculate_incidence_factor_for_comparison(G, case, ambient_ds)
 
-    df = dataarray_to_polars(if_da).with_columns(
+    df = xr_to_polars(if_da).with_columns(
         pl.col(dn.space_name).map_elements(
             get_idf_name_by_space_name, return_dtype=pl.String
         )
     )
-    logger.debug(df[dn.datetime])
-    logger.debug(qdim_df[dn.datetime])
+    logger.debug(df[dn.datetime].dtype)
+    logger.debug(qdim_df[dn.datetime].dtype)
     breakpoint()
 
     # TODO: get the actual names on the df ..

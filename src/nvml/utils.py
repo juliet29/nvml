@@ -23,13 +23,9 @@ def save_seaborn_fig(fig: so.Plot, path: Path, dpi: int = 300, **kwargs) -> Path
     return path
 
 
-def dataset_to_polars(ds: xr.Dataset):
-    df = pl.from_pandas(ds.to_dataframe().reset_index())
-    return df
-
-
-def dataarray_to_polars(da: xr.DataArray, name: str | None = None):
-    if not name:
-        assert da.name
-    df = pl.from_pandas(da.to_dataframe().reset_index())
-    return df
+def xr_to_polars(data: xr.Dataset | xr.DataArray) -> pl.DataFrame:
+    if isinstance(data, xr.DataArray):
+        assert data.name, "DataArray must be named to become a variable"
+        data = data.to_dataset()
+    df = pl.from_pandas(data.to_dataframe().reset_index())
+    return df.with_columns(pl.col(pl.Datetime).dt.cast_time_unit("us"))

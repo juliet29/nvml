@@ -19,6 +19,8 @@ dependencies = [
   "seaborn>=0.13.2",
   "marimo>=0.23.11",
   "metpy>=1.7.1",
+  "vegafusion>=2.0.3",
+  "vl-convert-python>=1.9.0.post1",
 ]
 
 [build-system]

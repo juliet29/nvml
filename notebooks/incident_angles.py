@@ -13,7 +13,7 @@ def _():
     import polars as pl
 
     from nvml.constants import DataNames as dn
-    from nvml.utils import dataset_to_polars
+    from nvml.utils import xr_to_polars
 
     from nvml.cli.config import CONFIGS_DICT   
     from nvml.cli.studies.qdim import ff
