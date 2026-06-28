@@ -17,6 +17,10 @@ class DataNames:
     space_name = "space_names"
     datetime = "datetimes"
 
+    # incident angle calc
+    xy_vector = "xy_vector"
+    edge_num = "edge_num"
+
 
 class FileNames:
     metrics_path = "cons/metrics.csv"

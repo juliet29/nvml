@@ -1,6 +1,5 @@
 import numpy as np
 import pint
-import xarray as xr
 from metpy.calc import wind_components
 from metpy.units import units
 
@@ -17,8 +16,3 @@ def wind_angles_to_vector(angle: float):
 
     # logger.debug(res)
     return res
-
-
-def wind_angle_da_to_vectors(angle: float):
-    # fx = lambda x: wind_angles_to_vector(x)
-    return xr.apply_ufunc(wind_angles_to_vector, angle)

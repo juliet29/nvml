@@ -5,8 +5,8 @@ from nvml.cli.config import CONFIGS_DICT
 from nvml.cli.studies.paths import ProjectPaths
 from nvml.constants import DataNames
 from nvml.qdim.incident import (
-    make_wind_direction_vector_da,
     make_zone_outward_normal_da,
+    wind_angle_da_to_vectors,
 )
 from nvml.qdim.intext import get_normals_for_windows_across_zones
 from nvml.qdim.io import get_ambient_data_as_ds, graph_to_ds
@@ -46,17 +46,6 @@ def fd():
 
 
 @qdim.command()
-def fda():
-    ds = get_ambient_data_as_ds(cfg.get_one_case_data().sql)
-    return make_wind_direction_vector_da(ds[DataNames.wind_dir])
-    # # return wind_angles_to_vector(ds.wind_speed[0].values)
-    # return wind_angles_to_vector(180)
-
-    # wind_angles_to_vector(res.wind_s)
-    # return res
-
-
-@qdim.command()
 def fe():
     res = get_ambient_data_as_ds(cfg.get_one_case_data().sql)
     ambient_ds = add_wind_sector_coord(res)
@@ -80,3 +69,9 @@ def ff():
     zons = get_normals_for_windows_across_zones(G, idf_path)
     da = make_zone_outward_normal_da(zons)
     return da
+
+
+@qdim.command()
+def ffa():
+    ds = get_ambient_data_as_ds(cfg.get_one_case_data().sql)
+    return wind_angle_da_to_vectors(ds[DataNames.wind_dir])
