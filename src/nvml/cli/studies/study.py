@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 from cyclopts import App
+from icecream import ic
 from loguru import logger
 
 # from plyze.plots.altair_helpers import AltairRenderers
@@ -32,6 +33,7 @@ def fc():
 def main():
     # AltairRenderers.set_renderer()
     # alt.theme.enable("default_theme")
+    ic.configureOutput(outputFunction=logger.debug)
     logset(to_stderr=True)
     app()
 

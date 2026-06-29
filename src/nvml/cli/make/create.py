@@ -23,7 +23,7 @@ def make_flow_graphs(cptr: str):
     for case in config.case_names:
         try:
             cd = config.make_case_data(case)
-            jsf = config.make_json_path(case)
+            jsf = config.make_graph_path(case)
             make_one_graph(cd, jsf)
         except Exception as e:
             logger.error(f"Failed to make {case} because: {e}")

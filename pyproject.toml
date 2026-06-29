@@ -21,6 +21,7 @@ dependencies = [
   "metpy>=1.7.1",
   "vegafusion>=2.0.3",
   "vl-convert-python>=1.9.0.post1",
+  "icecream>=2.2.0",
 ]
 
 [build-system]

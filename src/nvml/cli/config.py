@@ -22,7 +22,7 @@ class MakeConfig(NamedTuple):
         sql_path = self.eplus_model_source / case_name / self.sql_file_name
         return CaseData(idf_path, sql_path)
 
-    def make_json_path(self, case_name: str):
+    def make_graph_path(self, case_name: str):
         return self.data_store / case_name / self.data_folder_name / self.json_file_name
 
     # used in studies
@@ -33,7 +33,7 @@ class MakeConfig(NamedTuple):
         return self.make_case_data(self.case_names[ix])
 
     def get_one_graph_path(self, ix: int = 0):
-        return self.make_json_path(self.case_names[ix])
+        return self.make_graph_path(self.case_names[ix])
 
 
 test_create_config = MakeConfig(

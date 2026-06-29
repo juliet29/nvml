@@ -30,10 +30,13 @@ def add_wind_sector_coord(ds: xr.Dataset):
     shifted = (ds[dn.wind_dir] + 22.5) % 360  # ← this is what unifies North
     sector = pd.cut(
         shifted, bins=wdb.edges, labels=wdb.labels, include_lowest=True
-    ).astype(str)  # pyright: ignore[reportAttributeAccessIssue]
+    )  # .astype(str)  # pyright: ignore[reportAttributeAccessIssue]
     return ds.assign_coords(
         {dn.wind_sector: (dn.datetime, sector)}
     )  # sector coord indexed along the datetime coord
+
+
+# TODO: ensure downsstream qdim works..
 
 
 def calculate_incidence_factor_for_comparison(
@@ -85,7 +88,6 @@ def add_incidence_data(
     )
     logger.debug(df[dn.datetime].dtype)
     logger.debug(qdim_df[dn.datetime].dtype)
-    breakpoint()
 
     # TODO: get the actual names on the df ..
 
