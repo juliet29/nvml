@@ -7,60 +7,82 @@ app = marimo.App(width="medium")
 @app.cell
 def _():
     import marimo as mo
-    from nvml.cli.studies.flow import fc
+    from nvml.cli.studies.flow import fc, fb
+    from nvml.utils import xr_to_polars
     import xarray as xr
+    import polars as pl
+    import altair as alt
 
 
-    return fc, xr
+    return alt, fb, fc, pl, xr_to_polars
+
+
+@app.cell
+def _(fb):
+    paths = fb()
+    paths
+    return (paths,)
 
 
 @app.cell
 def _(fc):
-    q_dims, mix = fc()
-    q_dims
-    return mix, q_dims
+    qda = fc()
+    qda
+    return (qda,)
 
 
 @app.cell
-def _(q_dims):
-    q = q_dims[0]
-    q.drop_vars("space_names").expand_dims("edge")
+def _(qda):
+    qda.edge_name.u
+    return
+
+
+@app.cell
+def _(paths, qda):
+    pg = paths[0]
+    qpg = pg.get_qdim_data(qda)
+    #qpg.stack("edge_name")
+    qpg.plot.line(x="datetimes")
+    return pg, qpg
+
+
+@app.cell
+def _(qpg):
+    qpg
+    return
+
+
+@app.cell
+def _(qpg):
+    # key! just rest the index of edge name, and the info is still there!
+    resampled = qpg.T.reset_index("edge_name").resample(datetimes="96h").first()
+    resampled.name = "flow"
+    resampled
+    return (resampled,)
+
+
+@app.cell
+def _(pl, resampled, xr_to_polars):
+    df2 = xr_to_polars(resampled).with_columns(pl.col("edge_name").cast(pl.String).cast(pl.Categorical))
+    df2
+    return (df2,)
+
+
+@app.cell
+def _(pg):
+    pg.edge_list
+    return
+
+
+@app.cell
+def _(alt, df2):
+    df2.plot.line(x="edge_name", y = "flow").encode(color=alt.Color("datetimes", type="ordinal").scale(scheme="lightgreyred")
+    ).properties(width=500)
     return
 
 
 @app.cell
 def _():
-    return
-
-
-@app.cell
-def _(q_dims, xr):
-    qs = [q.drop_vars("space_names") for q in q_dims]
-    da = xr.concat(qs, dim="edge_name")
-    da
-    return (da,)
-
-
-@app.cell
-def _(mix):
-    mix
-    return
-
-
-@app.cell
-def _():
-    return
-
-
-@app.cell
-def _(mix):
-    mix.indexes
-    return
-
-
-@app.cell
-def _(da, mix):
-    da.assign_coords(mix)
     return
 
 

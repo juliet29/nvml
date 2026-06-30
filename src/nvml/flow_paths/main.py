@@ -23,6 +23,10 @@ class PathGraph(nx.DiGraph):
     def edge_list(self):
         return list(self.edges)
 
+    def get_qdim_data(self, da: xr.DataArray):
+        # this will be organized as it is called
+        return da.sel({dn.edge_name: self.edge_list})
+
     # def frozen_edge_list(self):
     #     return list([frozenset(i) for i in self.edges])
 
@@ -40,7 +44,7 @@ def prep_edge_qdim(edge: Edge, velocity: xr.DataArray, is_flipped: bool):
     """
     ed = edge.data
 
-    q = ed.flow_out if is_flipped else ed.flow_in
+    q = ed.flow_in if is_flipped else ed.flow_in
     qt = q.sel({dn.datetime: velocity[dn.datetime]})
     q_dim = qt / (velocity * edge.data.surface_area)
     return q_dim.drop_vars(dn.space_name)
