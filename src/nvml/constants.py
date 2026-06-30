@@ -3,6 +3,11 @@ class DataNames:
     is_external = "is_external"
     incident_factor = "incident_factor"
 
+    # flow paths
+    edge_name = "edge_name"
+    u = "u"
+    v = "v"
+
     # qois
     zone_dimless_flow = "zone_dimless_flow"
     zone_inflow = "zone_inflow"

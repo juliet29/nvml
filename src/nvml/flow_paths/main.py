@@ -1,4 +1,7 @@
+from typing import NamedTuple
+
 import networkx as nx
+import pandas as pd
 import xarray as xr
 
 ## flow paths => for now, assuming dominant external node is well-chosen by segmenting on wind direction. #TODO: investigate!
@@ -26,28 +29,57 @@ class PathGraph(nx.DiGraph):
 
 def get_unique_edges(path_graphs: list[PathGraph]):
     all_edges = chain_flatten([i.edge_list for i in path_graphs])
-    return [frozenset(i) for i in set(all_edges)]
+    # if frozen:
+    #     return [frozenset(i) for i in set(all_edges)]
+    return list(set(all_edges))
 
 
-def prep_edge_qdim(edge: Edge, velocity: xr.DataArray):
+def prep_edge_qdim(edge: Edge, velocity: xr.DataArray, is_flipped: bool):
     """
     Velocity datetimes should be filtered to one wind sector before being passed in
     """
-    q = edge.data.flow_in.sel({dn.datetime: velocity[dn.datetime]})
-    q_dim = q / (velocity * edge.data.surface_area)
-    return q_dim
+    ed = edge.data
+
+    q = ed.flow_out if is_flipped else ed.flow_in
+    qt = q.sel({dn.datetime: velocity[dn.datetime]})
+    q_dim = qt / (velocity * edge.data.surface_area)
+    return q_dim.drop_vars(dn.space_name)
 
 
-def get_relevant_edges(G: FlowGraph, path_graphs: list[PathGraph]):
-    # NOTE: may include all edges, so might actually not neede this..
-    # ic(pretty_repr(G.sorted_edge_names))
-    unique_edges = get_unique_edges(path_graphs)
-    # ic(pretty_repr(sorted(unique_edges)))
-    # ic((len(G.edges_with_data), len(unique_edges)))
-    res = [i for i in G.edges_with_data if frozenset(i.as_tuple) in unique_edges]
-    # ic(pretty_repr(sorted([i.as_tuple for i in res])))
-
-    assert len(res) == len(unique_edges), (
-        f"Expcted {len(unique_edges)} edges but instead got {len(res)}"
+def check_all_path_edges_found(q_dims: list, unique_edges: list):
+    assert len(q_dims) == len(unique_edges), (
+        f"Expcted {len(unique_edges)} edges but instead got {len(q_dims)}"
     )
-    return res
+
+
+def prep_edge_da(G: FlowGraph, path_graphs: list[PathGraph], wind_speed: xr.DataArray):
+    class EdgeInfo(NamedTuple):
+        edge_ix_name: tuple[str, str]
+        q_dim: xr.DataArray
+
+    def handle(edge: Edge):
+        if edge.as_tuple in unique_edges:
+            is_flipped = False
+            e_ix = edge.as_tuple
+        elif edge.as_tuple_reverse in unique_edges:
+            is_flipped = True
+            e_ix = edge.as_tuple_reverse
+        q_dim = prep_edge_qdim(edge, wind_speed, is_flipped)
+        return EdgeInfo(e_ix, q_dim)
+
+    unique_edges = get_unique_edges(path_graphs)
+    # ic(sorted(unique_edges))
+    # ic(sorted([i.as_tuple for i in G.edges_with_data]))
+    # breakpoint()
+    einfo = [handle(e) for e in G.edges_with_data]
+    check_all_path_edges_found(einfo, unique_edges)
+
+    # index
+    midx = pd.MultiIndex.from_tuples(
+        [e.edge_ix_name for e in einfo], names=(dn.u, dn.v)
+    )
+    midx_coords = xr.Coordinates.from_pandas_multiindex(midx, dim=dn.edge_name)
+    qdims = [i.q_dim for i in einfo]
+
+    da = xr.concat(qdims, dim=dn.edge_name).assign_coords(midx_coords)
+    return da
