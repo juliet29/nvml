@@ -14,7 +14,7 @@ def _():
     import polars as pl
     from nvml.constants import DataNames as dn
 
-    return CONFIGS_DICT, dn, get_data_for_graph, pl
+    return CONFIGS_DICT, alt, dn, get_data_for_graph, pl
 
 
 @app.cell
@@ -48,12 +48,7 @@ def _():
     # with suppress_stdout():
     #     for ii in range(10):
     #         print(ii)
-    return
-
-
-@app.cell
-def _():
-    return
+    return (suppress_stdout,)
 
 
 @app.cell
@@ -65,84 +60,117 @@ def _(cfg):
 @app.cell
 def _(case_name, cfg, get_data_for_graph):
     df = get_data_for_graph(cfg, case_name)
-
-    return (df,)
-
-
-@app.cell
-def _(cfg, dn, get_data_for_graph, pl):
-    def create_big_data(case_name):
-        df = get_data_for_graph(cfg, case_name)
-        return df.group_by(dn.wind_sector).agg(pl.col(dn.zone_dimless_flow).median(), pl.col(dn.incident_factor).min()).with_columns(pl.lit(case_name).alias(dn.case_name))
-
-    return (create_big_data,)
-
-
-@app.cell
-def _(cfg, create_big_data):
-    dfs = []
-    for i in cfg.case_names:
-        try: 
-            r = create_big_data(i);
-        except Exception as e: 
-            print([i, e])
-            pass
-        dfs.append(r)
-        
-
-    return (dfs,)
-
-
-@app.cell
-def _():
-    list(range(50))[0:-1:5]
     return
 
 
 @app.cell
-def _(cfg, df2, get_data_for_graph):
-    def get_data(stride:int = 5):
-        dfs2 = []
+def _(get_data_for_graph, suppress_stdout):
+    def get_data(cfg, stride:int = 5):
+        cnt = 0
+        dfs = []
         for i in cfg.case_names[0:-1:stride]:
+            print(f"{cnt}| Running case {i}")
+            cnt+=1
             try: 
-                r = get_data_for_graph(i);
+                with suppress_stdout():
+                    r = get_data_for_graph(cfg, i);
             except Exception as e: 
                 print([i, e])
-                pass
-            dfs2.append(r)
-        return df2 
+                continue
+            dfs.append(r)
+        return dfs 
 
     return (get_data,)
 
 
 @app.cell
-def _(get_data):
-    dfs2 = get_data()
+def _(cfg, get_data):
+    dfs2 = get_data(cfg)
+    return (dfs2,)
+
+
+@app.cell
+def _(dfs2, dn, pl):
+    tdf = dfs2[4].filter(pl.col(dn.wind_sector) == "E")
+    tdf
+    return (tdf,)
+
+
+@app.cell
+def _(alt, dn, tdf):
+    tdf.plot.scatter(x=alt.X(dn.wind_dir).scale(zero=False), y=dn.zone_dimless_flow, color=alt.Color(dn.incident_factor, type="ordinal").scale(scheme="lightgreyred"))
     return
 
 
 @app.cell
-def _(dfs, pl):
-    res = pl.concat(dfs, how="align")
-    res
-    return (res,)
+def _(dn, tdf):
+    tdf.plot.bar(x=dn.wind_dir, y="count()")
+    return
+
+
+app._unparsable_cell(
+    r"""
+    tdff2 = tdf.filter(pl.col(dn.wind_dir) == 90).group_by_dynamic(dn.datetime, every="48h").
+    tdff2
+    """,
+    name="_"
+)
 
 
 @app.cell
-def _(dn, res):
-    res.plot.scatter(x=dn.incident_factor, y=dn.zone_dimless_flow, column=dn.wind_sector)
+def _(dn, pl, tdf):
+    tdff = tdf.filter(pl.col(dn.wind_dir) == 90).group_by(dn.datetime).head(5)
+    tdff 
+    #.plot.bar(x=dn.zone_dimless_flow, y="count()", color=dn.space_name)
+    return (tdff,)
+
+
+app._unparsable_cell(
+    r"""
+
+    alt.Chart(tdff).transform_density(
+        density=dn.zone_dimless_flow,
+        groupby=['Species'],
+        extent= [2500, 6500],
+        counts = True,
+        steps=200
+    ).mark_area().encode(
+        alt.X('value:Q').title('Body Mass (g)'),
+        alt.Y('density:Q', stack='zero'),
+        alt.Color('Species:N')
+    """,
+    name="_"
+)
+
+
+@app.cell
+def _(dn, tdff):
+
+    tdff.plot.bar(x=dn.zone_dimless_flow, y="count()", color=dn.space_name, column=dn.wind_speed)
     return
 
 
 @app.cell
-def _(df, pl):
-    df.filter(pl.col("wind_sector")  == "NW")
+def _(dn, tdff):
+    tdff.plot.bar(x=dn.zone_dimless_flow, y="count()", color=dn.space_name, column=dn.datetime)
     return
 
 
 @app.cell
-def _(case_name, df, dn, pl):
-    df.group_by(dn.wind_sector).agg(pl.col(dn.zone_dimless_flow).median(), pl.col(dn.incident_factor).min()).with_columns(pl.lit(case_name).alias(dn.case_name))
+def _(dn, pl, tdf):
+    tdf.filter(pl.col(dn.wind_dir) == 90).select(pl.col(dn.datetime).unique())
+    return
+
+
+@app.cell
+def _(dn, pl, tdf):
+    tdf.select(pl.col(dn.wind_dir).value_counts())
+    return
+
+
+@app.cell
+def _():
+    # spatial dist for given wind directions
     return
 
 
