@@ -36,6 +36,11 @@ def _():
 
 
 @app.cell
+def _():
+    return
+
+
+@app.cell
 def _(CONFIGS_DICT, get_ambient_data_as_ds):
     cfg = CONFIGS_DICT["jun24"]  
     ads = get_ambient_data_as_ds(cfg.get_one_case_data().sql)   

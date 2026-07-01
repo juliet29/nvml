@@ -2,16 +2,16 @@ from cyclopts import App
 from plan2eplus.ezcase.ez import EZ
 from plyze import FlowGraphModel
 
-from nvml.cli.config import CONFIGS_DICT
+from nvml.cli.config import CONFIGS_DICT, MakeConfig
 from nvml.cli.studies.paths import ProjectPaths
 from nvml.constants import DataNames
+from nvml.io import get_ambient_data_as_ds, graph_to_ds
 from nvml.qdim.incident import (
     calculate_incidence_factor,
     make_zone_outward_normal_da,
     wind_angle_da_to_vectors,
 )
 from nvml.qdim.intext import get_normals_for_windows_across_zones
-from nvml.io import get_ambient_data_as_ds, graph_to_ds
 from nvml.qdim.wind import (
     add_incidence_data,
     add_wind_sector_coord,
@@ -104,3 +104,22 @@ def ffb():
 
     cd = prep_comparison_data(G, ambient_ds, qoi_ds)
     return add_incidence_data(G, case, ambient_ds, cd)
+
+
+def get_data_for_graph(cfg: MakeConfig, case_name: str):
+    graph_path = cfg.make_graph_path(case_name)
+    idf_path, sql_path = cfg.make_case_data(case_name)  # .idf
+    case = EZ(idf_path)
+    G = FlowGraphModel.read(graph_path)
+
+    res = get_ambient_data_as_ds(sql_path)
+    ambient_ds = add_wind_sector_coord(res)
+
+    qoi_ds = graph_to_ds(graph_path)
+
+    cd = prep_comparison_data(G, ambient_ds, qoi_ds)
+    return add_incidence_data(G, case, ambient_ds, cd)
+
+
+def load_config(name: str):
+    return CONFIGS_DICT[name]
