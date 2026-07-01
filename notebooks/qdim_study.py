@@ -91,7 +91,7 @@ def _(cfg, get_data):
 
 @app.cell
 def _(dfs2, dn, pl):
-    tdf = dfs2[4].filter(pl.col(dn.wind_sector) == "E")
+    tdf = dfs2[5].filter(pl.col(dn.wind_sector) == "E")
     tdf
     return (tdf,)
 
@@ -108,15 +108,6 @@ def _(dn, tdf):
     return
 
 
-app._unparsable_cell(
-    r"""
-    tdff2 = tdf.filter(pl.col(dn.wind_dir) == 90).group_by_dynamic(dn.datetime, every="48h").
-    tdff2
-    """,
-    name="_"
-)
-
-
 @app.cell
 def _(dn, pl, tdf):
     tdff = tdf.filter(pl.col(dn.wind_dir) == 90).group_by(dn.datetime).head(5)
@@ -125,28 +116,40 @@ def _(dn, pl, tdf):
     return (tdff,)
 
 
-app._unparsable_cell(
-    r"""
-
-    alt.Chart(tdff).transform_density(
-        density=dn.zone_dimless_flow,
-        groupby=['Species'],
-        extent= [2500, 6500],
-        counts = True,
-        steps=200
-    ).mark_area().encode(
-        alt.X('value:Q').title('Body Mass (g)'),
-        alt.Y('density:Q', stack='zero'),
-        alt.Color('Species:N')
-    """,
-    name="_"
-)
+@app.cell
+def _(alt, dn, tdf):
+    alt.Chart(tdf).transform_density(
+        density=dn.zone_dimless_flow,          # Column to calculate density for
+        groupby=[dn.space_name],
+        as_=[dn.zone_dimless_flow, 'density']  # Name output columns (X and Y axes)
+    ).mark_area(
+        opacity=0.4,
+        #color='steelblue'
+    ).encode(
+        x=dn.zone_dimless_flow,
+        y='density:Q',
+        color=dn.space_name
+    )
+    return
 
 
 @app.cell
-def _(dn, tdff):
+def _(alt, dn, tdff):
 
-    tdff.plot.bar(x=dn.zone_dimless_flow, y="count()", color=dn.space_name, column=dn.wind_speed)
+    alt.Chart(tdff).transform_density(
+        density=dn.zone_dimless_flow,
+        groupby=[dn.space_name],
+    ).mark_area().encode(
+        alt.X(dn.zone_dimless_flow),
+        alt.Y('density:Q', stack='zero'),
+        alt.Color(dn.space_name))
+    return
+
+
+@app.cell
+def _(dn, tdf):
+
+    tdf.plot.bar(x=dn.zone_dimless_flow, y="count()", color=dn.space_name, column=dn.wind_speed)
     return
 
 
