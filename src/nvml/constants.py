@@ -21,6 +21,7 @@ class DataNames:
     # coordinates
     case_name = "case_name"
     space_name = "space_names"
+    space_ix = "space_ix"
     datetime = "datetimes"
 
     # incident angle calc

@@ -19,39 +19,11 @@ CASE_NAME = cfg.get_one_case(CASE_IX)
 
 
 @qdim.command()
-def get_graph(case_name: str = CASE_NAME):
-    path = cfg.make_graph_path(case_name)
-    G = FlowGraphModel.read(path)
-    return G
-
-
-@qdim.command()
-def get_qoi_ds(case_name: str = CASE_NAME):
-    path = cfg.make_graph_path(case_name)
-    res = graph_to_ds(path)
-    return res
-
-
-@qdim.command()
-def get_ambient_ds(ix: int = CASE_IX):
-    res = get_ambient_data_as_ds(cfg.get_one_case_data(ix).sql)
-    res = add_wind_sector_coord(res)
-    return res
-
-
-def get_all_data():
-    G = get_graph()
-    qoi_ds = get_qoi_ds()
-    ambient_ds = get_ambient_ds()
-    return G, qoi_ds, ambient_ds
-
-
-@qdim.command()
 def fe():
     res = get_ambient_data_as_ds(cfg.get_one_case_data().sql)
     ambient_ds = add_wind_sector_coord(res)
 
-    json_path = cfg.make_json_path(cfg.get_one_case())
+    json_path = cfg.make_graph_path(cfg.get_one_case())
     qoi_ds = graph_to_ds(json_path)
 
     savedir = ProjectPaths.figs.qdim_corr
