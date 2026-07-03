@@ -17,7 +17,7 @@ def _():
     from nvml.constants import DataNames as dn
     from nvml.utils import xr_to_polars
 
-    return dn, get_all_data, pl, so
+    return dn, get_all_data, mo, pl, so
 
 
 @app.cell
@@ -62,11 +62,6 @@ def _(dn, qoi, qoi_coords):
 
 
 @app.cell
-def _():
-    return
-
-
-@app.cell
 def _(dn, pl, qa):
     df = pl.from_pandas(qa.reset_index(dims_or_levels=[dn.datetime, dn.space_name]).to_dataframe())
     df
@@ -79,6 +74,14 @@ def _(df, dn, so):
     return
 
 
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    # Study wind sector wind direction relationship
+    """)
+    return
+
+
 @app.cell
 def _(df, dn, pl):
     nedf = df.filter(pl.col(dn.wind_sector) == "N")
@@ -88,7 +91,7 @@ def _(df, dn, pl):
 
 @app.cell
 def _(dn, nedf, so):
-    so.Plot(nedf, dn.zone_dimless_flow).add(so.Area(), so.Hist(), color=dn.space_name).show()
+    so.Plot(nedf, dn.zone_inflow).add(so.Area(), so.Hist(), color=dn.space_name).show()
     return
 
 
@@ -102,19 +105,28 @@ def _(dn, nedf, so):
 @app.cell
 def _(dn, nedf, pl):
     # a table gives more of the info that is needed.. # TODO: put in utils
-    nedf.select(pl.col(dn.wind_dir).value_counts()).unnest().sort(by="count", descending=True)
-    return
+    wddf = nedf.select(pl.col(dn.wind_dir).value_counts()).unnest().sort(by="count", descending=True)
+    wddf
+    return (wddf,)
 
 
 @app.cell
-def _(dn, nedf, pl):
-    nedf_wd = nedf.filter(pl.col(dn.wind_dir).is_in([342.5, 22.5]))
+def _(dn, wddf):
+    topwd = wddf.head(3).select(dn.wind_dir)
+    topwd
+    return (topwd,)
+
+
+@app.cell
+def _(dn, nedf, pl, topwd):
+    nedf_wd =  nedf.filter(pl.col(dn.wind_dir).is_in([]))
+    nedf_wd = nedf.join(topwd, on=dn.wind_dir)
     return (nedf_wd,)
 
 
 @app.cell
 def _(dn, nedf_wd, so):
-    p = so.Plot(nedf_wd, dn.zone_dimless_flow).facet(row=dn.wind_dir).add(so.Area(), so.Hist(), color=dn.space_name).show()
+    p = so.Plot(nedf_wd, dn.zone_inflow).facet(row=dn.wind_dir).add(so.Area(), so.Hist(), color=dn.space_name).show()
     return
 
 
