@@ -7,9 +7,27 @@ properties:
     type: string
     description: "Name of graph under its case folder"
     default: "data/out.json"
+
+  zarr_name:
+    type: string
+    description: "Name to save .zarr file with"
+    default: "out.zarr"
+
+  ambient_name:
+    type: string
+    description: "Name to save ambient dataset with"
+    default: "ambient.nc"
+
   pathvars:
     type: object
+    default: {}
+
     properties:
+      savedir:
+        type: string
+        description: "Directory to keep outputs of this workglow"
+        default: "/oak/stanford/groups/risheej/jnwagwu/storage/nvml/qdim/tests"
+
       path_to_graphs:
         type: string
         description: "Location where graphs are stored. Case names should be flat list underneath"

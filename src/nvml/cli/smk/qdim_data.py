@@ -18,7 +18,7 @@ def init(savedir: Path, sqlpath: Path):
 
 
 @qdim.command()
-def create_case_data(
+def create(
     case_name_idx: int,
     case_name: str,
     zarr_path: Path,

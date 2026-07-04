@@ -1,0 +1,4 @@
+KeyError in file "/oak/stanford/groups/risheej/jnwagwu/fpopt/nvml/workflow/rules/qdim.smk", line 10:
+'pathvars'
+  File "/oak/stanford/groups/risheej/jnwagwu/fpopt/nvml/workflow/rules/qdim.smk", line 16, in <module>
+  File "/oak/stanford/groups/risheej/jnwagwu/fpopt/nvml/workflow/rules/qdim.smk", line 10, in get_graphs_data

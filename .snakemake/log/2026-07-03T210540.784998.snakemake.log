@@ -1,0 +1,2 @@
+WorkflowError in file "/oak/stanford/groups/risheej/jnwagwu/fpopt/nvml/workflow/rules/qdim.smk", line 3:
+Config file must be given as JSON or YAML with keys at top level.

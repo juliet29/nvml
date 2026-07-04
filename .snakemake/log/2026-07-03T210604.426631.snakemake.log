@@ -1,0 +1,3 @@
+NameError in file "/oak/stanford/groups/risheej/jnwagwu/fpopt/nvml/workflow/rules/qdim.smk", line 4:
+name 'validate' is not defined
+  File "/oak/stanford/groups/risheej/jnwagwu/fpopt/nvml/workflow/rules/qdim.smk", line 4, in <module>

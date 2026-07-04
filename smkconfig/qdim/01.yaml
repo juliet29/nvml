@@ -1,3 +1,4 @@
+graph_name: data/out.json
 pathvars:
-  path_to_graphs: ""
-  path_to_sql: ""
+  path_to_graphs: /oak/stanford/groups/risheej/jnwagwu/storage/nvml/jun30
+  path_to_sql: /oak/stanford/groups/risheej/jnwagwu/storage/msherlock_v1/data/135463/eplusout.sql

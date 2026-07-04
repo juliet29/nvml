@@ -1,1 +1,3 @@
+configfile: "smkconfig/qdim/01.yaml"
+
 include: "rules/qdim.smk"
