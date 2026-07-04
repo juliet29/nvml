@@ -3,7 +3,7 @@ from cyclopts import App
 
 from nvml.cli.studies.helpers import CASE_NAME, get_ambient_ds, get_graph_path
 from nvml.cli.studies.paths import ProjectPaths
-from nvml.cluster.assemble import make_space_name_by_wind_sector_da
+from nvml.cluster.setup.single import make_space_name_by_wind_sector_da
 from nvml.constants import DataNames, FileNames
 
 cluster = App("cluster")

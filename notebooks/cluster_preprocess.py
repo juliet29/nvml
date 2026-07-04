@@ -39,6 +39,12 @@ def _(da, dn):
     return (sda,)
 
 
+@app.cell
+def _(da, dn):
+    da[dn.space_ix]
+    return
+
+
 app._unparsable_cell(
     r"""
 
