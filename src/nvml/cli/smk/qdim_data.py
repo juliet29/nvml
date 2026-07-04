@@ -14,7 +14,7 @@ def init(savedir: Path, sqlpath: Path):
     init_zarr(savedir)
     ds = get_ambient_data_as_ds(sqlpath)
 
-    ds.to_netcdf(savedir / FileNames.ambient)  # TODO: change name
+    ds.to_netcdf(savedir / FileNames.ambient)
 
 
 @qdim.command()

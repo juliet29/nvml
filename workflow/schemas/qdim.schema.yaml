@@ -1,0 +1,21 @@
+$schema: "https://json-schema.org/draft/2020-12/schema"
+description: "Snakemake configuration file validation schema"
+type: object
+
+properties:
+  graph_name:
+    type: string
+    description: "Name of graph under its case folder"
+    default: "data/out.json"
+  pathvars:
+    type: object
+    properties:
+      path_to_graphs:
+        type: string
+        description: "Location where graphs are stored. Case names should be flat list underneath"
+        default: "/oak/stanford/groups/risheej/jnwagwu/storage/nvml/jun30"
+
+      path_to_sql:
+        type: string
+        description: "Path to sql model that will be used as reference for ambient data"
+        default: "/oak/stanford/groups/risheej/jnwagwu/storage/msherlock_v1/data/135463/eplusout.sql"

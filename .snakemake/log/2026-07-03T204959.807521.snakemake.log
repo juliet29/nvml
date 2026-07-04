@@ -1,0 +1,2 @@
+WorkflowError in file "/oak/stanford/groups/risheej/jnwagwu/fpopt/nvml/workflow/rules/qdim.smk", line 3:
+Workflow defines configfile smkconfig/qdim/01.yaml but it is not present or accessible (full checked path: /oak/stanford/groups/risheej/jnwagwu/fpopt/nvml/smkconfig/qdim/01.yaml).
