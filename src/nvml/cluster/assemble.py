@@ -37,7 +37,9 @@ def make_space_name_by_wind_sector_da(
 
     # Aggregate over space names and wind sectors => really group by wind sectors while preserving the space_ix axis..
     qa_flat = qdw.groupby([dn.wind_sector, dn.space_ix])  # .sum(dn.wind_sector)
-    qa_final = qa_flat.median(skipna=True).assign_attrs({dn.case_name: case_name})
+    qa_final = qa_flat.median(skipna=True).assign_attrs(
+        {dn.case_name: case_name}
+    )  # TODO => sort by the values..
 
     qa_final.name = dn.q_dim_median
 

@@ -1,4 +1,7 @@
 graph_name: data/out.json
+zarr_name: out.zarr
+ambient_name: ambient.nc
 pathvars:
+  savedir: /oak/stanford/groups/risheej/jnwagwu/storage/nvml/qdim/tests
   path_to_graphs: /oak/stanford/groups/risheej/jnwagwu/storage/nvml/jun30
   path_to_sql: /oak/stanford/groups/risheej/jnwagwu/storage/msherlock_v1/data/135463/eplusout.sql
