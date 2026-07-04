@@ -11,6 +11,7 @@ class DataNames:
     # qois
     zone_dimless_flow = "zone_dimless_flow"
     zone_inflow = "zone_inflow"
+    q_dim_median = "q_dim_median"
 
     # ambient qois
     wind_dir = "wind_direction"
@@ -33,3 +34,7 @@ class FileNames:
     metrics_path = "cons/metrics.csv"
     qois_path = "cons/qois.csv"
     graph_json_path = "data/out.json"
+
+    # cluster q_dim
+    zarr = "out.zarr"
+    ambient = "ambient.nc"

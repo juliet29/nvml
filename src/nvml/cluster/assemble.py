@@ -8,7 +8,10 @@ from nvml.io import graph_to_ds
 
 
 # TODO: think about if there are ways to parralelize graph reading..
-def make_space_name_by_wind_sector_da(graph_path: Path, ambient_ds: xr.Dataset):
+def make_space_name_by_wind_sector_da(
+    case_name: str, graph_path: Path, ambient_ds: xr.Dataset
+):
+
     qoi_ds = graph_to_ds(graph_path)
 
     # TODO: move this check higher, but since q_dim diveides by velocity, we get infinity whenever U = 0
@@ -30,8 +33,12 @@ def make_space_name_by_wind_sector_da(graph_path: Path, ambient_ds: xr.Dataset):
         )
         .swap_dims({dn.datetime: dn.wind_sector})
         .drop_vars(dn.datetime)
-    )  # see if we can group by wind sector and mean, oro if need to swap and drop again..
+    )
 
-    # Aggregate over space names and wind sectors
+    # Aggregate over space names and wind sectors => really group by wind sectors while preserving the space_ix axis..
     qa_flat = qdw.groupby([dn.wind_sector, dn.space_ix])  # .sum(dn.wind_sector)
-    return qa_flat.median(skipna=True)
+    qa_final = qa_flat.median(skipna=True).assign_attrs({dn.case_name: case_name})
+
+    qa_final.name = dn.q_dim_median
+
+    return qa_final
