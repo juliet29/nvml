@@ -36,6 +36,17 @@ def add_wind_sector_coord(ds: xr.Dataset):
     )  # sector coord indexed along the datetime coord
 
 
+def wind_sector_as_str(ds: xr.Dataset):
+    da = ds[dn.wind_sector]
+    return ds.assign_coords({dn.wind_sector: (da.dims, da.values.astype(str))})
+
+
+def wind_sector_as_categorical(ds: xr.Dataset):
+    da = ds[dn.wind_sector]
+    cat = pd.Categorical(da.values, categories=WindDirectionBins.labels, ordered=True)
+    return ds.assign_coords({dn.wind_sector: (da.dims, cat)})
+
+
 # TODO: ensure downsstream qdim works..
 
 
