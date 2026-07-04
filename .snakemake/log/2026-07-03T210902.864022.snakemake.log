@@ -1,2 +1,0 @@
-FileNotFoundError in file "/oak/stanford/groups/risheej/jnwagwu/fpopt/nvml/workflow/rules/qdim.smk", line 7:
-[Errno 2] No such file or directory: '/oak/stanford/groups/risheej/jnwagwu/fpopt/nvml/workflow/rules/workflow/schemas/qdim.schema.yaml'

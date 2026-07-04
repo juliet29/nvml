@@ -1,4 +1,0 @@
-rule qdim_create, line 17, /oak/stanford/groups/risheej/jnwagwu/fpopt/nvml/workflow/rules/qdim.smk: Empty file path encountered. Snakemake cannot understand this. If you want to indicate 'no file', please use an empty list ([]) instead of an empty string ('').
-rule qdim_create, line 17, /oak/stanford/groups/risheej/jnwagwu/fpopt/nvml/workflow/rules/qdim.smk: Empty file path encountered. Snakemake cannot understand this. If you want to indicate 'no file', please use an empty list ([]) instead of an empty string ('').
-Assuming unrestricted shared filesystem usage.
-Error: cores have to be specified for local execution (use --cores N with N being a number >= 1 or 'all')
