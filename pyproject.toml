@@ -24,6 +24,7 @@ dependencies = [
   "icecream>=2.2.0",
   "zarr>=3.2.1",
   "dask>=2026.6.0",
+  "scikit-learn>=1.9.0",
 ]
 
 [build-system]

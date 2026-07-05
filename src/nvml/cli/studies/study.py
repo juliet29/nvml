@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
 from cyclopts import App
-from icecream import ic
+from icecream import ic, install
 from loguru import logger
 
 # from plyze.plots.altair_helpers import AltairRenderers
@@ -18,6 +18,8 @@ app.command(qdim)
 app.command(create)
 app.command(flow)
 app.command(cluster)
+
+install()  # allow icecream to be used everywhere
 
 
 def keep():
