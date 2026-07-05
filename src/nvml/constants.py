@@ -29,6 +29,14 @@ class DataNames:
     xy_vector = "xy_vector"
     edge_num = "edge_num"
 
+    # tsne
+    c1 = "coord_1"
+    c2 = "coord_2"
+    coord = "coord"
+
+    # clustering
+    label = "label"
+
 
 class FileNames:
     metrics_path = "cons/metrics.csv"
@@ -38,3 +46,5 @@ class FileNames:
     # cluster q_dim
     zarr = "out.zarr"
     ambient = "ambient.nc"
+    general_nc = "out.nc"
+    general_fig = "out.png"

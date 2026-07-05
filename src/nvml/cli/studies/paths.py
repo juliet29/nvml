@@ -12,12 +12,15 @@ class External:
 class Figures:
     base = PROJECT_STORAGE / "figures_temp"
     qdim_corr = base / "qdim_corr"
+    tsne = base / "tsne/tests"
 
 
 class Data:
-    graphs_jun24 = PROJECT_STORAGE / "jun24"
-    graphs_jun30 = PROJECT_STORAGE / "jun30"
-    qdim_test = PROJECT_STORAGE / "qdim/tests"
+    base = PROJECT_STORAGE
+    graphs_jun24 = base / "jun24"
+    graphs_jun30 = base / "jun30"
+    qdim_test = base / "qdim/tests"
+    tsne = base / "tsne/tests"
 
 
 class ProjectPaths:  # for now assuming all are temp

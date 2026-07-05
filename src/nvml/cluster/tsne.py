@@ -5,6 +5,8 @@ import xarray as xr
 from sklearn import manifold
 
 from nvml.constants import DataNames as dn
+from nvml.constants import FileNames
+from nvml.utils import save_mpl_fig
 
 
 def sort_da_values(da: xr.DataArray, dim: str):
@@ -23,11 +25,6 @@ def sort_da_values(da: xr.DataArray, dim: str):
 
 
 def setup_tsne(path: Path):
-
-    # open zarr, sort array, get first 5 values, and drop the case if ther are not up to 5..
-    # really need to look at histogram of the case to say accurantely
-    # need apply u_func for this.. => need to write good res for this...
-
     ds = xr.open_zarr(path)
     da = ds[dn.q_dim_median].load()
 
@@ -41,11 +38,18 @@ def setup_tsne(path: Path):
     return da5
 
 
-def make_tsne(X: np.ndarray):
-    tsne = manifold.TSNE(perplexity=10)
+def make_tsne(da: xr.DataArray, wind_sector: str):
+    X = da.sel({dn.wind_sector: wind_sector}).values
+    tsne = manifold.TSNE(perplexity=15)
     Y = tsne.fit_transform(X)
-    return Y
+    return xr.DataArray(
+        Y,
+        coords={dn.case_name: da.case_name.values, dn.coord: [dn.c1, dn.c2]},
+        dims=[dn.case_name, dn.coord],
+    )
 
 
-def plot_tsne(Y):
-    pass
+def plot_tsne(tsne_path: Path, savedir: Path):
+    Y = xr.open_dataarray(tsne_path)
+    fig = Y.to_dataset(dim=dn.coord).plot.scatter(x=dn.c1, y=dn.c2)
+    save_mpl_fig(fig, savedir / FileNames.general_fig)
