@@ -19,11 +19,18 @@ def _():
     ## top level
     from nvml.constants import DataNames as dn
     ## cli
-    from nvml.cli.studies.cluster import fda, ff
+    from nvml.cli.studies.cluster import fda, ff, fc
     ## within module
-    from nvml.cluster.spectral import plot_cluster_on_tsne
+    from nvml.cluster.spectral import plot_cluster_on_tsne, plot_cluster_on_data
 
-    return dn, fda, ff, plot_cluster_on_tsne
+    return dn, fc, fda, ff, plot_cluster_on_data, plot_cluster_on_tsne, plt
+
+
+@app.cell
+def _(fc):
+    data = fc()
+    data
+    return (data,)
 
 
 @app.cell
@@ -38,6 +45,13 @@ def _(ff):
     labels = ff()
     labels
     return (labels,)
+
+
+@app.cell
+def _(data, labels, plot_cluster_on_data, plt):
+    plot_cluster_on_data(labels, data)
+    plt.show()
+    return
 
 
 @app.cell

@@ -1,7 +1,7 @@
 from cyclopts import App
 
 from nvml.cli.studies.paths import ProjectPaths
-from nvml.cluster.spectral import make_spectral
+from nvml.cluster.spectral import make_spectral, plot_cluster_on_data
 from nvml.cluster.tsne import make_tsne, plot_tsne, setup_tsne
 from nvml.constants import FileNames
 from nvml.utils import make_dir
@@ -40,3 +40,10 @@ def ff():
     da = setup_tsne(path)
     labels = make_spectral(da, WIND_DIR)
     return labels
+
+
+@cluster.command()
+def fg():
+    labels = ff()
+    da = fc()
+    return plot_cluster_on_data(labels, da)
