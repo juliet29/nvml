@@ -1,5 +1,5 @@
 from cyclopts import App
-from utils4plans.logconfig import logset
+from utils4plans.logs import logset
 
 from nvml.cli.smk.qdim_data import qdim
 

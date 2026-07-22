@@ -20,9 +20,10 @@ class Data:
     graphs_jun30 = base / "jun30"
     qdim_test = base / "qdim/tests"
     tsne = base / "tsne/tests"
+    gnn = base / "gnn/tests"
 
 
-class ProjectPaths:  # for now assuming all are temp
+class StudyPaths:  # for now assuming all are temp
     figs = Figures
     data = Data
     external = External

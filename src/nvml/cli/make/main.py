@@ -5,7 +5,7 @@ from loguru import logger
 # from plyze.plots.altair_helpers import AltairRenderers
 # from plyze.plots.theme import default_theme
 from rich.pretty import pretty_repr
-from utils4plans.logconfig import logset
+from utils4plans.logs import logset
 
 from nvml.cli.make.create import create
 
