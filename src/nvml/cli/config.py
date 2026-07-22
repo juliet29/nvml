@@ -3,8 +3,7 @@ from typing import NamedTuple
 
 from plyze import CaseData
 
-PATH_TO_STORAGE = Path("/oak/stanford/groups/risheej/jnwagwu/storage/")
-PATH_TO_PROJECT_STORAGE = PATH_TO_STORAGE / "nvml"
+from nvml.cli.paths import PATH_TO_STORAGE, PATH_TO_TEMP
 
 
 class MakeConfig(NamedTuple):
@@ -40,13 +39,13 @@ class MakeConfig(NamedTuple):
 test_create_config = MakeConfig(
     eplus_model_source=PATH_TO_STORAGE / "msherlock_v1/data",
     case_names=["100268"],
-    data_store=PATH_TO_PROJECT_STORAGE / "test_create",
+    data_store=PATH_TO_TEMP / "test_create",
 )
 
 jun24config = MakeConfig(
     eplus_model_source=PATH_TO_STORAGE / "msherlock_v1/data",
     case_names=["100268", "100275", "100306"],
-    data_store=PATH_TO_PROJECT_STORAGE / "jun24",
+    data_store=PATH_TO_TEMP / "jun24",
 )
 
 case50 = MakeConfig(
@@ -104,7 +103,7 @@ case50 = MakeConfig(
         "106675",
         "106718",
     ],
-    data_store=PATH_TO_PROJECT_STORAGE / "jun30",
+    data_store=PATH_TO_TEMP / "jun30",
     # json_file_name=""
 )
 

@@ -1,7 +1,6 @@
 from pathlib import Path
 
-PATH_TO_STORAGE = "/oak/stanford/groups/risheej/jnwagwu/storage"
-PROJECT_STORAGE = Path(PATH_TO_STORAGE) / "nvml"
+from nvml.cli.paths import PATH_TO_STORAGE, PATH_TO_TEMP
 
 
 class External:
@@ -10,13 +9,13 @@ class External:
 
 
 class Figures:
-    base = PROJECT_STORAGE / "figures_temp"
+    base = PATH_TO_TEMP / "figures_temp"
     qdim_corr = base / "qdim_corr"
     tsne = base / "tsne/tests"
 
 
 class Data:
-    base = PROJECT_STORAGE
+    base = PATH_TO_TEMP
     graphs_jun24 = base / "jun24"
     graphs_jun30 = base / "jun30"
     qdim_test = base / "qdim/tests"

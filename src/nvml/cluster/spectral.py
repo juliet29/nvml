@@ -10,7 +10,7 @@ def make_spectral(da: xr.DataArray, wind_sector: str):
     X = da.sel({dn.wind_sector: wind_sector}).values
 
     clustering = SpectralClustering(
-        n_clusters=3, random_state=RANDOM_STATE, assign_labels="cluster_qr"
+        n_clusters=2, random_state=RANDOM_STATE, assign_labels="cluster_qr"
     ).fit(X)
     labels = clustering.labels_
     return xr.DataArray(

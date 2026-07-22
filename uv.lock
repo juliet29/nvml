@@ -2368,6 +2368,7 @@ dependencies = [
     { name = "marimo" },
     { name = "metpy" },
     { name = "plyze" },
+    { name = "pytorch-geometric" },
     { name = "rich" },
     { name = "scikit-learn" },
     { name = "seaborn" },
@@ -2391,6 +2392,7 @@ requires-dist = [
     { name = "marimo", specifier = ">=0.23.11" },
     { name = "metpy", specifier = ">=1.7.1" },
     { name = "plyze", editable = "../plyze" },
+    { name = "pytorch-geometric", specifier = ">=0.0.2" },
     { name = "rich", specifier = ">=15.0.0" },
     { name = "scikit-learn", specifier = ">=1.9.0" },
     { name = "seaborn", specifier = ">=0.13.2" },
@@ -3297,6 +3299,15 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/5b/42/55c32bb9b12693c092ad250a0e82edb5b31ddeda6eb772de5f308b3804ad/python_multipart-0.0.32.tar.gz", hash = "sha256:be54b7f3fa167bb83e4fcd936b887b708f4e57fe75911c02aebf53efaf8d938e", size = 46881, upload-time = "2026-06-04T16:18:58.647Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/e1/04/e8135ebd1ad02c56ec633277529b2602ff99ff634be76cdba5744cf554fd/python_multipart-0.0.32-py3-none-any.whl", hash = "sha256:ff6d3f776f16878c894e52e107296ffc890e913c611b1a4ec6c44e2821fe2e23", size = 30042, upload-time = "2026-06-04T16:18:57.319Z" },
+]
+
+[[package]]
+name = "pytorch-geometric"
+version = "0.0.2"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/41/bf/b79d44cc362965bf8670a6e7e5918241224edc3b409aa76ff5b783935b2f/pytorch_geometric-0.0.2.tar.gz", hash = "sha256:68cce81bf1338f93d79dd66c9e8d9b3bb7bff283d8f8009e7fa34f156a739cb0", size = 4761, upload-time = "2026-04-02T11:19:54.943Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/f5/dc/7b24d31828aa2acebe6ca3fc21b780867c8ee10da7fb9280af58bf96760b/pytorch_geometric-0.0.2-py3-none-any.whl", hash = "sha256:4b030fe692e4db90e17d09137390ad4f7b994b6e46f735028071874523d1f212", size = 5289, upload-time = "2026-04-02T11:19:53.486Z" },
 ]
 
 [[package]]
@@ -4368,13 +4379,17 @@ dependencies = [
 requires-dist = [
     { name = "expression", specifier = ">=5.6.0" },
     { name = "loguru", specifier = ">=0.7.3" },
+    { name = "matplotlib", marker = "extra == 'figures'", specifier = ">=3.11.0" },
     { name = "networkx", specifier = ">=3.5" },
     { name = "numpy", specifier = ">=2.3.2" },
     { name = "pydantic", specifier = ">=2.13.3" },
     { name = "pytest", specifier = ">=8.4.1" },
+    { name = "pyyaml", marker = "extra == 'yaml'", specifier = ">=6.0" },
     { name = "rich", specifier = ">=14.1.0" },
+    { name = "seaborn", marker = "extra == 'figures'", specifier = ">=0.13.2" },
     { name = "tomli-w", specifier = ">=1.2.0" },
 ]
+provides-extras = ["figures", "yaml"]
 
 [[package]]
 name = "uvicorn"

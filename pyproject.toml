@@ -25,6 +25,7 @@ dependencies = [
   "zarr>=3.2.1",
   "dask>=2026.6.0",
   "scikit-learn>=1.9.0",
+  "pytorch-geometric>=0.0.2",
 ]
 
 [build-system]
