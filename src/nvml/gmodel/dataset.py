@@ -1,3 +1,4 @@
+import shutil
 from pathlib import Path
 from typing import NamedTuple
 
@@ -48,6 +49,32 @@ class FlowGraphDataset(Dataset):
         self.cfg = cfg
         self.save_loc = save_loc
         self.make_case_name_map()
+        # will be looking for raw_data in the raw_data_dir, so update the config datastore
+        # self.cfg.data_store = self.raw_data_dir
+
+    @property
+    def raw_data_dir(self):
+        return self.save_loc / "raw"
+
+    @property
+    def processed_data_dir(self):
+        return self.save_loc / "processed"
+
+    @property
+    def raw_file_names(self):
+        return [str(self.raw_data_dir / i) for i in self.cfg.case_names]
+
+    @property
+    def processed_file_names(self):
+        return [
+            str(self.processed_data_dir / GModelNames(i).processed_data)
+            for i in self.case_name_map.values()
+        ]
+
+    @property
+    def download(self):
+        # copy over the contents of the folder, redirect the cfg (later..)
+        shutil.copytree(self.cfg.data_store, self.raw_data_dir)
 
     def make_case_name_map(self):
         sorted_case_names = sorted(self.cfg.case_names)
@@ -57,7 +84,7 @@ class FlowGraphDataset(Dataset):
     def process(self):
         # to keep idx => case_name map constant, sort first
         for case_name in self.case_name_map.values():
-            graph_to_torch_data(self.cfg, case_name, self.save_loc)
+            graph_to_torch_data(self.cfg, case_name, self.processed_data_dir)
 
     def len(self):
         return len(self.case_name_map.values())
