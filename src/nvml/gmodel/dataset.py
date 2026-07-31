@@ -44,15 +44,9 @@ def graph_to_torch_data(cfg: MakeConfig, case_name: str, save_loc: Path):
 
 class FlowGraphDataset(Dataset):
     def __init__(self, cfg: MakeConfig, save_loc: Path):
-
-        # TODO: try to use more of their domain language, ie "root" => look at the docs
         self.cfg = cfg
-        # self.root = save_loc
         self.make_case_name_map()
-
         super().__init__(root=str(save_loc))
-        # will be looking for raw_data in the raw_data_dir, so update the config datastore
-        # self.cfg.data_store = self.raw_data_dir
 
     @property
     def raw_file_names(self):
@@ -64,8 +58,6 @@ class FlowGraphDataset(Dataset):
         return [str(GModelNames(i).processed_data) for i in self.case_name_map.values()]
 
     def download(self):
-        # copy over the contents of the folder, redirect the cfg (later..)
-        # TODO: make sure these have matching names to what is needed..
         shutil.copytree(self.cfg.data_store, self.raw_dir, dirs_exist_ok=True)
 
     def make_case_name_map(self):
@@ -74,7 +66,6 @@ class FlowGraphDataset(Dataset):
         self.case_name_map = d
 
     def process(self):
-        # to keep idx => case_name map constant, sort first
         for case_name in self.case_name_map.values():
             graph_to_torch_data(
                 self.cfg, case_name, Path(self.processed_dir)
@@ -84,8 +75,5 @@ class FlowGraphDataset(Dataset):
         return len(self.case_name_map.values())
 
     def get(self, idx: int):
-        # case_name = self.case_name_map[idx]
         path = self.processed_paths[idx]
-        # path = self.root / GModelNames(case_name).processed_data
-        data = torch.load(path)
-        return data
+        return torch.load(path, weights_only=False)

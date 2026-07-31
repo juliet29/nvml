@@ -17,3 +17,10 @@ def fc():
 def fd():
     logger.debug(StudyPaths.data.gnn)
     return FlowGraphDataset(cfg, StudyPaths.data.gnn)
+
+
+@gmod.command()
+def fda():
+    gds = FlowGraphDataset(cfg, StudyPaths.data.gnn)
+    logger.debug(gds.indices())
+    return gds.num_classes
