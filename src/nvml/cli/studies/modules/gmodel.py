@@ -1,4 +1,5 @@
 from cyclopts import App
+from loguru import logger
 
 from nvml.cli.studies.helpers import CASE_NAME, cfg
 from nvml.cli.studies.study_paths import StudyPaths
@@ -14,4 +15,5 @@ def fc():
 
 @gmod.command()
 def fd():
+    logger.debug(StudyPaths.data.gnn)
     return FlowGraphDataset(cfg, StudyPaths.data.gnn)

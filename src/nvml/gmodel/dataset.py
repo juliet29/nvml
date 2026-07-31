@@ -3,6 +3,7 @@ from pathlib import Path
 from typing import NamedTuple
 
 import torch
+from loguru import logger
 from plyze.flow_graph.create.main import make_flow_graph
 from torch_geometric.data import Dataset
 from torch_geometric.utils import from_networkx
@@ -43,38 +44,29 @@ def graph_to_torch_data(cfg: MakeConfig, case_name: str, save_loc: Path):
 
 class FlowGraphDataset(Dataset):
     def __init__(self, cfg: MakeConfig, save_loc: Path):
-        super().__init__()
 
         # TODO: try to use more of their domain language, ie "root" => look at the docs
         self.cfg = cfg
-        self.save_loc = save_loc
+        # self.root = save_loc
         self.make_case_name_map()
+
+        super().__init__(root=str(save_loc))
         # will be looking for raw_data in the raw_data_dir, so update the config datastore
         # self.cfg.data_store = self.raw_data_dir
 
     @property
-    def raw_data_dir(self):
-        return self.save_loc / "raw"
-
-    @property
-    def processed_data_dir(self):
-        return self.save_loc / "processed"
-
-    @property
     def raw_file_names(self):
-        return [str(self.raw_data_dir / i) for i in self.cfg.case_names]
+        logger.debug(self.raw_dir)
+        return list(self.cfg.case_names)
 
     @property
     def processed_file_names(self):
-        return [
-            str(self.processed_data_dir / GModelNames(i).processed_data)
-            for i in self.case_name_map.values()
-        ]
+        return [str(GModelNames(i).processed_data) for i in self.case_name_map.values()]
 
-    @property
     def download(self):
         # copy over the contents of the folder, redirect the cfg (later..)
-        shutil.copytree(self.cfg.data_store, self.raw_data_dir)
+        # TODO: make sure these have matching names to what is needed..
+        shutil.copytree(self.cfg.data_store, self.raw_dir, dirs_exist_ok=True)
 
     def make_case_name_map(self):
         sorted_case_names = sorted(self.cfg.case_names)
@@ -84,13 +76,16 @@ class FlowGraphDataset(Dataset):
     def process(self):
         # to keep idx => case_name map constant, sort first
         for case_name in self.case_name_map.values():
-            graph_to_torch_data(self.cfg, case_name, self.processed_data_dir)
+            graph_to_torch_data(
+                self.cfg, case_name, Path(self.processed_dir)
+            )  # TODO: fix
 
     def len(self):
         return len(self.case_name_map.values())
 
     def get(self, idx: int):
-        case_name = self.case_name_map[idx]
-        path = self.save_loc / GModelNames(case_name).processed_data
+        # case_name = self.case_name_map[idx]
+        path = self.processed_paths[idx]
+        # path = self.root / GModelNames(case_name).processed_data
         data = torch.load(path)
         return data
