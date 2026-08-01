@@ -14,6 +14,7 @@ from nvml.cluster.setup.multi import init_zarr, write_to_zarr
 from nvml.cluster.spectral import make_spectral
 from nvml.cluster.tsne import setup_for_clustering
 from nvml.constants import DataNames, FileNames
+from nvml.gmodel.dataset_interfaces import ClusterModelParams
 from nvml.io import get_ambient_data_as_ds
 from nvml.qdim.wind import WindDirectionBinNames
 
@@ -108,10 +109,11 @@ class Processor:
 # this is pre-load.. doesnt get saved to the graph. -> transform / pre-transform
 def save_spectal_clusters(
     save_loc: Path,
-    wind_sector: WindDirectionBinNames,
-    n_clusters: int = 2,
+    model_params: ClusterModelParams,
     random_state: int = 1204,
 ):  # TODO: make wind_sector an enum
+    wind_sector = model_params.wind_sector
+    n_clusters = model_params.n_clusters
     cluster_path = GModelNames.make_cluster_path(save_loc)
     zarr_path = cluster_path / FileNames.zarr
 

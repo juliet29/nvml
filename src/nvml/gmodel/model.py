@@ -3,15 +3,18 @@ import torch.nn.functional as F
 from torch.nn import Linear
 from torch_geometric.nn import GCNConv, global_mean_pool
 
+from nvml.gmodel.model_interfaces import GraphModelParams
+
 
 class GCN(torch.nn.Module):
-    def __init__(self, hidden_channels):
+    def __init__(self, graph_params: GraphModelParams):
         super(GCN, self).__init__()
         torch.manual_seed(12345)
-        self.conv1 = GCNConv(dataset.num_node_features, hidden_channels)
+        hidden_channels = graph_params.hidden_channels
+        self.conv1 = GCNConv(graph_params.num_node_features, hidden_channels)
         self.conv2 = GCNConv(hidden_channels, hidden_channels)
         self.conv3 = GCNConv(hidden_channels, hidden_channels)
-        self.lin = Linear(hidden_channels, dataset.num_classes)
+        self.lin = Linear(hidden_channels, graph_params.num_classes)
 
     def forward(self, x, edge_index, batch):
         # 1. Obtain node embeddings

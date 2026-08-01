@@ -5,33 +5,42 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 from loguru import logger
-from torch.utils.data import DataLoader
+from torch_geometric.loader import DataLoader
 
 from nvml.cli.config import MakeConfig
+from nvml.constants import FileNames
 from nvml.gmodel.dataset import FlowGraphDataset
-from nvml.gmodel.interfaces import ModelAndDetails, ModelTracker, SplitDataLoaders
+from nvml.gmodel.dataset_interfaces import ClusterModelParams
 from nvml.gmodel.model import GCN
-from nvml.qdim.wind import WindDirectionBinNames
+from nvml.gmodel.model_interfaces import (
+    GraphModelParams,
+    ModelAndDetails,
+    ModelTracker,
+    SplitDataLoaders,
+)
 
 
-def prep_data(
+def load_data(
     cfg: MakeConfig,
     save_loc: Path,
-    wind_sector: WindDirectionBinNames,
-    n_clusters: int,
+    model_params: ClusterModelParams,
+):
+    ds = FlowGraphDataset(cfg, save_loc)
+    ds.cluster(model_params)
+    return ds
+
+
+def split_data(
+    ds: FlowGraphDataset,
     batch_size: int,
     n_train: int,
 ):
-    ds = FlowGraphDataset(cfg, save_loc)
-
-    # creates and save clustering model that will hold labels for each graph
-    ds.cluster(wind_sector, n_clusters)
-
+    assert isinstance(ds, FlowGraphDataset)
     # breaks potential bias due to similarities in adjacent data
-    ds = ds.shuffle()
+    dss = ds.shuffle()
 
-    train_ds = ds[:n_train]
-    test_ds = ds[n_train:]
+    train_ds = dss[:n_train]
+    test_ds = dss[n_train:]
 
     train_loader = DataLoader(train_ds, batch_size=batch_size, shuffle=True)
     test_loader = DataLoader(test_ds, batch_size=batch_size, shuffle=False)
@@ -39,11 +48,11 @@ def prep_data(
     return SplitDataLoaders(train_loader, test_loader)
 
 
-def init_model(hidden_channels: int):
+def init_model(graph_params: GraphModelParams):
     """
-    hidden_channels: != batch_size
+    hidden_channels: != batch_size: usually a power of 2, 2^4=16, 2^5=32, ...
     """
-    model = GCN(hidden_channels)
+    model = GCN(graph_params)
 
     # 3. Define loss function and optimizer
 
@@ -52,6 +61,8 @@ def init_model(hidden_channels: int):
     return ModelAndDetails(model, criterion, optimizer)
 
 
+# even more of a util
+# TODO: split utils and runners
 def log_progress(epoch, epochs, mt: ModelTracker, elapsed: float):
     if (epoch + 1) % 10 == 0:
         logger.info(
@@ -60,10 +71,13 @@ def log_progress(epoch, epochs, mt: ModelTracker, elapsed: float):
         )
 
 
-def train_model(train_ds: FlowGraphDataset, mad: ModelAndDetails, epochs: int = 100):
+def train_model(
+    train_loader: DataLoader, mad: ModelAndDetails, save_loc: Path, epochs: int = 100
+):
 
-    def handle_batch(X, y):
-        logits = mad.model(X)
+    def handle_batch(batch):
+        logits = mad.model(batch.x, batch.edge_index, batch.batch)
+        y = batch.y
         loss = mad.criterion(logits, y)
 
         mad.optimizer.zero_grad()
@@ -74,33 +88,42 @@ def train_model(train_ds: FlowGraphDataset, mad: ModelAndDetails, epochs: int = 
         mt.update_correct(logits, y)
         mt.update_seen(y)
 
-    loader = DataLoader(train_ds, batch_size=32, shuffle=True)
-
     mad.model.train()
     mt = ModelTracker()
 
     for epoch in range(epochs):
         mt.reset()
         start = time.perf_counter()
-        for X, y in loader:
-            handle_batch(X, y)
+        for batch in train_loader:
+            handle_batch(batch)
         log_progress(epoch, epochs, mt, time.perf_counter() - start)
 
+    mad.save_model_state(save_loc)
 
-def inspect_model(mad: ModelAndDetails):
+
+def load_model_state(save_loc: Path, graph_params: GraphModelParams):
+    p = save_loc / "models" / FileNames.gnn
+    state_dict = torch.load(p, weights_only=True)
+
+    model = GCN(graph_params)
+    model.load_state_dict(state_dict)
+    return model
+
+
+def inspect_model(model: GCN):
     # 5. Inspect learned parameters
-    [w, b] = mad.model.parameters()
+    [w, b] = model.parameters()
     print(f"Learned Weight: {w[0][0].item():.4f}, Learned Bias: {b[0].item():.4f}")
 
 
 @torch.no_grad()
-def evaluate(test_ds: FlowGraphDataset, mad: ModelAndDetails):
-    loader = DataLoader(test_ds, batch_size=64)
+def evaluate(test_loader: DataLoader, model: GCN):
 
-    mad.model.eval()
+    model.eval()
     mt = ModelTracker()
-    for X, y in loader:
-        logits = mad.model(X)
+    for batch in test_loader:
+        logits = model(batch.x, batch.edge_index, batch.batch)
+        y = batch.y
         mt.update_correct(logits, y)
         mt.update_seen(y)
 

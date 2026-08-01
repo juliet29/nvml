@@ -49,3 +49,6 @@ class FileNames:
     ambient = "ambient.nc"
     general_nc = "out.nc"
     general_fig = "out.png"
+
+    # nn
+    gnn = "gnn.pt"

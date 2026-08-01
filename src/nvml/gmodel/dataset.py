@@ -2,14 +2,15 @@ import shutil
 from pathlib import Path
 
 import torch
+import torch_geometric.transforms as T
 import xarray as xr
 from loguru import logger
 from torch_geometric.data import Data, Dataset
 
 from nvml.cli.config import MakeConfig
 from nvml.constants import DataNames
+from nvml.gmodel.dataset_interfaces import ClusterModelParams
 from nvml.gmodel.processing import GModelNames, Processor, save_spectal_clusters
-from nvml.qdim.wind import WindDirectionBinNames
 
 # TODO: create a dataset that matches with the pytorch_geometric interface based on plyze.
 # will probably have multiple datasets based on the different models want to run
@@ -51,6 +52,7 @@ class FlowGraphDataset(Dataset):
         self.cluster_path: Path | None = None
 
         def transform_fx(data: Data):
+            data = T.Constant()(data)
             data = assign_cluster_label_to_data(
                 data, path_to_clustering_model=self.cluster_path
             )
@@ -81,9 +83,9 @@ class FlowGraphDataset(Dataset):
         pr = Processor(self.cfg, Path(self.processed_dir), self.case_names)
         pr.write_all()
 
-    def cluster(self, wind_sector: WindDirectionBinNames, n_clusters: int):
+    def cluster(self, model_params: ClusterModelParams):
         path, retained_case_names = save_spectal_clusters(
-            Path(self.processed_dir), wind_sector, n_clusters
+            Path(self.processed_dir), model_params
         )
         # update case names.
         self.cluster_path = path
