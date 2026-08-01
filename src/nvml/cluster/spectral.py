@@ -6,11 +6,16 @@ from nvml.constants import DataNames as dn
 RANDOM_STATE = 1
 
 
-def make_spectral(da: xr.DataArray, wind_sector: str):
+def make_spectral(
+    da: xr.DataArray,
+    wind_sector: str,
+    n_clusters: int = 2,
+    random_state: int = RANDOM_STATE,
+):
     X = da.sel({dn.wind_sector: wind_sector}).values
 
     clustering = SpectralClustering(
-        n_clusters=2, random_state=RANDOM_STATE, assign_labels="cluster_qr"
+        n_clusters=n_clusters, random_state=random_state, assign_labels="cluster_qr"
     ).fit(X)
     labels = clustering.labels_
     return xr.DataArray(

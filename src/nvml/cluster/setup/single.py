@@ -2,6 +2,7 @@ from pathlib import Path
 
 import numpy as np
 import xarray as xr
+from plyze.flow_graph.interfaces import FlowGraph
 
 from nvml.constants import DataNames as dn
 from nvml.io import graph_to_ds
@@ -9,7 +10,7 @@ from nvml.io import graph_to_ds
 
 # TODO: think about if there are ways to parralelize graph reading..
 def make_space_name_by_wind_sector_da(
-    case_name: str, graph_path: Path, ambient_ds: xr.Dataset
+    case_name: str, graph_path: Path | FlowGraph, ambient_ds: xr.Dataset
 ):
 
     qoi_ds = graph_to_ds(graph_path)

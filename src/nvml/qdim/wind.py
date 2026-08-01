@@ -1,4 +1,5 @@
 from pathlib import Path
+from typing import Literal, get_args
 
 import pandas as pd
 import polars as pl
@@ -18,10 +19,12 @@ from nvml.qdim.incident import (
 from nvml.qdim.intext import get_normals_for_windows_across_zones, make_int_ext_series
 from nvml.utils import save_seaborn_fig, xr_to_polars
 
+WIND_DIRECTION_NAMES = Literal["N", "NE", "E", "SE", "S", "SW", "W", "NW"]
+
 
 class WindDirectionBins:
     edges = [0, 45, 90, 135, 180, 225, 270, 315, 360]
-    labels = ["N", "NE", "E", "SE", "S", "SW", "W", "NW"]
+    labels = get_args(WIND_DIRECTION_NAMES)
 
 
 def add_wind_sector_coord(ds: xr.Dataset):

@@ -2,10 +2,12 @@ from pathlib import Path
 
 import numpy as np
 import xarray as xr
+from plyze.flow_graph.interfaces import FlowGraph
 
-from nvml.cluster.assemble import make_space_name_by_wind_sector_da
+from nvml.cluster.setup.single import make_space_name_by_wind_sector_da
 from nvml.constants import DataNames as dn
 from nvml.constants import FileNames
+from nvml.io import get_ambient_data_as_ds
 from nvml.qdim.wind import WindDirectionBins, wind_sector_as_categorical
 from nvml.utils import make_dir
 
@@ -33,11 +35,13 @@ def init_zarr(savedir: Path, case_names: list[str]):
 def write_to_zarr(
     case_name: str,
     zarr_path: Path,
-    graph_path: Path,
-    ambient_ds_path: Path,
+    graph: Path | FlowGraph,
+    ambient_ds_or_sql_path: Path | xr.Dataset,
 ):
-    ambient_ds = xr.open_dataset(ambient_ds_path).pipe(wind_sector_as_categorical)
-    da = make_space_name_by_wind_sector_da(case_name, graph_path, ambient_ds)
+    ambient_ds = get_ambient_data_as_ds(ambient_ds_or_sql_path).pipe(
+        wind_sector_as_categorical
+    )
+    da = make_space_name_by_wind_sector_da(case_name, graph, ambient_ds)
     da = (
         da.reindex(
             {

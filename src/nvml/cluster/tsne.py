@@ -24,7 +24,7 @@ def sort_da_values(da: xr.DataArray, dim: str):
     )
 
 
-def setup_tsne(path: Path):
+def setup_for_clustering(path: Path, max_space_ix: int = 5):
     ds = xr.open_zarr(path)
     da = ds[dn.q_dim_median].load()
 
@@ -32,7 +32,7 @@ def setup_tsne(path: Path):
         da.transpose(dn.wind_sector, dn.case_name, dn.space_ix)
         .dropna(dim=dn.wind_sector, how="all")
         .pipe(sort_da_values, dim=dn.space_ix)
-        .isel({dn.space_ix: slice(None, 5)})
+        .isel({dn.space_ix: slice(None, max_space_ix)})
         .dropna(dim=dn.case_name, how="any")
     )
     return da5

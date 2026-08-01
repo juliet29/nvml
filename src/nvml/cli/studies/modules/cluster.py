@@ -1,8 +1,8 @@
 from cyclopts import App
-
 from nvml.cli.studies.paths import ProjectPaths
+
 from nvml.cluster.spectral import make_spectral, plot_cluster_on_data
-from nvml.cluster.tsne import make_tsne, plot_tsne, setup_tsne
+from nvml.cluster.tsne import make_tsne, plot_tsne, setup_for_clustering
 from nvml.constants import FileNames
 from nvml.utils import make_dir
 
@@ -12,14 +12,14 @@ WIND_DIR = "N"
 
 def fc():
     path = ProjectPaths.data.qdim_test / FileNames.zarr
-    da = setup_tsne(path)
+    da = setup_for_clustering(path)
     return da
 
 
 @cluster.command()
 def fda():
     path = ProjectPaths.data.qdim_test / FileNames.zarr
-    da = setup_tsne(path)
+    da = setup_for_clustering(path)
     Y = make_tsne(da, WIND_DIR)
     p = ProjectPaths.data.tsne / FileNames.general_nc
     make_dir(p)
@@ -37,7 +37,7 @@ def fe():
 @cluster.command()
 def ff():
     path = ProjectPaths.data.qdim_test / FileNames.zarr
-    da = setup_tsne(path)
+    da = setup_for_clustering(path)
     labels = make_spectral(da, WIND_DIR)
     return labels
 
