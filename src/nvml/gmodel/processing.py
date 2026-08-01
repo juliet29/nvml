@@ -65,9 +65,15 @@ class Processor:
     @property
     def graphs(self):
         def load(case_name):
-            return make_flow_graph(
-                self.cfg.make_case_data(case_name), self.cfg.cardinal_expansion_factor
-            )
+            try:
+                g = make_flow_graph(
+                    self.cfg.make_case_data(case_name),
+                    self.cfg.cardinal_expansion_factor,
+                )
+            except Exception:
+                logger.debug(f"Error when loading graph {case_name}: e")
+                raise RuntimeError("Error when loading graphs")
+            return g
 
         return [load(i) for i in self.case_names]
 
@@ -110,9 +116,10 @@ def save_spectal_clusters(
     zarr_path = cluster_path / FileNames.zarr
 
     da = setup_for_clustering(zarr_path)
+    retained_cases = da[DataNames.case_name].values.tolist()
     model = make_spectral(da, wind_sector, n_clusters, random_state)
 
     path = GModelNames.make_cluster_name(cluster_path, wind_sector, n_clusters)
     # TODO: use a named tuple for hyperparams, save in a metadata folder..
     model.to_netcdf(path)
-    return path
+    return path, retained_cases

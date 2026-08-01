@@ -1,7 +1,7 @@
 from cyclopts import App
 from icecream import ic
-from loguru import logger
 
+from nvml.cli.config import CONFIGS_DICT
 from nvml.cli.studies.helpers import cfg
 from nvml.cli.studies.study_paths import StudyPaths
 from nvml.gmodel.dataset import FlowGraphDataset
@@ -17,18 +17,23 @@ def fc():
 
 @gmod.command()
 def fd():
-    logger.debug(StudyPaths.data.gnn)
-    return FlowGraphDataset(cfg, StudyPaths.data.gnn)
+    # test dataset
+    return FlowGraphDataset(cfg, StudyPaths.data.gnn.test)
 
 
 @gmod.command()
-def fda():
-    gds = FlowGraphDataset(cfg, StudyPaths.data.gnn)  # test process
-    gds.cluster("N", 2)
-    [i for i in gds]
+def fe():
+
+    cfg = CONFIGS_DICT["case50"]
+    gds = FlowGraphDataset(cfg, StudyPaths.data.gnn.case50)  # test process
+
+    ic(gds.len())
+    gds.cluster("N", 3)
+    # [i for i in gds]
     ic(gds.num_features)
 
     ic(gds.num_classes)
+    ic(gds.len())
     # data = gds[0]
     #
 

@@ -14,13 +14,20 @@ class Figures:
     tsne = base / "tsne/tests"
 
 
+class GraphModels:
+    base = PATH_TO_TEMP / "gnn"
+    test = base / "tests"
+    case50 = base / "case50"
+
+
 class Data:
     base = PATH_TO_TEMP
     graphs_jun24 = base / "jun24"
     graphs_jun30 = base / "jun30"
     qdim_test = base / "qdim/tests"
     tsne = base / "tsne/tests"
-    gnn = base / "gnn/tests"
+    gnn = GraphModels
+    # gnn = base / "gnn/tests"
 
 
 class StudyPaths:  # for now assuming all are temp

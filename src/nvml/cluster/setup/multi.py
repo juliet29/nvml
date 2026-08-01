@@ -40,7 +40,7 @@ def write_to_zarr(
 ):
     ambient_ds = get_ambient_data_as_ds(ambient_ds_or_sql_path).pipe(
         add_wind_sector_coord
-    )
+    )  # TODO: should pass this dataset directly..
     da = make_space_name_by_wind_sector_da(case_name, graph, ambient_ds)
     da = (
         da.reindex(
