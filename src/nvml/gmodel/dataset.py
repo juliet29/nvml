@@ -24,12 +24,34 @@ from nvml.qdim.wind import WindDirectionBinNames
 # finish reading explainer epaper which probably details how can know if exolanation is good
 
 
+def assign_cluster_label_to_data(data: Data, path_to_clustering_model: Path | None):
+    ic(f"Being trasnsformed | before {data}")
+    if not path_to_clustering_model:
+        raise Exception("Need to cluster!")
+    da = xr.open_dataarray(path_to_clustering_model)
+    case_name = data[DataNames.case_name]
+    class_idx = da.sel({DataNames.case_name: case_name}).data
+    # ic(class_idx)
+    data[DataNames.label] = torch.tensor(class_idx, dtype=torch.long)
+    ic(f"After: {data}")
+    return data
+
+
 class FlowGraphDataset(Dataset):
     def __init__(self, cfg: MakeConfig, save_loc: Path, force_reload: bool = False):
         self.cfg = cfg
         self.case_names = self.get_case_names()
         self.cluster_path: Path | None = None
-        super().__init__(root=str(save_loc), force_reload=force_reload)
+
+        def transform_fx(data: Data):
+            data = assign_cluster_label_to_data(
+                data, path_to_clustering_model=self.cluster_path
+            )
+            return data
+
+        super().__init__(
+            root=str(save_loc), force_reload=force_reload, transform=transform_fx
+        )
 
     @property
     def raw_file_names(self):
@@ -54,14 +76,6 @@ class FlowGraphDataset(Dataset):
     def cluster(self, wind_sector: WindDirectionBinNames, n_clusters: int):
         path = save_spectal_clusters(Path(self.processed_dir), wind_sector, n_clusters)
         self.cluster_path = path
-
-    def transform(self, data: Data):
-        if not self.cluster_path:
-            raise Exception("Need to cluster!")
-        da = xr.open_dataarray(self.cluster_path)
-        case_name = data[DataNames.case_name]
-        class_idx = da.sel({DataNames.label: case_name})
-        data[DataNames.label] = torch.tensor([class_idx], dtype=torch.long)
 
     def len(self):
         return len(self.case_names)

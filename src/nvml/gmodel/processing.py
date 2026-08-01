@@ -113,5 +113,6 @@ def save_spectal_clusters(
     model = make_spectral(da, wind_sector, n_clusters, random_state)
 
     path = GModelNames.make_cluster_name(cluster_path, wind_sector, n_clusters)
+    # TODO: use a named tuple for hyperparams, save in a metadata folder..
     model.to_netcdf(path)
     return path
