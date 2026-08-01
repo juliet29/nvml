@@ -14,7 +14,9 @@ from nvml.cli.config import MakeConfig
 from nvml.cluster.setup.multi import init_zarr, write_to_zarr
 from nvml.cluster.spectral import make_spectral
 from nvml.cluster.tsne import setup_for_clustering
+from nvml.constants import DataNames
 from nvml.io import get_ambient_data_as_ds
+from nvml.qdim.wind import WindDirectionBinNames
 
 
 class GModelNames(NamedTuple):
@@ -22,6 +24,11 @@ class GModelNames(NamedTuple):
 
     def make_processed_data_name(self, case_name: str):
         return f"data_{case_name}.pt"
+
+    def make_cluster_name(
+        self, zarr_path: Path, wind_direction: WindDirectionBinNames, n_clusters: int
+    ):
+        return zarr_path.parent / f"specrtral_model_{wind_direction}_{n_clusters}.nc"
 
 
 @dataclass
@@ -36,6 +43,7 @@ class Processor:
 
     @property
     def zarr_path(self):
+        make_dir(self.save_loc)
         return self.save_loc / GModelNames.zarr_name
 
     @property
@@ -64,7 +72,7 @@ class Processor:
 
     def write_one_to_torch(self, graph: FlowGraph, case_name: str):
         torch_data = from_networkx(graph)
-        make_dir(self.save_loc)
+        torch_data[DataNames.case_name] = case_name
         torch.save(
             torch_data, self.save_loc / GModelNames(case_name).make_processed_data_name
         )
@@ -79,9 +87,14 @@ class Processor:
 
 
 # this is pre-load.. doesnt get saved to the graph. -> transform / pre-transform
-def cluster(
-    zarr_path: Path, wind_sector: str, n_clusters: int = 2, random_state: int = 1204
+def save_spectal_clusters(
+    zarr_path: Path,
+    wind_sector: WindDirectionBinNames,
+    n_clusters: int = 2,
+    random_state: int = 1204,
 ):  # TODO: make wind_sector an enum
     da = setup_for_clustering(zarr_path)
     model = make_spectral(da, wind_sector, n_clusters, random_state)
-    pass
+    path = GModelNames().make_cluster_name(zarr_path, wind_sector, n_clusters)
+    model.to_netcdf(path)
+    return path
