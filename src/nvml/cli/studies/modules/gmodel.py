@@ -1,16 +1,19 @@
 from cyclopts import App
 from loguru import logger
 
-from nvml.cli.studies.helpers import CASE_NAME, cfg
+from nvml.cli.studies.helpers import cfg
 from nvml.cli.studies.study_paths import StudyPaths
-from nvml.gmodel.dataset import FlowGraphDataset, graph_to_torch_data
+from nvml.gmodel.dataset import FlowGraphDataset
+from nvml.io import get_ambient_data_as_ds
+from nvml.qdim.wind import add_wind_sector_coord
 
 gmod = App("gmod")
 
 
 @gmod.command()
 def fc():
-    return graph_to_torch_data(cfg, CASE_NAME, StudyPaths.data.gnn)
+    pass
+    # return graph_to_torch_data(cfg, CASE_NAME, StudyPaths.data.gnn)
 
 
 @gmod.command()
@@ -21,6 +24,16 @@ def fd():
 
 @gmod.command()
 def fda():
-    gds = FlowGraphDataset(cfg, StudyPaths.data.gnn)
-    logger.debug(gds.indices())
-    return gds.num_classes
+    gds = FlowGraphDataset(cfg, StudyPaths.data.gnn, force_reload=True)  # test process
+    gds.cluster("N", 2)
+
+
+@gmod.command()
+def fdaa():
+    path = cfg.get_one_case_data(0).sql
+
+    ambient_ds = (
+        get_ambient_data_as_ds(path).pipe(add_wind_sector_coord)
+        # .pipe(wind_sector_as_categorical)
+    )
+    return ambient_ds

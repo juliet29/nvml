@@ -45,6 +45,7 @@ def wind_sector_as_str(ds: xr.Dataset):
 
 
 def wind_sector_as_categorical(ds: xr.Dataset):
+    logger.debug(ds)
     da = ds[dn.wind_sector]
     cat = pd.Categorical(da.values, categories=WindDirectionBins.labels, ordered=True)
     return ds.assign_coords({dn.wind_sector: (da.dims, cat)})

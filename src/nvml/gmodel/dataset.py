@@ -3,12 +3,13 @@ from pathlib import Path
 
 import torch
 import xarray as xr
-from loguru import logger
+from icecream import ic
 from torch_geometric.data import Data, Dataset
 
 from nvml.cli.config import MakeConfig
 from nvml.constants import DataNames
 from nvml.gmodel.processing import GModelNames, Processor, save_spectal_clusters
+from nvml.qdim.wind import WindDirectionBinNames
 
 # TODO: create a dataset that matches with the pytorch_geometric interface based on plyze.
 # will probably have multiple datasets based on the different models want to run
@@ -24,15 +25,14 @@ from nvml.gmodel.processing import GModelNames, Processor, save_spectal_clusters
 
 
 class FlowGraphDataset(Dataset):
-    def __init__(self, cfg: MakeConfig, save_loc: Path):
+    def __init__(self, cfg: MakeConfig, save_loc: Path, force_reload: bool = False):
         self.cfg = cfg
         self.case_names = self.get_case_names()
         self.cluster_path: Path | None = None
-        super().__init__(root=str(save_loc))
+        super().__init__(root=str(save_loc), force_reload=force_reload)
 
     @property
     def raw_file_names(self):
-        logger.debug(self.raw_dir)
         return list(self.cfg.case_names)
 
     @property
@@ -46,13 +46,13 @@ class FlowGraphDataset(Dataset):
         shutil.copytree(self.cfg.data_store, self.raw_dir, dirs_exist_ok=True)
 
     def process(self):
+        ic(self.processed_dir)
+        # breakpoint()
         pr = Processor(self.cfg, Path(self.processed_dir), self.case_names)
         pr.write_all()
 
-    def cluster(self, wind_sector, n_clusters):
-        path = save_spectal_clusters(
-            Path(self.processed_dir) / GModelNames.zarr_name, wind_sector, n_clusters
-        )
+    def cluster(self, wind_sector: WindDirectionBinNames, n_clusters: int):
+        path = save_spectal_clusters(Path(self.processed_dir), wind_sector, n_clusters)
         self.cluster_path = path
 
     def transform(self, data: Data):

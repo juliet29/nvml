@@ -8,7 +8,7 @@ from nvml.cluster.setup.single import make_space_name_by_wind_sector_da
 from nvml.constants import DataNames as dn
 from nvml.constants import FileNames
 from nvml.io import get_ambient_data_as_ds
-from nvml.qdim.wind import WindDirectionBins, wind_sector_as_categorical
+from nvml.qdim.wind import WindDirectionBins, add_wind_sector_coord
 from nvml.utils import make_dir
 
 MAX_SPACES_PER_CASE = 100  # pre-allocate; no case has this many rooms
@@ -20,7 +20,7 @@ def init_zarr(savedir: Path, case_names: list[str]):
     )
     dims = [dn.wind_sector, dn.space_ix, dn.case_name]
     coords = {
-        dn.wind_sector: WindDirectionBins.labels,
+        dn.wind_sector: list(WindDirectionBins.labels),
         dn.space_ix: np.arange(MAX_SPACES_PER_CASE),
         dn.case_name: case_names,
     }
@@ -39,7 +39,7 @@ def write_to_zarr(
     ambient_ds_or_sql_path: Path | xr.Dataset,
 ):
     ambient_ds = get_ambient_data_as_ds(ambient_ds_or_sql_path).pipe(
-        wind_sector_as_categorical
+        add_wind_sector_coord
     )
     da = make_space_name_by_wind_sector_da(case_name, graph, ambient_ds)
     da = (
