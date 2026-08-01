@@ -1,4 +1,5 @@
 from cyclopts import App
+from icecream import ic
 from loguru import logger
 
 from nvml.cli.studies.helpers import cfg
@@ -24,6 +25,11 @@ def fd():
 def fda():
     gds = FlowGraphDataset(cfg, StudyPaths.data.gnn)  # test process
     gds.cluster("N", 2)
-    data = gds[0]
+    [i for i in gds]
+    ic(gds.num_features)
+
+    ic(gds.num_classes)
+    # data = gds[0]
+    #
 
     # gds.transform(data)

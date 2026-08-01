@@ -36,6 +36,7 @@ class DataNames:
 
     # clustering
     label = "label"
+    torch_geometric_graph_label = "y"
 
 
 class FileNames:

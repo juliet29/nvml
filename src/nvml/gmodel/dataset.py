@@ -25,15 +25,17 @@ from nvml.qdim.wind import WindDirectionBinNames
 
 
 def assign_cluster_label_to_data(data: Data, path_to_clustering_model: Path | None):
-    ic(f"Being trasnsformed | before {data}")
+    # ic(f"Being trasnsformed | before {data}")
     if not path_to_clustering_model:
         raise Exception("Need to cluster!")
     da = xr.open_dataarray(path_to_clustering_model)
     case_name = data[DataNames.case_name]
-    class_idx = da.sel({DataNames.case_name: case_name}).data
+    class_idx = da.sel({DataNames.case_name: case_name}).data.reshape(1)
     # ic(class_idx)
-    data[DataNames.label] = torch.tensor(class_idx, dtype=torch.long)
-    ic(f"After: {data}")
+    data[DataNames.torch_geometric_graph_label] = torch.tensor(
+        class_idx, dtype=torch.long
+    )
+    # ic(f"After: {data}")
     return data
 
 
