@@ -10,12 +10,10 @@ from tqdm import tqdm
 
 from nvml.cli.config.config import MakeConfig
 from nvml.cli.config.cstore import CONFIGS_DICT, config_names
+from nvml.logs import silence_plan2eplus_logging
+from nvml.utils import default_worker_count
 
 create = App("create")
-
-
-def silence_plan2eplus_logging():
-    logger.disable("plan2eplus")
 
 
 def build_flow_graph_for_case(config: MakeConfig, case: str):
@@ -38,8 +36,9 @@ def make_flow_graphs(
         logger.info(f"Skipping {skipped_count} cases with existing graphs")
 
     failures = []
+    max_workers = workers if workers is not None else default_worker_count()
     with ProcessPoolExecutor(
-        max_workers=workers, initializer=silence_plan2eplus_logging
+        max_workers=max_workers, initializer=silence_plan2eplus_logging
     ) as executor:
         case_by_future = {
             executor.submit(build_flow_graph_for_case, config, case): case

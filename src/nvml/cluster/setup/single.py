@@ -7,6 +7,8 @@ from plyze.flow_graph.interfaces import FlowGraph
 from nvml.constants import DataNames as dn
 from nvml.io import graph_to_ds
 
+MIN_SPACES_FOR_GROUPING = 2
+
 
 # TODO: think about if there are ways to parralelize graph reading..
 def make_space_name_by_wind_sector_da(
@@ -18,7 +20,13 @@ def make_space_name_by_wind_sector_da(
     # TODO: move this check higher, but since q_dim diveides by velocity, we get infinity whenever U = 0
     q_dim = qoi_ds[dn.zone_dimless_flow]
 
-    space_ixes = np.arange(qoi_ds[dn.space_name].size)
+    space_count = qoi_ds[dn.space_name].size
+    if space_count < MIN_SPACES_FOR_GROUPING:
+        raise ValueError(
+            f"{case_name} has {space_count} spaces; need >= {MIN_SPACES_FOR_GROUPING} "
+            "for wind-sector grouping"
+        )
+    space_ixes = np.arange(space_count)
     qds = (
         q_dim.where(np.isfinite(q_dim), other=0)
         .assign_coords({dn.space_ix: (dn.space_name, space_ixes)})

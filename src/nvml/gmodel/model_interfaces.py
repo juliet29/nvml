@@ -16,20 +16,19 @@ from nvml.gmodel.dataset import FlowGraphDataset
 
 class GraphModelParams(NamedTuple):
     hidden_channels: int
-    num_node_features: int
     num_classes: int
 
     @classmethod
     def make(cls, hidden_channels: int, ds: FlowGraphDataset):
         return cls(
             hidden_channels=hidden_channels,
-            num_node_features=ds.num_node_features,
             num_classes=ds.num_classes,
         )
 
 
 class SplitDataLoaders(NamedTuple):
     train: DataLoader
+    val: DataLoader
     test: DataLoader
 
 

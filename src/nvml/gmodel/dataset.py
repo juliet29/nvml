@@ -1,86 +1,73 @@
-import shutil
 from pathlib import Path
 
 import torch
-import torch_geometric.transforms as T
 import xarray as xr
 from loguru import logger
-from torch_geometric.data import Data, Dataset
+from torch_geometric.data import HeteroData, InMemoryDataset
 
 from nvml.cli.config.config import MakeConfig
 from nvml.constants import DataNames
 from nvml.gmodel.dataset_interfaces import ClusterModelParams
-from nvml.gmodel.processing import GModelNames, Processor, save_spectal_clusters
-
-# TODO: create a dataset that matches with the pytorch_geometric interface based on plyze.
-# will probably have multiple datasets based on the different models want to run
-#
-# need to: move temp data over to scratch, creaate a project config so remove scratch name from repo..
-# read in the graphs as flow graphs
-# associate each graph with a label based on current algo
-# trim down to the data needed..
-#
-#
-# research: best way to compare different graph data vs compare different models vs compare different hyperparams..
-# finish reading explainer epaper which probably details how can know if exolanation is good
+from nvml.gmodel.processing import Processor, save_spectal_clusters
 
 
-def assign_cluster_label_to_data(data: Data, cluster_labels: dict | None):
+def assign_cluster_label_to_data(data: HeteroData, cluster_labels: dict | None):
     if cluster_labels is None:
         raise Exception("Need to cluster!")
-    case_name = data[DataNames.case_name]
+    case_name = getattr(data, DataNames.case_name)
     class_idx = cluster_labels[case_name]
-    data[DataNames.torch_geometric_graph_label] = torch.tensor(
-        [class_idx], dtype=torch.long
+    setattr(
+        data,
+        DataNames.torch_geometric_graph_label,
+        torch.tensor([class_idx], dtype=torch.long),
     )
     return data
 
 
-class FlowGraphDataset(Dataset):
-    def __init__(self, cfg: MakeConfig, save_loc: Path, force_reload: bool = False):
+class FlowGraphDataset(InMemoryDataset):
+    def __init__(self, cfg: MakeConfig, save_loc: Path, reuse_existing: bool = True):
         logger.info(f"Initializing data that will be saved to {save_loc}")
         self.cfg = cfg
-        self.case_names = self.get_case_names()
+        self.reuse_existing = reuse_existing
+        self.all_case_names = sorted(set(cfg.case_names))
         self.cluster_path: Path | None = None
         self.cluster_labels: dict | None = None
+        self.retained_indices: list[int] = []
 
-        def transform_fx(data: Data):
-            data = T.Constant()(data)
-            data = assign_cluster_label_to_data(data, self.cluster_labels)
-            return data
+        def transform_fx(data: HeteroData):
+            return assign_cluster_label_to_data(data, self.cluster_labels)
 
-        super().__init__(
-            root=str(save_loc), force_reload=force_reload, transform=transform_fx
-        )
-
-    def get_case_names(self):
-        return sorted(set(self.cfg.case_names))
+        super().__init__(root=str(save_loc), transform=transform_fx)
+        self.load(self.processed_paths[0])
 
     @property
     def raw_file_names(self):
-        return list(set(self.case_names))
+        return []
 
     @property
     def processed_file_names(self):
-        return [GModelNames.make_processed_data_name(i) for i in self.case_names]
-
-    def download(self):
-        logger.info(f"`Downloading` data from {self.cfg.data_store}")
-        shutil.copytree(self.cfg.data_store, self.raw_dir, dirs_exist_ok=True)
+        return ["data.pt"]
 
     def process(self):
-        logger.info(f"Processing data into {self.processed_dir}")
-        # breakpoint()
-        pr = Processor(self.cfg, Path(self.processed_dir), self.case_names)
-        pr.write_all()
+        pr = Processor(
+            self.cfg, Path(self.processed_dir), self.all_case_names, self.reuse_existing
+        )
+        pr.build_all()
+
+        built_case_names = [c for c in self.all_case_names if pr.torch_path(c).exists()]
+        data_list = [
+            torch.load(pr.torch_path(c), weights_only=False) for c in built_case_names
+        ]
+        self.save(data_list, self.processed_paths[0])
+
+    def stored_case_names(self):
+        return [getattr(self.get(i), DataNames.case_name) for i in range(len(self))]
 
     def cluster(self, model_params: ClusterModelParams):
         path, retained_case_names = save_spectal_clusters(
             Path(self.processed_dir), model_params
         )
-        # update case names.
         self.cluster_path = path
-        self.case_names = sorted(retained_case_names)
 
         da = xr.open_dataarray(path)
         self.cluster_labels = {
@@ -90,9 +77,12 @@ class FlowGraphDataset(Dataset):
             )
         }
 
-    def len(self):
-        return len(self.case_names)
+        retained = set(retained_case_names) & set(self.cluster_labels)
+        self.retained_indices = [
+            ix for ix, name in enumerate(self.stored_case_names()) if name in retained
+        ]
 
-    def get(self, idx: int):
-        path = self.processed_paths[idx]
-        return torch.load(path, weights_only=False)
+    @property
+    def num_classes(self):
+        assert self.cluster_labels is not None
+        return len(set(self.cluster_labels.values()))

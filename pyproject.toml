@@ -27,6 +27,8 @@ dependencies = [
   "scikit-learn>=1.9.0",
   "pytorch-geometric>=0.0.2",
   "tqdm>=4.68.3",
+  "matplotlib>=3.11.0",
+  "matplotlib-backend-kitty>=2.1.2",
 ]
 
 [build-system]

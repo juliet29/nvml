@@ -15,8 +15,8 @@ MAX_SPACES_PER_CASE = 100  # pre-allocate; no case has this many rooms
 
 
 def init_zarr(savedir: Path, case_names: list[str]):
-    grid = np.zeros(
-        (len(WindDirectionBins.labels), MAX_SPACES_PER_CASE, len(case_names))
+    grid = np.full(
+        (len(WindDirectionBins.labels), MAX_SPACES_PER_CASE, len(case_names)), np.nan
     )
     dims = [dn.wind_sector, dn.space_ix, dn.case_name]
     coords = {

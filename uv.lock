@@ -1717,6 +1717,18 @@ wheels = [
 ]
 
 [[package]]
+name = "matplotlib-backend-kitty"
+version = "2.1.2"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "matplotlib" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/d5/74/4fa3a53439fbc50eaf7fb5056cc68b98f31f67aeaff602236dd96652779e/matplotlib-backend-kitty-2.1.2.tar.gz", hash = "sha256:ab7d17ef00186c680a989af8c9be9fc8900a505f5c107dc7d9abc67b1a57f150", size = 6298, upload-time = "2023-01-23T17:00:17.208Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/1f/90/c1770c3443ae8ba4104db158df2d6a964394553b17bc195fdccd648685ce/matplotlib_backend_kitty-2.1.2-py3-none-any.whl", hash = "sha256:6f11f1b734d64df3712539833072be6dc66e4112320974bf614d2dff5dc2e8b5", size = 6733, upload-time = "2023-01-23T17:00:16.001Z" },
+]
+
+[[package]]
 name = "mdit-py-plugins"
 version = "0.6.1"
 source = { registry = "https://pypi.org/simple" }
@@ -2256,6 +2268,8 @@ dependencies = [
     { name = "icecream" },
     { name = "loguru" },
     { name = "marimo" },
+    { name = "matplotlib" },
+    { name = "matplotlib-backend-kitty" },
     { name = "metpy" },
     { name = "plyze" },
     { name = "pytorch-geometric" },
@@ -2281,6 +2295,8 @@ requires-dist = [
     { name = "icecream", specifier = ">=2.2.0" },
     { name = "loguru", specifier = ">=0.7.3" },
     { name = "marimo", specifier = ">=0.23.11" },
+    { name = "matplotlib", specifier = ">=3.11.0" },
+    { name = "matplotlib-backend-kitty", specifier = ">=2.1.2" },
     { name = "metpy", specifier = ">=1.7.1" },
     { name = "plyze", editable = "../plyze" },
     { name = "pytorch-geometric", specifier = ">=0.0.2" },

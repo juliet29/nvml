@@ -1,9 +1,14 @@
+import os
 from pathlib import Path
 
 import polars as pl
 import seaborn.objects as so
 import xarray as xr
 from matplotlib.figure import Figure
+
+
+def default_worker_count(reserve: int = 2) -> int:
+    return max(1, (os.cpu_count() or 1) - reserve)
 
 
 def make_dir(path: Path) -> Path:
