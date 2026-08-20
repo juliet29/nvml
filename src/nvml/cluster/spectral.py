@@ -1,5 +1,6 @@
 import xarray as xr
 from sklearn.cluster import SpectralClustering
+from sklearn.metrics import silhouette_score
 
 from nvml.constants import DataNames as dn
 
@@ -22,6 +23,23 @@ def make_spectral(
         labels,
         coords={dn.case_name: da.case_name.values},
     )
+
+
+def silhouette_sweep(
+    da: xr.DataArray,
+    wind_sector: str,
+    k_values: list[int],
+    random_state: int = RANDOM_STATE,
+):
+    X = da.sel({dn.wind_sector: wind_sector}).values
+
+    scores = {}
+    for k in k_values:
+        labels = SpectralClustering(
+            n_clusters=k, random_state=random_state, assign_labels="cluster_qr"
+        ).fit_predict(X)
+        scores[k] = float(silhouette_score(X, labels))
+    return scores
 
 
 def plot_cluster_on_data(labels: xr.DataArray, da: xr.DataArray):

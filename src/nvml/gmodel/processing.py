@@ -42,6 +42,34 @@ class GModelNames:
         assert cluster_path.exists()
         return p / f"spectral_model_{wind_direction}_{n_clusters}.nc"
 
+    @classmethod
+    def make_model_name(cls, tag: str):
+        return f"gnn_{tag}.pt"
+
+    @classmethod
+    def make_best_model_name(cls, tag: str):
+        return f"gnn_best_{tag}.pt"
+
+    @classmethod
+    def make_convergence_fig_name(cls, tag: str):
+        return f"gnn_convergence_{tag}.png"
+
+    @classmethod
+    def make_cross_validation_fig_name(cls, tag: str):
+        return f"gnn_cross_validation_{tag}.png"
+
+    @classmethod
+    def make_cross_validation_convergence_fig_name(cls, tag: str):
+        return f"gnn_cross_validation_convergence_{tag}.png"
+
+    @classmethod
+    def make_confusion_fig_name(cls, tag: str):
+        return f"gnn_confusion_{tag}.png"
+
+    @classmethod
+    def make_silhouette_fig_name(cls, wind_sector: str):
+        return f"silhouette_{wind_sector}.png"
+
 
 def load_flow_graph(cfg: MakeConfig, case_name: str, reuse_existing: bool) -> FlowGraph:
     json_path = cfg.make_graph_path(case_name)

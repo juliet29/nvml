@@ -52,3 +52,4 @@ class FileNames:
 
     # nn
     gnn = "gnn.pt"
+    gnn_best = "gnn_best.pt"

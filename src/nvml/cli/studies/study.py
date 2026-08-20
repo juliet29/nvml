@@ -9,6 +9,7 @@ from zarr.core.dtype.common import UnstableSpecificationWarning
 # from nvml.cli.studies.create import create
 # from nvml.cli.studies.modules.cluster import cluster
 # from nvml.cli.studies.modules.flow import flow
+from nvml.cli.studies.modules.geexplain import geexplain
 from nvml.cli.studies.modules.gmodel import gmod
 
 # from nvml.cli.studies.modules.qdim import qdim
@@ -19,6 +20,7 @@ app = App()
 # app.command(flow)
 # app.command(cluster)
 app.command(gmod)
+app.command(geexplain)
 
 
 def suppress_zarr_warnings():

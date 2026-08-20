@@ -63,9 +63,9 @@ class FlowGraphDataset(InMemoryDataset):
     def stored_case_names(self):
         return [getattr(self.get(i), DataNames.case_name) for i in range(len(self))]
 
-    def cluster(self, model_params: ClusterModelParams):
+    def cluster(self, model_params: ClusterModelParams, seed: int = 1204):
         path, retained_case_names = save_spectal_clusters(
-            Path(self.processed_dir), model_params
+            Path(self.processed_dir), model_params, random_state=seed
         )
         self.cluster_path = path
 

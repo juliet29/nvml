@@ -5,6 +5,7 @@ from typing import NamedTuple
 import torch
 import torch.nn as nn
 from loguru import logger
+from rich.pretty import pretty_repr
 from torch.nn.modules.loss import _Loss
 from torch.optim import Optimizer
 from torch.utils.data import DataLoader
@@ -12,6 +13,23 @@ from utils4plans.io import make_dir
 
 from nvml.constants import FileNames
 from nvml.gmodel.dataset import FlowGraphDataset
+
+
+@dataclass
+class EvalMetrics:
+    accuracy: float
+    balanced_accuracy: float
+    macro_f1: float
+    confusion: list[list[int]]
+
+    def log(self, label: str):
+        logger.info(
+            f"{label}: acc {self.accuracy:.3f}  balanced_acc {self.balanced_accuracy:.3f}  "
+            f"macro_f1 {self.macro_f1:.3f}"
+        )
+        logger.info(
+            f"{label} confusion (rows=true, cols=pred):\n{pretty_repr(self.confusion)}"
+        )
 
 
 class GraphModelParams(NamedTuple):
@@ -37,8 +55,8 @@ class ModelAndDetails(NamedTuple):
     criterion: _Loss
     optimizer: Optimizer
 
-    def save_model_state(self, save_loc: Path):
-        p = save_loc / "models" / FileNames.gnn
+    def save_model_state(self, save_loc: Path, file_name: str = FileNames.gnn):
+        p = save_loc / "models" / file_name
         make_dir(p)
 
         torch.save({"model": self.model.state_dict(), "optimizer": self.optimizer}, p)
