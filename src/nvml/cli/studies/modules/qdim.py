@@ -2,7 +2,8 @@ from cyclopts import App
 from plan2eplus.ezcase.ez import EZ
 from plyze import FlowGraphModel
 
-from nvml.cli.config import CONFIGS_DICT, MakeConfig
+from nvml.cli.config.config import MakeConfig
+from nvml.cli.config.cstore import CONFIGS_DICT
 from nvml.cli.studies.paths import ProjectPaths
 from nvml.io import get_ambient_data_as_ds, graph_to_ds
 from nvml.qdim.wind import (

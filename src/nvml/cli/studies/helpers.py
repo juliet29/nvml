@@ -1,6 +1,6 @@
 from plyze import FlowGraphModel
 
-from nvml.cli.config import CONFIGS_DICT
+from nvml.cli.config.cstore import CONFIGS_DICT
 from nvml.io import get_ambient_data_as_ds, graph_to_ds
 from nvml.qdim.wind import (
     add_wind_sector_coord,

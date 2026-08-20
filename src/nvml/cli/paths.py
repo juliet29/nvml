@@ -15,3 +15,8 @@ PATH_TO_STORAGE = Path(storage_path)
 temp_path = os.getenv("PATH_TO_TEMP")
 assert temp_path
 PATH_TO_TEMP = Path(temp_path)
+
+
+msd_temp_path = os.getenv("PATH_TO_MSD_TEMP")
+assert msd_temp_path
+PATH_TO_MSD_TEMP = Path(msd_temp_path)

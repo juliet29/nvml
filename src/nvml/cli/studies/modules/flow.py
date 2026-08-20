@@ -2,7 +2,7 @@ from cyclopts import App
 from plyze import FlowGraphModel
 from plyze.metrics.helpers.flow_paths import create_flow_paths
 
-from nvml.cli.config import CONFIGS_DICT
+from nvml.cli.config.cstore import CONFIGS_DICT
 from nvml.constants import DataNames
 from nvml.flow_paths.main import PathGraph, prep_edge_da
 from nvml.io import get_ambient_data_as_ds

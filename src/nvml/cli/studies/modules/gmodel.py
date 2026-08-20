@@ -1,7 +1,7 @@
 from cyclopts import App
 from icecream import ic
 
-from nvml.cli.config import CONFIGS_DICT
+from nvml.cli.config.cstore import CONFIGS_DICT
 from nvml.cli.studies.helpers import cfg
 from nvml.cli.studies.study_paths import StudyPaths
 from nvml.gmodel.dataset import FlowGraphDataset
@@ -14,9 +14,10 @@ gmod = App("gmod")
 
 @gmod.command()
 def fc():
-    ic("hi")
-    pass
-    # return graph_to_torch_data(cfg, CASE_NAME, StudyPaths.data.gnn)
+    cfg = CONFIGS_DICT["msd_aug20"]
+    r = cfg.get_one_case_data().sql
+    assert r.exists()
+    return cfg
 
 
 @gmod.command()
@@ -28,13 +29,13 @@ def fd():
 @gmod.command()
 def fe():
     # larger test dataset
-    return FlowGraphDataset(cfg, StudyPaths.data.gnn.case50)
+    return FlowGraphDataset(cfg, StudyPaths.data.gnn.aug20)
 
 
 @gmod.command()
 def ff():
-    cfg = CONFIGS_DICT["case50"]
-    p = StudyPaths.data.gnn.case50
+    cfg = CONFIGS_DICT["msd_aug20"]
+    p = StudyPaths.data.gnn.aug20
 
     bsize = 8
     n_train = bsize * 4

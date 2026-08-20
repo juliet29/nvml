@@ -7,7 +7,7 @@ import torch.optim as optim
 from loguru import logger
 from torch_geometric.loader import DataLoader
 
-from nvml.cli.config import MakeConfig
+from nvml.cli.config.config import MakeConfig
 from nvml.constants import FileNames
 from nvml.gmodel.dataset import FlowGraphDataset
 from nvml.gmodel.dataset_interfaces import ClusterModelParams

@@ -7,7 +7,7 @@ import xarray as xr
 from loguru import logger
 from torch_geometric.data import Data, Dataset
 
-from nvml.cli.config import MakeConfig
+from nvml.cli.config.config import MakeConfig
 from nvml.constants import DataNames
 from nvml.gmodel.dataset_interfaces import ClusterModelParams
 from nvml.gmodel.processing import GModelNames, Processor, save_spectal_clusters
@@ -25,22 +25,14 @@ from nvml.gmodel.processing import GModelNames, Processor, save_spectal_clusters
 # finish reading explainer epaper which probably details how can know if exolanation is good
 
 
-def assign_cluster_label_to_data(data: Data, path_to_clustering_model: Path | None):
-    # ic(f"Being trasnsformed | before {data}")
-    if not path_to_clustering_model:
+def assign_cluster_label_to_data(data: Data, cluster_labels: dict | None):
+    if cluster_labels is None:
         raise Exception("Need to cluster!")
-    da = xr.open_dataarray(path_to_clustering_model)
     case_name = data[DataNames.case_name]
-    try:
-        class_idx = da.sel({DataNames.case_name: case_name}).data.reshape(1)
-    except KeyError:
-        logger.error(f"{case_name} not in da.case_names")
-        breakpoint()
-    # ic(class_idx)
+    class_idx = cluster_labels[case_name]
     data[DataNames.torch_geometric_graph_label] = torch.tensor(
-        class_idx, dtype=torch.long
+        [class_idx], dtype=torch.long
     )
-    # ic(f"After: {data}")
     return data
 
 
@@ -50,12 +42,11 @@ class FlowGraphDataset(Dataset):
         self.cfg = cfg
         self.case_names = self.get_case_names()
         self.cluster_path: Path | None = None
+        self.cluster_labels: dict | None = None
 
         def transform_fx(data: Data):
             data = T.Constant()(data)
-            data = assign_cluster_label_to_data(
-                data, path_to_clustering_model=self.cluster_path
-            )
+            data = assign_cluster_label_to_data(data, self.cluster_labels)
             return data
 
         super().__init__(
@@ -90,6 +81,14 @@ class FlowGraphDataset(Dataset):
         # update case names.
         self.cluster_path = path
         self.case_names = sorted(retained_case_names)
+
+        da = xr.open_dataarray(path)
+        self.cluster_labels = {
+            name: int(label)
+            for name, label in zip(
+                da[DataNames.case_name].values.tolist(), da.values.tolist()
+            )
+        }
 
     def len(self):
         return len(self.case_names)

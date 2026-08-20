@@ -9,7 +9,7 @@ from plyze.flow_graph.interfaces import FlowGraph
 from torch_geometric.utils import from_networkx
 from utils4plans.io import make_dir
 
-from nvml.cli.config import MakeConfig
+from nvml.cli.config.config import MakeConfig
 from nvml.cluster.setup.multi import init_zarr, write_to_zarr
 from nvml.cluster.spectral import make_spectral
 from nvml.cluster.tsne import setup_for_clustering

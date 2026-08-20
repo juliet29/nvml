@@ -1,7 +1,7 @@
 from cyclopts import App
 from plyze.flow_graph.create.main import make_flow_graph
 
-from nvml.cli.config import CONFIGS_DICT
+from nvml.cli.config.cstore import CONFIGS_DICT
 
 create = App("create")
 

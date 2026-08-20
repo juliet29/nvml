@@ -18,6 +18,7 @@ class GraphModels:
     base = PATH_TO_TEMP / "gnn"
     test = base / "tests"
     case50 = base / "case50"
+    aug20 = base / "aug20"
 
 
 class Data:

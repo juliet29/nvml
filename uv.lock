@@ -2265,6 +2265,7 @@ dependencies = [
     { name = "selenium" },
     { name = "torch" },
     { name = "torch-geometric" },
+    { name = "tqdm" },
     { name = "utils4plans" },
     { name = "vegafusion" },
     { name = "vl-convert-python" },
@@ -2289,6 +2290,7 @@ requires-dist = [
     { name = "selenium", specifier = ">=4.45.0" },
     { name = "torch", specifier = ">=2.12.1" },
     { name = "torch-geometric", specifier = ">=2.6.0" },
+    { name = "tqdm", specifier = ">=4.68.3" },
     { name = "utils4plans", editable = "../utils4plans" },
     { name = "vegafusion", specifier = ">=2.0.3" },
     { name = "vl-convert-python", specifier = ">=1.9.0.post1" },
@@ -2636,6 +2638,7 @@ dependencies = [
     { name = "snakemake" },
     { name = "torch" },
     { name = "torch-geometric" },
+    { name = "utils4plans" },
     { name = "xarray" },
 ]
 
@@ -2651,6 +2654,7 @@ requires-dist = [
     { name = "snakemake", specifier = ">=9.16.3" },
     { name = "torch", specifier = ">=2.11.0" },
     { name = "torch-geometric", specifier = ">=2.7.0" },
+    { name = "utils4plans", editable = "../utils4plans" },
     { name = "xarray", specifier = ">=2026.2.0" },
 ]
 
@@ -4276,6 +4280,7 @@ name = "utils4plans"
 source = { editable = "../utils4plans" }
 dependencies = [
     { name = "expression" },
+    { name = "icecream" },
     { name = "loguru" },
     { name = "networkx" },
     { name = "numpy" },
@@ -4288,6 +4293,7 @@ dependencies = [
 [package.metadata]
 requires-dist = [
     { name = "expression", specifier = ">=5.6.0" },
+    { name = "icecream", specifier = ">=2.2.0" },
     { name = "loguru", specifier = ">=0.7.3" },
     { name = "matplotlib", marker = "extra == 'figures'", specifier = ">=3.11.0" },
     { name = "networkx", specifier = ">=3.5" },
