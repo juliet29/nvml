@@ -38,9 +38,9 @@ def setup_for_clustering(path: Path, max_space_ix: int = 5):
     return da5
 
 
-def make_tsne(da: xr.DataArray, wind_sector: str):
+def make_tsne(da: xr.DataArray, wind_sector: str, random_state: int = 1204):
     X = da.sel({dn.wind_sector: wind_sector}).values
-    tsne = manifold.TSNE(perplexity=15)
+    tsne = manifold.TSNE(perplexity=15, random_state=random_state)
     Y = tsne.fit_transform(X)
     return xr.DataArray(
         Y,

@@ -1,39 +1,59 @@
-from collections import defaultdict
-
-import networkx as nx
+from collections import Counter, defaultdict
 
 from nvml.explain.interfaces import (
-    EMPTY_MOTIF,
     ClassExplanation,
     InstanceExplanation,
     MotifPrevalence,
 )
+from nvml.explain.subgraph import (
+    DEFAULT_MOTIF_DISTANCE,
+    DEFAULT_WL_ITERATIONS,
+    cluster_motifs,
+)
 from nvml.gmodel.hetero import CARDINAL_DIRECTIONS
+
+DEFAULT_MIN_SUPPORT = 0.05
 
 
 def aggregate_explanations(
     instances: list[InstanceExplanation],
+    motif_distance: float = DEFAULT_MOTIF_DISTANCE,
+    wl_iterations: int = DEFAULT_WL_ITERATIONS,
+    min_support: float = DEFAULT_MIN_SUPPORT,
 ) -> dict[int, ClassExplanation]:
-    by_class: dict[int, list[InstanceExplanation]] = defaultdict(list)
-    for instance in instances:
-        by_class[instance.predicted_class].append(instance)
-
     total_instances = len(instances)
-    motif_total_counts: dict[str, int] = defaultdict(int)
-    motif_representative: dict[str, nx.Graph] = {}
 
-    def register_motif(instance: InstanceExplanation):
-        if instance.motif_hash == EMPTY_MOTIF:
-            return
-        motif_total_counts[instance.motif_hash] += 1
-        motif_representative.setdefault(instance.motif_hash, instance.motif_graph)
+    non_empty_indices = [
+        index for index, instance in enumerate(instances)
+        if instance.motif_graph.number_of_nodes()
+    ]
+    family_labels, medoid_of = cluster_motifs(
+        [instances[index].motif_graph for index in non_empty_indices],
+        wl_iterations,
+        motif_distance,
+    )
+    family_of_instance = {
+        non_empty_indices[position]: label
+        for position, label in enumerate(family_labels)
+    }
+    family_representative = {
+        label: instances[non_empty_indices[medoid_position]].motif_graph
+        for label, medoid_position in medoid_of.items()
+    }
+    family_representative_case = {
+        label: instances[non_empty_indices[medoid_position]].case_name
+        for label, medoid_position in medoid_of.items()
+    }
+    family_total_counts = Counter(family_labels)
 
-    for instance in instances:
-        register_motif(instance)
+    by_class: dict[int, list[int]] = defaultdict(list)
+    for index, instance in enumerate(instances):
+        by_class[instance.predicted_class].append(index)
 
     result: dict[int, ClassExplanation] = {}
 
-    def summarize_class(predicted_class: int, class_instances: list[InstanceExplanation]):
+    def summarize_class(predicted_class: int, member_indices: list[int]):
+        class_instances = [instances[index] for index in member_indices]
         n = len(class_instances)
 
         direction_importance: dict[str, float] = {}
@@ -70,29 +90,40 @@ def aggregate_explanations(
             pair for instance in class_instances for pair in instance.zone_area_importance
         ]
 
-        class_motif_counts: dict[str, int] = defaultdict(int)
-        for instance in class_instances:
-            if instance.motif_hash != EMPTY_MOTIF:
-                class_motif_counts[instance.motif_hash] += 1
+        pathway_counts = {
+            direction: [instance.cardinal_pathways.get(direction, 0) for instance in class_instances]
+            for direction in CARDINAL_DIRECTIONS
+        }
+
+        family_counts = Counter(
+            family_of_instance[index]
+            for index in member_indices
+            if index in family_of_instance
+        )
 
         motifs: list[MotifPrevalence] = []
 
-        def register_prevalence(motif_hash: str, count: int):
+        def register_family(family_label: int, count: int):
             frequency = count / n
-            base_rate = motif_total_counts[motif_hash] / total_instances
+            family_total = family_total_counts[family_label]
             motifs.append(
                 MotifPrevalence(
-                    motif_hash=motif_hash,
-                    representative_graph=motif_representative[motif_hash],
+                    motif_hash=str(family_label),
+                    representative_graph=family_representative[family_label],
+                    representative_case=family_representative_case[family_label],
                     count=count,
                     frequency=frequency,
-                    lift=frequency / base_rate,
+                    lift=frequency / (family_total / total_instances),
+                    exclusivity=count / family_total,
                 )
             )
 
-        for motif_hash, count in class_motif_counts.items():
-            register_prevalence(motif_hash, count)
-        motifs.sort(key=lambda m: (m.lift, m.count), reverse=True)
+        for family_label, count in family_counts.items():
+            register_family(family_label, count)
+        motifs.sort(
+            key=lambda m: (m.frequency >= min_support, m.exclusivity, m.count),
+            reverse=True,
+        )
 
         result[predicted_class] = ClassExplanation(
             predicted_class=predicted_class,
@@ -101,10 +132,11 @@ def aggregate_explanations(
             direction_coverage=direction_coverage,
             relation_importance=relation_importance,
             zone_area_importance=zone_area_importance,
+            pathway_counts=pathway_counts,
             motifs=motifs,
         )
 
-    for predicted_class, class_instances in sorted(by_class.items()):
-        summarize_class(predicted_class, class_instances)
+    for predicted_class, member_indices in sorted(by_class.items()):
+        summarize_class(predicted_class, member_indices)
 
     return result

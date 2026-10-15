@@ -26,6 +26,7 @@ class InstanceExplanation:
     direction_importance: dict[str, float]
     relation_importance: dict[Relation, float]
     zone_area_importance: list[tuple[float, float]]
+    cardinal_pathways: dict[str, int]
     motif_hash: str
     motif_graph: nx.Graph
 
@@ -34,9 +35,11 @@ class InstanceExplanation:
 class MotifPrevalence:
     motif_hash: str
     representative_graph: nx.Graph
+    representative_case: str
     count: int
     frequency: float
     lift: float
+    exclusivity: float
 
 
 @dataclass
@@ -47,4 +50,5 @@ class ClassExplanation:
     direction_coverage: dict[str, float]
     relation_importance: dict[Relation, float]
     zone_area_importance: list[tuple[float, float]]
+    pathway_counts: dict[str, list[int]]
     motifs: list[MotifPrevalence]

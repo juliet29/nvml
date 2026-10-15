@@ -6,6 +6,8 @@ import seaborn.objects as so
 import xarray as xr
 from matplotlib.figure import Figure
 
+from nvml.style import finalize_house_style
+
 
 def default_worker_count(reserve: int = 2) -> int:
     return max(1, (os.cpu_count() or 1) - reserve)
@@ -18,6 +20,7 @@ def make_dir(path: Path) -> Path:
 
 def save_mpl_fig(fig: Figure, path: Path, dpi: int = 300, **kwargs) -> Path:
     make_dir(path)
+    finalize_house_style(fig)
     fig.savefig(path, dpi=dpi, bbox_inches="tight", **kwargs)
     return path
 

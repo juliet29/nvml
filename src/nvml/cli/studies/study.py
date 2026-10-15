@@ -11,6 +11,7 @@ from zarr.core.dtype.common import UnstableSpecificationWarning
 # from nvml.cli.studies.modules.flow import flow
 from nvml.cli.studies.modules.geexplain import geexplain
 from nvml.cli.studies.modules.gmodel import gmod
+from nvml.style import apply_house_style
 
 # from nvml.cli.studies.modules.qdim import qdim
 
@@ -33,6 +34,7 @@ def main():
     suppress_zarr_warnings()
     ic.configureOutput(outputFunction=logger.debug)
     logset(to_stderr=True)
+    apply_house_style()
     app()
 
 
