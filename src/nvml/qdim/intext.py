@@ -41,7 +41,7 @@ def make_int_ext_series(G: FlowGraph):
 def find_subsurface_by_edge(candidate_surfaces: list[Subsurface], edge: Edge):
     cs_edges = [s.edge for s in candidate_surfaces]
     for s in candidate_surfaces:
-        sa, sb = s.edge
+        sa, sb, _ = s.edge
         u, v = edge.u, edge.v
         if sa == u and sb == v:
             return s
