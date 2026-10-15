@@ -25,5 +25,5 @@ def fc():
 
     zons = get_normals_for_windows_across_zones(G, case)
     zone_da = make_zone_outward_normal_da(zons)
-    return zone_da
     wind_da = wind_angle_da_to_vectors(ambient_ds[dn.wind_dir])
+    return wind_da

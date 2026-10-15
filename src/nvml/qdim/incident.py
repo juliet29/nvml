@@ -18,7 +18,9 @@ def make_zone_outward_normal_da(zons: list[ZoneAndOutwardNormals]):
     data = [
         i.normal_vectors for i in zons
     ]  # TODO: for transparency, could bring the wind_angles_to_vector call up here..
-    # getting an issue here because some of the zones have multiple windows, which means multiple outward normals, not something I accounted for..
+    # getting an issue here because some of the zones have multiple windows, which means multiple outward normals, not something I accounted for.. actually yes it is.. because the edge coord takes the max...
+    # so why did it work before and isnt working now?
+    # and how does this relate to longer term goal of just getting yes or no coincidences? do i need this array?
     ic(data, coords, dims)
     return
 
