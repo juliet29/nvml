@@ -1,3 +1,4 @@
+import numpy as np
 import xarray as xr
 from cyclopts import App
 from icecream import ic
@@ -7,9 +8,10 @@ from plan2eplus.geometry.directions import WallNormal
 from nvml.cli.config.cstore import CONFIGS_DICT
 from nvml.cli.studies.helpers import get_ambient_ds
 from nvml.constants import DataNames as dn
+from nvml.features.coinc import tabulate_coinc_features
 from nvml.io import read_graph
 from nvml.qdim.angles import wind_angles_to_vector
-from nvml.qdim.incident import make_zone_outward_normal_da, wind_angle_da_to_vectors
+from nvml.qdim.incident import make_zone_outward_normal_da
 from nvml.qdim.intext import get_normals_for_windows_across_zones
 
 coinc_app = App("coinc")
@@ -51,5 +53,16 @@ def fc():
     ic("hi", zone_da, angle_da)
     return xr.dot(angle_da, zone_da, dim=dn.xy_vector)
 
-    wind_da = wind_angle_da_to_vectors(ambient_ds[dn.wind_dir])
-    return ambient_ds
+    # wind_da = wind_angle_da_to_vectors(ambient_ds[dn.wind_dir])
+    # return ambient_ds
+    #
+
+
+@coinc_app.command()
+def fd():
+    da = xr.DataArray(
+        data=np.array(
+            [[0.0, np.nan], [1.0, 0.0], [1.0, np.nan], [0.0, np.nan], [0.0, np.nan]]
+        )
+    )
+    return tabulate_coinc_features(da)
