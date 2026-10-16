@@ -1,9 +1,21 @@
+import numpy as np
 import xarray as xr
 from icecream import ic
 
 from nvml.constants import DataNames as dn
 from nvml.qdim.angles import wind_angles_to_vector
 from nvml.qdim.interfaces import ZoneAndOutwardNormals
+
+
+def pad_array(data: list[list[np.ndarray]]):
+    lengths = np.array([len(row) for row in data])
+    n_max = lengths.max()
+
+    mask = np.arange(n_max) < lengths[:, None]  # shape (5, n_max)
+
+    padded = np.full((len(data), n_max, len(data[0][0])), np.nan)
+    padded[mask] = np.concatenate([np.stack(r) for r in data if r])
+    return padded
 
 
 def make_zone_outward_normal_da(zons: list[ZoneAndOutwardNormals]):
@@ -18,13 +30,10 @@ def make_zone_outward_normal_da(zons: list[ZoneAndOutwardNormals]):
     data = [
         i.normal_vectors for i in zons
     ]  # TODO: for transparency, could bring the wind_angles_to_vector call up here..
-    # getting an issue here because some of the zones have multiple windows, which means multiple outward normals, not something I accounted for.. actually yes it is.. because the edge coord takes the max...
-    # so why did it work before and isnt working now?
-    # and how does this relate to longer term goal of just getting yes or no coincidences? do i need this array?
-    ic(data, coords, dims)
-    return
 
-    da = xr.DataArray(data=data, coords=coords, dims=dims)
+    padded_data = pad_array(data)
+    ic(padded_data)
+    da = xr.DataArray(data=padded_data, coords=coords, dims=dims)
     return da
 
 
@@ -45,7 +54,13 @@ def calculate_incidence_factor(zone_da: xr.DataArray, wind_da: xr.DataArray):
     assert zone_da.dims == (dn.space_name, dn.edge_num, dn.xy_vector)
     assert wind_da.dims == (dn.datetime, dn.xy_vector)
     incidence_factor_across_surfaces = zone_da @ wind_da.T
-    incidence_factor_per_zone = incidence_factor_across_surfaces.min(dim=dn.edge_num)
     incidence_factor_per_zone.name = dn.incident_factor
 
     return incidence_factor_per_zone
+
+
+def calculate_incidence_factor_for_zone(zone_da: xr.DataArray, wind_da: xr.DataArray):
+    """incidence factor [-1,1] = cos(incidence_angle [0,2pi])"""
+    assert zone_da.dims == (dn.space_name, dn.edge_num, dn.xy_vector)
+    assert wind_da.dims == (dn.datetime, dn.xy_vector)
+    incidence_factor_across_surfaces = zone_da @ wind_da.T
