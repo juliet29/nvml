@@ -5,14 +5,16 @@ from icecream import ic
 from plan2eplus.ezcase.ez import EZ
 from plan2eplus.geometry.directions import WallNormal
 
+from nvml.cli.config.config import MakeConfig
 from nvml.cli.config.cstore import CONFIGS_DICT
-from nvml.cli.studies.helpers import get_ambient_ds
 from nvml.constants import DataNames as dn
 from nvml.features.coinc import tabulate_coinc_features
-from nvml.io import read_graph
+from nvml.features.qoi import calc_qdim_quantity
+from nvml.io import get_ambient_data_as_ds, read_graph
 from nvml.qdim.angles import wind_angles_to_vector
 from nvml.qdim.incident import make_zone_outward_normal_da
 from nvml.qdim.intext import get_normals_for_windows_across_zones
+from nvml.qdim.wind import add_wind_sector_coord
 
 coinc_app = App("coinc")
 
@@ -21,6 +23,12 @@ CASE_IX = 0
 case_name = cfg.get_one_case(CASE_IX)
 case_data = cfg.get_one_case_data(CASE_IX)
 case_graph_path = cfg.get_one_graph_path(CASE_IX)
+
+
+def get_ambient_ds(ix: int, cfg: MakeConfig):
+    res = get_ambient_data_as_ds(cfg.get_one_case_data(ix).sql)
+    res = add_wind_sector_coord(res)
+    return res
 
 
 @coinc_app.command()
@@ -41,7 +49,7 @@ def fb():
 
 @coinc_app.command()
 def fc():
-    ambient_ds = get_ambient_ds(CASE_IX)  # this is coming from helpers
+    ambient_ds = get_ambient_ds(CASE_IX, cfg)  # this is coming from helpers
     G = read_graph(case_graph_path)
     case = EZ(case_data.idf)
 
@@ -66,3 +74,10 @@ def fd():
         )
     )
     return tabulate_coinc_features(da)
+
+
+@coinc_app.command()
+def fe():
+    ambient_ds = get_ambient_ds(CASE_IX, cfg)  # this is coming from helpers
+    G = read_graph(case_graph_path)
+    return calc_qdim_quantity(G, ambient_ds, "N")

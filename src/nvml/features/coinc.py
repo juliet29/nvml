@@ -5,10 +5,6 @@ import xarray as xr
 from plan2eplus.ops.zones.ezobject import WallNormal
 
 
-def calc_plan_coinc(G, case, incident_wind_drn: WallNormal) -> xr.DataArray:
-    pass
-
-
 class CoincidentType(Enum):
     windward = -1
     leeward = 1
@@ -44,6 +40,12 @@ def get_feature(ct_set: set[CoincidentType]):
     )
 
 
+def calc_plan_coinc(G, case, incident_wind_drn: WallNormal) -> xr.DataArray:
+    # TODO ~ fc from studies/coinc -> which goes to modules when done..
+
+    pass
+
+
 def tabulate_coinc_features(da: xr.DataArray):
     # turn the data into a set
     data = da.data.flatten()
@@ -54,5 +56,3 @@ def tabulate_coinc_features(da: xr.DataArray):
     ct_set = {CoincidentType(i) for i in number_set}
 
     return get_feature(ct_set)
-
-    return ct_set
