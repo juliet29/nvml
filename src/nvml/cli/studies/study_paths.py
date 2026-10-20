@@ -21,6 +21,11 @@ class GraphModels:
     aug20 = base / "aug20"
 
 
+class ANOVAModels:
+    base = PATH_TO_TEMP / "anova"
+    aug20 = base / "aug20"
+
+
 class Data:
     base = PATH_TO_TEMP
     graphs_jun24 = base / "jun24"
@@ -28,6 +33,7 @@ class Data:
     qdim_test = base / "qdim/tests"
     tsne = base / "tsne/tests"
     gnn = GraphModels
+    anova = ANOVAModels
     # gnn = base / "gnn/tests"
 
 

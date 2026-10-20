@@ -8,7 +8,7 @@ from plan2eplus.geometry.directions import WallNormal
 from nvml.cli.config.config import MakeConfig
 from nvml.cli.config.cstore import CONFIGS_DICT
 from nvml.constants import DataNames as dn
-from nvml.features.coinc import tabulate_coinc_features
+from nvml.features.coinc import calc_plan_coinc, tabulate_coinc_features
 from nvml.features.qoi import calc_qdim_quantity
 from nvml.io import get_ambient_data_as_ds, read_graph
 from nvml.qdim.angles import wind_angles_to_vector
@@ -78,6 +78,16 @@ def fd():
 
 @coinc_app.command()
 def fe():
-    ambient_ds = get_ambient_ds(CASE_IX, cfg)  # this is coming from helpers
+    ambient_ds = get_ambient_ds(CASE_IX, cfg)
     G = read_graph(case_graph_path)
     return calc_qdim_quantity(G, ambient_ds, "N")
+
+
+@coinc_app.command()
+def fg():
+    ambient_ds = get_ambient_ds(CASE_IX, cfg)
+    G = read_graph(case_graph_path)
+    case = EZ(case_data.idf)
+    coinc_da = calc_plan_coinc(G, case, WallNormal.NORTH)
+    coinc_feature = tabulate_coinc_features(coinc_da)
+    return coinc_feature

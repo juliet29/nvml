@@ -2,7 +2,14 @@ from enum import Enum
 
 import numpy as np
 import xarray as xr
+from plan2eplus.ezcase.ez import EZ
 from plan2eplus.ops.zones.ezobject import WallNormal
+from plyze.flow_graph.interfaces import FlowGraph
+
+from nvml.constants import DataNames as dn
+from nvml.qdim.angles import wind_angles_to_vector
+from nvml.qdim.incident import make_zone_outward_normal_da
+from nvml.qdim.intext import get_normals_for_windows_across_zones
 
 
 class CoincidentType(Enum):
@@ -35,13 +42,26 @@ features = {
 
 
 def get_feature(ct_set: set[CoincidentType]):
-    return features.get(
-        frozenset(ct_set), lambda: print("Could not find a matching set!")
+    res = features.get(frozenset(ct_set))
+    assert res, f"Could not find reature for this set: {ct_set}"
+    return res
+
+
+def calc_plan_coinc(
+    G: FlowGraph, case: EZ, incident_wind_drn: WallNormal
+) -> xr.DataArray:
+    # TODO ~ fc from studies/coinc -> which goes to modules when done..
+
+    zons = get_normals_for_windows_across_zones(G, case)
+    zone_da = make_zone_outward_normal_da(zons)
+    angle_drn = wind_angles_to_vector(incident_wind_drn.value)
+
+    angle_da = xr.DataArray(
+        data=angle_drn, coords={dn.xy_vector: ["x", "y"]}, dims=dn.xy_vector
     )
 
-
-def calc_plan_coinc(G, case, incident_wind_drn: WallNormal) -> xr.DataArray:
-    # TODO ~ fc from studies/coinc -> which goes to modules when done..
+    da = xr.dot(angle_da, zone_da, dim=dn.xy_vector)
+    return da
 
     pass
 

@@ -3,6 +3,8 @@ from icecream import ic
 from loguru import logger
 from utils4plans.logs import logset
 
+from nvml.cli.studies.anova import anv_app
+
 # from nvml.cli.studies.create import create
 # from nvml.cli.studies.modules.cluster import cluster
 # from nvml.cli.studies.modules.flow import flow
@@ -12,6 +14,7 @@ from nvml.cli.studies.coinc import coinc_app
 
 app = App()
 app.command(coinc_app)
+app.command(anv_app)
 # app.command(qdim)
 # app.command(create)
 # app.command(flow)

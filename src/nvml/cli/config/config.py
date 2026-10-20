@@ -14,6 +14,9 @@ class MakeConfig(NamedTuple):
     sql_file_name: str = "eplusout.sql"
     cardinal_expansion_factor = 1.1
 
+    def __len__(self):
+        return len(self.case_names)
+
     def make_case_data(self, case_name):
         idf_path = self.eplus_model_source / case_name / self.idf_file_name
         sql_path = self.eplus_model_source / case_name / self.sql_file_name
@@ -32,3 +35,5 @@ class MakeConfig(NamedTuple):
 
     def get_one_graph_path(self, ix: int = 0):
         return self.make_graph_path(self.case_names[ix])
+
+    # TODO: define some kind of iterable over this..

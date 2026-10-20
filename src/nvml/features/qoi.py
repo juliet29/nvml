@@ -35,4 +35,9 @@ def calc_qdim_quantity(
         .drop_vars(dn.datetime)
     )
 
-    return qdc_wind.where(qdc_wind[dn.wind_sector] == wind_sector, drop=True).median()
+    res = (
+        qdc_wind.where(qdc_wind[dn.wind_sector] == wind_sector, drop=True)
+        .mean()
+        .values  # .tolist()[0]
+    )
+    return float(res)
