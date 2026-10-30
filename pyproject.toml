@@ -30,6 +30,8 @@ dependencies = [
   "matplotlib-backend-kitty>=2.1.2",
   "tdqm>=0.0.1",
   "tqdm>=4.68.3",
+  "patsy>=1.0.3",
+  "statsmodels>=0.15.0",
 ]
 
 [build-system]

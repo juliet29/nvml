@@ -11,6 +11,7 @@ from tqdm import tqdm
 from utils4plans.io import make_dir
 
 from nvml.cli.config.config import MakeConfig
+from nvml.constants import FileNames
 from nvml.features.coinc import (
     calc_plan_coinc,
     tabulate_coinc_features,
@@ -80,7 +81,7 @@ class DataMaker(NamedTuple):
 
 
 def save_data(cfg: MakeConfig, direction: WindDirectionBinNames, path: Path):
-    path = path / "data.csv"
+    path = path / FileNames.anova_data
     make_dir(path)
 
     ambient_ds = get_ambient_ds(0, cfg)

@@ -53,3 +53,6 @@ class FileNames:
     # nn
     gnn = "gnn.pt"
     gnn_best = "gnn_best.pt"
+
+    # anova
+    anova_data = "data.csv"
