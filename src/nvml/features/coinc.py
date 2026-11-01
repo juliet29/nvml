@@ -1,6 +1,7 @@
 from enum import Enum
 
 import numpy as np
+import polars as pl
 import xarray as xr
 from plan2eplus.ezcase.ez import EZ
 from plan2eplus.ops.zones.ezobject import WallNormal
@@ -41,6 +42,11 @@ features = {
 }
 
 
+COINCIDENCE_POLARS_ENUM = pl.Enum(
+    categories=["ww", "lw", "sd", "ww_lw", "ww_sd", "lw_sd", "ww_lw_sd"]
+)
+
+
 def get_feature(ct_set: set[CoincidentType]):
     res = features.get(frozenset(ct_set))
     assert res, f"Could not find reature for this set: {ct_set}"
@@ -73,3 +79,9 @@ def tabulate_coinc_features(da: xr.DataArray):
     ct_set = {CoincidentType(i) for i in number_set}
 
     return get_feature(ct_set)
+
+
+def get_coinc(G: FlowGraph, case: EZ, wall_normal: WallNormal):
+    coinc_da = calc_plan_coinc(G, case, wall_normal)
+    coinc_feature = tabulate_coinc_features(coinc_da)
+    return coinc_feature.name

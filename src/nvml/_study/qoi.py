@@ -2,7 +2,7 @@ from cyclopts import App
 
 from nvml._study.config.config import MakeConfig
 from nvml._study.config.cstore import CONFIGS_DICT
-from nvml.features.area import calc_flow_data_metrics, calc_plan_area_metrics
+from nvml.features.area import calc_plan_area_metrics
 from nvml.features.qoi import calc_qdim_quantity
 from nvml.io import get_ambient_data_as_ds, read_graph
 from nvml.qdim.wind import add_wind_sector_coord
@@ -33,6 +33,6 @@ def fe(case_ix: int = CASE_IX):
 def fg(case_ix: int = CASE_IX):
     G = read_graph(cfg.get_one_graph_path(case_ix))
     # return calc_flow_metrics(G)
-    return calc_flow_data_metrics(G, "NORTH")
+    # return calc_flow_data_metrics(G, "NORTH")
 
     return calc_plan_area_metrics(G)
