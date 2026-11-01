@@ -3,6 +3,7 @@ from plan2eplus.ezcase.ez import EZ
 from plan2eplus.geometry.directions import WallNormal
 from plan2eplus.ops.subsurfaces.ezobject import Subsurface
 from plyze.flow_graph.interfaces import Edge, FlowGraph, ZoneNode
+from plyze.qoi.xarray_helpers import CardinalNames
 from rich.pretty import pretty_repr
 from utils4plans.lists import get_unique_one
 
@@ -11,7 +12,7 @@ from nvml.qdim.interfaces import EdgeAndNormal, ZoneAndOutwardNormals
 
 """Properties derived from the graph, idf, or both"""
 
-CardinalNames = ["EAST", "SOUTH", "NORTH", "WEST"]
+# CardinalNames = ["EAST", "SOUTH", "NORTH", "WEST"]
 # TODO: redundant, could use WallNormal values, .. but explicit
 
 

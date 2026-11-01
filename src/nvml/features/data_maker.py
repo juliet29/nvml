@@ -45,7 +45,16 @@ class TableEntry(NamedTuple):
     case_name: str
     space_mean_time_mean: float
     space_sum_time_mean: float
-    feature: str
+    coincidence: str
+
+
+class dfc:
+    feature = "feature"
+    target = "target"
+    case_name = "case_name"
+    ww = "ww"
+    lw = "lw"
+    sd = "sd"
 
 
 class DataMaker(NamedTuple):
@@ -121,5 +130,3 @@ def save_data(cfg: MakeConfig, direction: WindDirectionBinNames, path: Path):
     )
     ic(df)
     return df
-    #
-    # df.write_csv(path)

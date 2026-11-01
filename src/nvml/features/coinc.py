@@ -50,7 +50,6 @@ def get_feature(ct_set: set[CoincidentType]):
 def calc_plan_coinc(
     G: FlowGraph, case: EZ, incident_wind_drn: WallNormal
 ) -> xr.DataArray:
-    # TODO ~ fc from studies/coinc -> which goes to modules when done..
 
     zons = get_normals_for_windows_across_zones(G, case)
     zone_da = make_zone_outward_normal_da(zons)
@@ -62,8 +61,6 @@ def calc_plan_coinc(
 
     da = xr.dot(angle_da, zone_da, dim=dn.xy_vector)
     return da
-
-    pass
 
 
 def tabulate_coinc_features(da: xr.DataArray):

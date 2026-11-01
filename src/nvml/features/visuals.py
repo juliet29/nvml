@@ -3,16 +3,17 @@ from pathlib import Path
 import matplotlib.pyplot as plt
 import polars as pl
 import seaborn.objects as so
-from matplotlib.figure import Figure
 
+from nvml.features.data_maker import dfc
 
-class dfc:
-    feature = "feature"
-    target = "target"
-    case_name = "case_name"
-    ww = "ww"
-    lw = "lw"
-    sd = "sd"
+# class dfc:
+#     feature = "feature"
+#     target = "target"
+#     case_name = "case_name"
+#     ww = "ww"
+#     lw = "lw"
+#     sd = "sd"
+#
 
 
 def plot_feature_v_target(df: pl.DataFrame, save_path: Path = Path("")):
@@ -31,21 +32,6 @@ def plot_bar_compare(df: pl.DataFrame):
     ax3.scatter(df[dfc.sd], df[dfc.target])
     ax3.set_xlabel("sd")
     return fig
-
-
-def plot_bar_compare2(df: pl.DataFrame):
-    f = Figure(figsize=(9, 4))
-    sfs = f.subfigures(nrows=1, ncols=2)
-    # print(sfs)
-    # return sfsj
-    p1 = so.Plot(df, x=dfc.ww, y=dfc.target).add(so.Dot()).on(sfs[0])  # .plot()
-
-    p2 = so.Plot(df, x=dfc.lw, y=dfc.target).add(so.Dot()).on(sfs[1])  # .plot()
-    p1.plot()
-
-    return f
-
-    pass
 
 
 def plot_target_hist(df: pl.DataFrame):
