@@ -20,7 +20,7 @@ from sklearn.model_selection import StratifiedKFold, train_test_split
 from torch_geometric.loader import DataLoader
 from utils4plans.io import make_dir
 
-from nvml.cli.config.config import MakeConfig
+from nvml._study.config.config import MakeConfig
 from nvml.gmodel.dataset import FlowGraphDataset
 from nvml.gmodel.dataset_interfaces import ClusterModelParams
 from nvml.gmodel.model import HeterogGCN

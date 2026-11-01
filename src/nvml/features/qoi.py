@@ -14,7 +14,6 @@ def calc_qdim_quantity(
 ):
 
     qoi_ds = graph_to_ds(graph)
-    # clean_ds = qoi_ds[~np.isnan(qoi_ds)]
 
     # TODO: move this check higher, but since q_dim diveides by velocity, we get infinity whenever U = 0 ->
     q_dim = qoi_ds[dn.zone_dimless_flow]
@@ -27,6 +26,7 @@ def calc_qdim_quantity(
     # return q_dim_clean
     # ic(qdc, ambient_ds)
 
+    # want to check where the wind matches and the wind speed is not 0..
     qdc_wind = (
         qdc.assign_coords(
             {dn.wind_sector: (dn.datetime, ambient_ds[dn.wind_sector].data)}

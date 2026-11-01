@@ -2,9 +2,9 @@ from typing import Literal
 
 from utils4plans.io import read_json
 
-from nvml.cli.config.case_50 import case_names_50
-from nvml.cli.config.config import MakeConfig
-from nvml.cli.paths import PATH_TO_MSD_TEMP, PATH_TO_STORAGE, PATH_TO_TEMP
+from nvml._study._root.paths import PATH_TO_MSD_TEMP, PATH_TO_STORAGE, PATH_TO_TEMP
+from nvml._study.config.case_50 import case_names_50
+from nvml._study.config.config import MakeConfig
 
 test_create_config = MakeConfig(
     eplus_model_source=PATH_TO_STORAGE / "msherlock_v1/data",

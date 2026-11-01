@@ -11,7 +11,7 @@ from rich.pretty import pretty_repr
 from tqdm import tqdm
 from utils4plans.io import make_dir
 
-from nvml.cli.config.config import MakeConfig
+from nvml._study.config.config import MakeConfig
 from nvml.cluster.setup.multi import init_zarr, write_to_zarr
 from nvml.cluster.spectral import make_spectral
 from nvml.cluster.tsne import setup_for_clustering

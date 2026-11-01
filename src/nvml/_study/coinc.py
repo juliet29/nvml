@@ -5,13 +5,12 @@ from icecream import ic
 from plan2eplus.ezcase.ez import EZ
 from plan2eplus.geometry.directions import WallNormal
 
-from nvml.cli.config.config import MakeConfig
-from nvml.cli.config.cstore import CONFIGS_DICT
+from nvml._study.config.config import MakeConfig
+from nvml._study.config.cstore import CONFIGS_DICT
 from nvml.constants import DataNames as dn
 from nvml.features.coinc import calc_plan_coinc, tabulate_coinc_features
 from nvml.features.qoi import calc_qdim_quantity
 from nvml.io import get_ambient_data_as_ds, read_graph
-from nvml.qdim.angles import wind_angles_to_vector
 from nvml.qdim.incident import make_zone_outward_normal_da
 from nvml.qdim.intext import get_normals_for_windows_across_zones
 from nvml.qdim.wind import add_wind_sector_coord
@@ -37,14 +36,6 @@ def fb():
         data=[0, 1], coords={dn.xy_vector: ["x", "y"]}, dims=dn.xy_vector
     )
     return angle_da
-
-    return wind_angles_to_vector(WallNormal.NORTH.value)
-    # ambient_ds = get_ambient_ds(CASE_IX)  # this is coming from helpers
-    # n_mask = ambient_ds[dn.wind_sector] == "N"
-    # return n_mask
-    # first_n_idx = np.argmax()
-    #
-    # # get a wind direction with wind secto being north..
 
 
 @coinc_app.command()

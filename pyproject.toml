@@ -43,6 +43,6 @@ plyze = { path = "../plyze", editable = true }
 utils4plans = { path = "../utils4plans/", editable = true }
 
 [project.scripts]
-nvml = "nvml.cli.make.main:main"
-nvmlsmk = "nvml.cli.smk.main:main"
-nvmls = "nvml.cli.studies.study:main"
+# nvml = "nvml.cli.make.main:main"
+# nvmlsmk = "nvml.cli.smk.main:main"
+nvmls = "nvml._study._root.root:main"

@@ -10,7 +10,7 @@ from plan2eplus.ops.zones.ezobject import WallNormal
 from tqdm import tqdm
 from utils4plans.io import make_dir
 
-from nvml.cli.config.config import MakeConfig
+from nvml._study.config.config import MakeConfig
 from nvml.constants import FileNames
 from nvml.features.coinc import (
     calc_plan_coinc,

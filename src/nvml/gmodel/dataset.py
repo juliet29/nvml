@@ -5,7 +5,7 @@ import xarray as xr
 from loguru import logger
 from torch_geometric.data import HeteroData, InMemoryDataset
 
-from nvml.cli.config.config import MakeConfig
+from nvml._study.config.config import MakeConfig
 from nvml.constants import DataNames
 from nvml.gmodel.dataset_interfaces import ClusterModelParams
 from nvml.gmodel.processing import Processor, save_spectal_clusters

@@ -7,9 +7,9 @@ from cyclopts import App
 from icecream import ic
 from loguru import logger
 
-from nvml.cli.config.cstore import CONFIGS_DICT
-from nvml.cli.studies.helpers import cfg
-from nvml.cli.studies.study_paths import StudyPaths
+from nvml._study.config.cstore import CONFIGS_DICT
+from nvml._study._root.helpers import cfg
+from nvml._study._root.study_paths import StudyPaths
 from nvml.cluster.spectral import silhouette_sweep
 from nvml.cluster.tsne import setup_for_clustering
 from nvml.constants import FileNames

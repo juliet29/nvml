@@ -1,5 +1,5 @@
 from cyclopts import App
-from nvml.cli.studies.paths import ProjectPaths
+from nvml._study._root.paths import ProjectPaths
 
 from nvml.cluster.spectral import make_spectral, plot_cluster_on_data
 from nvml.cluster.tsne import make_tsne, plot_tsne, setup_for_clustering

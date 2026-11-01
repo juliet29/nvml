@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from nvml.cli.paths import PATH_TO_STORAGE, PATH_TO_TEMP
+from nvml._study._root.paths import PATH_TO_STORAGE, PATH_TO_TEMP
 
 
 class External:
