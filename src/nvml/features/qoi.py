@@ -1,6 +1,5 @@
 from pathlib import Path
 
-import numpy as np
 import xarray as xr
 from plyze.flow_graph.interfaces import FlowGraph
 
@@ -15,29 +14,23 @@ def calc_qdim_quantity(
 
     qoi_ds = graph_to_ds(graph)
 
-    # TODO: move this check higher, but since q_dim diveides by velocity, we get infinity whenever U = 0 ->
     q_dim = qoi_ds[dn.zone_dimless_flow]
 
-    # check how many nan rows / cols ther are*
-    # return q_dim.where(np.isinf(q_dim), drop=True).shape
+    qdc = q_dim
 
-    # Keep non-nan numbers, otherwise replace with 0
-    qdc = q_dim.where(~np.isinf(q_dim), other=0)
-    # return q_dim_clean
-    # ic(qdc, ambient_ds)
-
-    # want to check where the wind matches and the wind speed is not 0..
     qdc_wind = (
         qdc.assign_coords(
-            {dn.wind_sector: (dn.datetime, ambient_ds[dn.wind_sector].data)}
+            {
+                dn.wind_sector: (dn.datetime, ambient_ds[dn.wind_sector].data),
+                dn.wind_speed: (dn.datetime, ambient_ds[dn.wind_speed].data),
+            }
         )
         .swap_dims({dn.datetime: dn.wind_sector})
         .drop_vars(dn.datetime)
     )
 
-    res = (
-        qdc_wind.where(qdc_wind[dn.wind_sector] == wind_sector, drop=True)
-        .mean()
-        .values  # .tolist()[0]
-    )
+    res = qdc_wind.where(qdc_wind[dn.wind_speed] != 0, drop=True)
+
+    return res.where(res[dn.wind_sector] == wind_sector, drop=True)
+    return res
     return float(res)

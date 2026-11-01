@@ -55,4 +55,4 @@ class FileNames:
     gnn_best = "gnn_best.pt"
 
     # anova
-    anova_data = "data.csv"
+    regression_data = "data.csv"

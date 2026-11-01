@@ -24,6 +24,7 @@ class GraphModels:
 class ANOVAModels:
     base = PATH_TO_TEMP / "anova"
     aug20 = base / "aug20"
+    aug20v2 = base / "aug20v2"
 
 
 class Data:

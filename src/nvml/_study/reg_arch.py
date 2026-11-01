@@ -4,26 +4,10 @@ from icecream import ic
 
 matplotlib.use("module://matplotlib-backend-kitty")
 
-from nvml._study.config.cstore import CONFIGS_DICT
 from nvml._study._root.study_paths import StudyPaths
 from nvml.constants import FileNames
-from nvml.features.data_maker import save_data
 
 
-# regeeration --
-def save_msd_data():
-    cfg = CONFIGS_DICT["msd_aug20"]
-    direction = "N"
-    save_path = StudyPaths.data.anova.aug20
-    return
-
-    # "are you sure you want to overwerite this path?"
-    save_data(cfg, direction, save_path)
-
-    pass
-
-
-# utils ---
 def get_data_and_splits():
     d = pl.read_csv(StudyPaths.data.anova.aug20 / FileNames.anova_data)
 

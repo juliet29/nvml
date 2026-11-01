@@ -4,6 +4,7 @@ from typing import NamedTuple
 import polars as pl
 import xarray as xr
 from icecream import ic
+from joblib import Parallel, delayed
 from loguru import logger
 from plan2eplus.ezcase.ez import EZ
 from plan2eplus.ops.zones.ezobject import WallNormal
@@ -11,6 +12,7 @@ from tqdm import tqdm
 from utils4plans.io import make_dir
 
 from nvml._study.config.config import MakeConfig
+from nvml.constants import DataNames as dn
 from nvml.constants import FileNames
 from nvml.features.coinc import (
     calc_plan_coinc,
@@ -19,6 +21,10 @@ from nvml.features.coinc import (
 from nvml.features.qoi import calc_qdim_quantity
 from nvml.io import get_ambient_data_as_ds, read_graph
 from nvml.qdim.wind import WindDirectionBinNames, add_wind_sector_coord
+
+COINCIDENCE_POLARS_ENUM = pl.Enum(
+    categories=["ww", "lw", "sd", "ww_lw", "ww_sd", "lw_sd", "ww_lw_sd"]
+)
 
 
 def get_ambient_ds(ix: int, cfg: MakeConfig):
@@ -37,7 +43,8 @@ direction_map: dict[WindDirectionBinNames, WallNormal] = {
 
 class TableEntry(NamedTuple):
     case_name: str
-    target: float
+    space_mean_time_mean: float
+    space_sum_time_mean: float
     feature: str
 
 
@@ -57,7 +64,12 @@ class DataMaker(NamedTuple):
         return self.cfg.get_one_case(self.case_ix)
 
     def get_target(self):
-        return calc_qdim_quantity(self.graph, self.ambient_ds, self.direction)
+        da = calc_qdim_quantity(self.graph, self.ambient_ds, self.direction)
+        space_mean_time_mean = (
+            da.mean(dim=dn.space_name).mean(dim=dn.wind_sector).values
+        )
+        space_sum_time_mean = da.sum(dim=dn.space_name).mean(dim=dn.wind_sector).values
+        return float(space_mean_time_mean), float(space_sum_time_mean)
 
     def get_features(self):
         case_data = self.cfg.get_one_case_data(self.case_ix)
@@ -75,35 +87,39 @@ class DataMaker(NamedTuple):
     def make_table_entry(self):
         return TableEntry(
             self.case_name,
-            self.get_target(),
+            *self.get_target(),
             self.get_features(),
         )
 
 
 def save_data(cfg: MakeConfig, direction: WindDirectionBinNames, path: Path):
-    path = path / FileNames.anova_data
+    path = path / FileNames.regression_data
     make_dir(path)
+    logger.info(f"Will save to {path}")
 
     ambient_ds = get_ambient_ds(0, cfg)
 
-    data = []
-    rng = range(len(cfg))  # [0:3]
+    rng = range(len(cfg))[0:3]
 
-    pl_enum = pl.Enum(
-        categories=["ww", "lw", "sd", "ww_lw", "ww_sd", "lw_sd", "ww_lw_sd"]
+    def process(ix: int):
+        try:
+            # with logger.contextualize(silence=True):
+            dm = DataMaker(ambient_ds, direction, cfg, ix)
+            entry = dm.make_table_entry()
+        except Exception as e:
+            print(f"Issue for {dm.case_name}: {e}")
+            # logger.critical(f"Issue for {dm.case_name}: {e}")
+
+        return entry
+
+    entries = Parallel(n_jobs=3)(
+        delayed(process)(ix) for ix in tqdm(rng, "Processing data")
     )
 
-    for ix in tqdm(rng, "Processing data"):
-        try:
-            with logger.contextualize(silence=True):
-                dm = DataMaker(ambient_ds, direction, cfg, ix)
-                entry = dm.make_table_entry()
-
-                data.append(entry)
-        except Exception as e:
-            logger.critical(f"Issue for {dm.case_name}: {e}")
-
-    df = pl.DataFrame(data).with_columns(pl.col("feature").cast(pl_enum))
+    df = pl.DataFrame(entries).with_columns(
+        pl.col("feature").cast(COINCIDENCE_POLARS_ENUM)
+    )
     ic(df)
-
-    df.write_csv(path)
+    return df
+    #
+    # df.write_csv(path)

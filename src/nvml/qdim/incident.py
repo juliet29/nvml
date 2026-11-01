@@ -1,6 +1,5 @@
 import numpy as np
 import xarray as xr
-from icecream import ic
 
 from nvml.constants import DataNames as dn
 from nvml.qdim.angles import wind_angles_to_vector
@@ -32,7 +31,6 @@ def make_zone_outward_normal_da(zons: list[ZoneAndOutwardNormals]):
     ]  # TODO: for transparency, could bring the wind_angles_to_vector call up here..
 
     padded_data = pad_array(data)
-    ic(padded_data)
     da = xr.DataArray(data=padded_data, coords=coords, dims=dims)
     return da
 
