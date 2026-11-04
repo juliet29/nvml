@@ -34,3 +34,21 @@ def calc_qdim_quantity(
     return res.where(res[dn.wind_sector] == wind_sector, drop=True)
     return res
     return float(res)
+
+
+# NOTE: this is a newer, more efficient version. Version above will be deprecated soon.. 11/4/26
+def gather_qdim(
+    graph: Path | FlowGraph,
+):
+
+    qoi_ds = graph_to_ds(graph)
+    space_ixes = list(range(len(qoi_ds[dn.space_name])))
+
+    q_dim = (
+        qoi_ds[dn.zone_dimless_flow]
+        .assign_coords({dn.space_ix: (dn.space_name, space_ixes)})
+        .swap_dims({dn.space_name: dn.space_ix})
+        .drop_vars(dn.space_name)
+    )
+
+    return q_dim

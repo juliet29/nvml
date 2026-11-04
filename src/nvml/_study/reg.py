@@ -1,12 +1,12 @@
 import matplotlib
 import matplotlib.pyplot as plt
-import statsmodels.formula.api as smf
 from icecream import ic
 from loguru import logger
 from patsy import dmatrix
 
 from nvml._study.reg_arch import get_data, get_data_and_splits
-from nvml.features.visuals import plot_bar_compare
+from nvml.features.models import study_many_formulas
+from nvml.features.visuals import plot_bar_compare, plot_space_sum_time_mean_hist
 
 matplotlib.use("module://matplotlib-backend-kitty")
 from cyclopts import App
@@ -17,10 +17,19 @@ reg_app = App("reg")
 
 
 @reg_app.command()
+def fa():
+    data = get_data_and_splits()
+    return data
+
+
+@reg_app.command()
 def fcb():
     data = get_data_and_splits()
-    p = plot_bar_compare(data)
+    p = plot_space_sum_time_mean_hist(data)
+    p.show()
 
+    if None:
+        plot_bar_compare(data)
     plt.show()
 
 
@@ -40,15 +49,6 @@ def ff():
 @reg_app.command()
 def fe():
     # split model
-    df = get_data_and_splits().to_pandas()
+    df = get_data_and_splits()  # .to_pandas()
     logger.info("data is ready...")
-    ic(df)
-    # return
-    # m1 = smf.ols(f"{dfc.target} ~ {dfc.ww}", df).fit()
-    # ic(m1.summary())
-    # logger.info("don fitting ww")
-    #
-
-    # m1 = smf.ols(f"{dfc.target} ~ {dfc.ww} + {dfc.lw} + {dfc.sd} + ", df).fit()
-    m1 = smf.ols(f"{dfc.target} ~ {dfc.feature} ", df).fit()
-    ic(m1.summary())
+    study_many_formulas(df)

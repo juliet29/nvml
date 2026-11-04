@@ -1,9 +1,7 @@
 import matplotlib
 from cyclopts import App
 
-from nvml._study.config.config import MakeConfig
-from nvml.io import get_ambient_data_as_ds
-from nvml.qdim.wind import add_wind_sector_coord
+from nvml.io import get_ambient_ds_from_cfg
 
 matplotlib.use("module://matplotlib-backend-kitty")
 
@@ -14,17 +12,11 @@ from nvml.features.data_maker import DataMaker, save_data
 reg_data_app = App("rd")
 
 
-def get_ambient_ds(ix: int, cfg: MakeConfig):
-    res = get_ambient_data_as_ds(cfg.get_one_case_data(ix).sql)
-    res = add_wind_sector_coord(res)
-    return res
-
-
 @reg_data_app.command()
 def try_one():
     cfg = CONFIGS_DICT["msd_aug20"]
     direction = "N"
-    ambient_ds = get_ambient_ds(0, cfg)
+    ambient_ds = get_ambient_ds_from_cfg(cfg)
     dm = DataMaker(ambient_ds, direction, cfg, 100)
     return dm.make_table_entry()
 

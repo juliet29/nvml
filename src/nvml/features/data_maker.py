@@ -19,8 +19,8 @@ from nvml.constants import FileNames
 from nvml.features.area import calc_flow_data_metrics, calc_plan_area_metrics
 from nvml.features.coinc import COINCIDENCE_POLARS_ENUM, get_coinc
 from nvml.features.qoi import calc_qdim_quantity
-from nvml.io import get_ambient_data_as_ds, read_graph
-from nvml.qdim.wind import WindDirectionBinNames, add_wind_sector_coord
+from nvml.io import get_ambient_ds_from_cfg, read_graph
+from nvml.qdim.wind import WindDirectionBinNames
 
 direction_map: dict[WindDirectionBinNames, WallNormal] = {
     "N": WallNormal.NORTH,
@@ -28,12 +28,6 @@ direction_map: dict[WindDirectionBinNames, WallNormal] = {
     "S": WallNormal.SOUTH,
     "W": WallNormal.WEST,
 }
-
-
-def get_ambient_ds(ix: int, cfg: MakeConfig):
-    res = get_ambient_data_as_ds(cfg.get_one_case_data(ix).sql)
-    res = add_wind_sector_coord(res)
-    return res
 
 
 class TableEntry(NamedTuple):
@@ -55,8 +49,19 @@ class dfc:
     case_name = "case_name"
     space_mean_time_mean = "space_mean_time_mean"
     space_sum_time_mean = "space_sum_time_mean"
+
     coincidence = "coincidence"
+
     area = "area"
+    num_rooms = "num_rooms"
+    num_paths = "num_paths"
+
+    # paths
+    avg_path_length = "avg_path_length"
+    mode_path_length = "mode_path_length"
+    len_longest_path = "len_longest_path"
+    len_shortest_path = "len_shortest_path"
+    degree_dom_node = "degree_dom_node"
 
     # --- added on later
     ww = "ww"
@@ -136,7 +141,7 @@ def save_data(
     else:
         logger.info(f"Not planning to save this, but the passed path is {path}")
 
-    ambient_ds = get_ambient_ds(0, cfg)
+    ambient_ds = get_ambient_ds_from_cfg(cfg, ix=0)
 
     if true_run:
         rng = range(len(cfg))
