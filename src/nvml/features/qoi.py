@@ -37,6 +37,23 @@ def calc_qdim_quantity(
 
 
 # NOTE: this is a newer, more efficient version. Version above will be deprecated soon.. 11/4/26
+def add_ambient_data_to_da(da: xr.DataArray, ambient_ds: xr.Dataset):
+    da_out = (
+        da.assign_coords(
+            {
+                dn.wind_sector: (dn.datetime, ambient_ds[dn.wind_sector].data),
+                dn.wind_speed: (dn.datetime, ambient_ds[dn.wind_speed].data),
+            }
+        )
+        .swap_dims({dn.datetime: dn.wind_sector})
+        .drop_vars(dn.datetime)
+    )
+
+    # as a courtesy, dropping where wind speed is 0
+
+    return da_out.where(da_out[dn.wind_speed] != 0, drop=True)
+
+
 def gather_qdim(
     graph: Path | FlowGraph,
 ):

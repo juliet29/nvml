@@ -87,3 +87,6 @@ def prep_edge_da(G: FlowGraph, path_graphs: list[PathGraph], wind_speed: xr.Data
 
     da = xr.concat(qdims, dim=dn.edge_name).assign_coords(midx_coords)
     return da
+
+
+# seems like a re-implementation?

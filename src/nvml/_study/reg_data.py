@@ -26,6 +26,6 @@ def mk_data(true_run: bool = False, save: bool = False, njobs: int = 3):
     # have 24 cores? so 18 is not a bad choice
     cfg = CONFIGS_DICT["msd_aug20"]
     direction = "N"
-    save_path = StudyPaths.data.anova.aug20v2
+    save_path = StudyPaths.data.reg.aug20v2
 
     return save_data(cfg, direction, save_path, true_run, save, njobs)

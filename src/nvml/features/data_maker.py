@@ -126,6 +126,16 @@ class DataMaker(NamedTuple):
         )
 
 
+def handle_path(path: Path, file_name: str, save: bool):
+    path = path / file_name
+    make_dir(path)
+    if save:
+        logger.info(f"Will save to {path}")
+    else:
+        logger.info(f"Not planning to save this, but the passed path is {path}")
+    return path
+
+
 def save_data(
     cfg: MakeConfig,
     direction: WindDirectionBinNames,
@@ -134,12 +144,7 @@ def save_data(
     save: bool = False,
     njobs: int = 3,
 ):
-    path = path / FileNames.regression_data
-    make_dir(path)
-    if save:
-        logger.info(f"Will save to {path}")
-    else:
-        logger.info(f"Not planning to save this, but the passed path is {path}")
+    path = handle_path(path, file_name=FileNames.regression_data, save=save)
 
     ambient_ds = get_ambient_ds_from_cfg(cfg, ix=0)
 

@@ -11,7 +11,7 @@ from nvml.constants import FileNames
 
 
 def get_data():
-    d = pl.read_csv(StudyPaths.data.anova.aug20v2 / FileNames.regression_data)
+    d = pl.read_csv(StudyPaths.data.reg.aug20v2 / FileNames.regression_data)
     return d
 
 
@@ -26,7 +26,7 @@ def get_data_and_splits():
 
 # reporting ---
 def fd():
-    data = pl.read_csv(StudyPaths.data.anova.aug20 / FileNames.regression_data)
+    data = pl.read_csv(StudyPaths.data.reg.aug20 / FileNames.regression_data)
     result = data.select(pl.col(dfc.coincidence).value_counts(sort=True)).unnest(
         dfc.coincidence
     )
