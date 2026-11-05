@@ -10,8 +10,10 @@ class DataNames:
 
     # qois
     zone_dimless_flow = "zone_dimless_flow"
+    zone_dimless_temp = "zone_dimless_temp"
     zone_inflow = "zone_inflow"
     q_dim_median = "q_dim_median"
+    zone_temp = "temperature"
 
     # ambient qois
     wind_dir = "wind_direction"
@@ -57,3 +59,4 @@ class FileNames:
     # regression
     regression_data = "data.csv"
     qoi_dataArray = "qoi.nc"
+    tdim_dataArray = "tdim.nc"

@@ -1,7 +1,7 @@
 import matplotlib
 from cyclopts import App
 
-from nvml.features.dataset_maker import make_dataset
+from nvml.features.dataset_maker import make_dataset, make_tdim_dataset
 
 matplotlib.use("module://matplotlib-backend-kitty")
 
@@ -29,3 +29,13 @@ def mk_data(true_run: bool = False, save: bool = False, njobs: int = 3):
     save_path = StudyPaths.data.reg.aug20v2
 
     return make_dataset(cfg, save_path, true_run, save, njobs)
+
+
+@reg_qoi_app.command()
+def mk_tdim(true_run: bool = False, save: bool = False, njobs: int = 3):
+    # have 24 cores? so 18 is not a bad choice
+    cfg = CONFIGS_DICT["msd_aug20"]
+    # direction = "N"
+    save_path = StudyPaths.data.reg.aug20v2
+
+    return make_tdim_dataset(cfg, save_path, true_run, save, njobs)

@@ -4,12 +4,12 @@ from loguru import logger
 from utils4plans.logs import logset
 
 from nvml._study.coinc import coinc_app
+from nvml._study.qe import qoi_explore_app
 from nvml._study.qoi import qoi_app
 
 # from nvml._study.reg import reg_app
 from nvml._study.reg_data import reg_data_app
 from nvml._study.reg_qoi import reg_qoi_app
-from nvml._study.rex import qoi_explore_app
 
 # from nvml._study._root.modules.qdim import qdim
 

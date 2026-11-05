@@ -32,8 +32,6 @@ def calc_qdim_quantity(
     res = qdc_wind.where(qdc_wind[dn.wind_speed] != 0, drop=True)
 
     return res.where(res[dn.wind_sector] == wind_sector, drop=True)
-    return res
-    return float(res)
 
 
 # NOTE: this is a newer, more efficient version. Version above will be deprecated soon.. 11/4/26
@@ -43,14 +41,12 @@ def add_ambient_data_to_da(da: xr.DataArray, ambient_ds: xr.Dataset):
             {
                 dn.wind_sector: (dn.datetime, ambient_ds[dn.wind_sector].data),
                 dn.wind_speed: (dn.datetime, ambient_ds[dn.wind_speed].data),
+                dn.wind_dir: (dn.datetime, ambient_ds[dn.wind_dir].data),
             }
-        )
-        .swap_dims({dn.datetime: dn.wind_sector})
-        .drop_vars(dn.datetime)
+        ).swap_dims({dn.datetime: dn.wind_sector})
+        # .drop_vars(dn.datetime)
     )
-
     # as a courtesy, dropping where wind speed is 0
-
     return da_out.where(da_out[dn.wind_speed] != 0, drop=True)
 
 
@@ -63,6 +59,39 @@ def gather_qdim(
 
     q_dim = (
         qoi_ds[dn.zone_dimless_flow]
+        .assign_coords({dn.space_ix: (dn.space_name, space_ixes)})
+        .swap_dims({dn.space_name: dn.space_ix})
+        .drop_vars(dn.space_name)
+    )
+
+    return q_dim
+
+
+def add_temp_ambient_data_to_da(da: xr.DataArray, ambient_ds: xr.Dataset):
+    da_out = (
+        da.assign_coords(
+            {
+                dn.t_out: (dn.datetime, ambient_ds[dn.t_out].data),
+                dn.wind_speed: (dn.datetime, ambient_ds[dn.wind_speed].data),
+                dn.wind_dir: (dn.datetime, ambient_ds[dn.wind_dir].data),
+            }
+        )
+        # .swap_dims({dn.datetime: dn.wind_sector})
+        # .drop_vars(dn.datetime)
+    )
+    # as a courtesy, dropping where wind speed is 0
+    return da_out.where(da_out[dn.wind_speed] != 0, drop=True)
+
+
+def gather_temp(
+    graph: Path | FlowGraph,
+):
+
+    qoi_ds = graph_to_ds(graph)
+    space_ixes = list(range(len(qoi_ds[dn.space_name])))
+
+    q_dim = (
+        qoi_ds[dn.zone_temp]
         .assign_coords({dn.space_ix: (dn.space_name, space_ixes)})
         .swap_dims({dn.space_name: dn.space_ix})
         .drop_vars(dn.space_name)

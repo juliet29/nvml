@@ -1,9 +1,7 @@
-from pathlib import Path
 from typing import Literal, get_args
 
 import pandas as pd
 import polars as pl
-import seaborn.objects as so
 import xarray as xr
 from loguru import logger
 from plan2eplus.ezcase.ez import EZ
@@ -11,13 +9,13 @@ from plyze.flow_graph.interfaces import FlowGraph
 from utils4plans.lists import get_unique_one
 
 from nvml.constants import DataNames as dn
+from nvml.ml_models.utils import xr_to_polars
 from nvml.qdim.incident import (
     calculate_incidence_factor,
     make_zone_outward_normal_da,
     wind_angle_da_to_vectors,
 )
 from nvml.qdim.intext import get_normals_for_windows_across_zones, make_int_ext_series
-from nvml.utils import save_seaborn_fig, xr_to_polars
 
 WindDirectionBinNames = Literal["N", "NE", "E", "SE", "S", "SW", "W", "NW"]
 
@@ -110,24 +108,24 @@ def add_incidence_data(
     return full_df
 
 
-def plot(df: pl.DataFrame, savedir: Path, ambient_var: str):
-    p = (
-        so.Plot(df, x=ambient_var, y=dn.zone_inflow, color=dn.is_external)
-        .facet(dn.wind_sector)
-        .add(so.Dots())
-    )
-    # p = (
-    #     so.Plot(long, x=ambient_var, y="flow"
-    #     )
-    #     .add(so.Dots())
-    #     .add(so.Line())
-    #     .facet(col=dn.wind_sector, row="qoi")
-    #     .share(y=False)
-    # )
-    #
-    # n_cols = long[dn.wind_sector].nunique()
-    # fig = plt.figure(figsize=(3 * n_cols, 6))
-    # p.on(fig).plot()
-
-    path = savedir / f"corr_plot_{ambient_var}.png"
-    save_seaborn_fig(p, path)
+# def plot(df: pl.DataFrame, savedir: Path, ambient_var: str):
+#     p = (
+#         so.Plot(df, x=ambient_var, y=dn.zone_inflow, color=dn.is_external)
+#         .facet(dn.wind_sector)
+#         .add(so.Dots())
+#     )
+#     # p = (
+#     #     so.Plot(long, x=ambient_var, y="flow"
+#     #     )
+#     #     .add(so.Dots())
+#     #     .add(so.Line())
+#     #     .facet(col=dn.wind_sector, row="qoi")
+#     #     .share(y=False)
+#     # )
+#     #
+#     # n_cols = long[dn.wind_sector].nunique()
+#     # fig = plt.figure(figsize=(3 * n_cols, 6))
+#     # p.on(fig).plot()
+#
+#     path = savedir / f"corr_plot_{ambient_var}.png"
+#     save_seaborn_fig(p, path)
