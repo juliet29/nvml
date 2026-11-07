@@ -104,6 +104,6 @@ def fc():
 
     # aa = sp.fit_transform([a, a])
     # ab = sp.fit_transform([a, b])
-    # abc = sp.fit_transform([a, b, c])
+    abc = sp.fit_transform([a, b, c])
     kern = sp.fit_transform(gks[0:4])
     ic(kern)

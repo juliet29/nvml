@@ -51,16 +51,18 @@ class Q_Summary_Plots:
         median = self.qs.space_median().pipe(QTransforms.time_mean)
 
         ax.scatter(x=mean, y=median)
+        ax.set(xlabel="Mean Q*", ylabel="Median Q*")
         return ax
 
     def scale_plot(self, ax: Axes):
-        variation = self.qs.space_std().pipe(QTransforms.time_mean)
+        std_ = self.qs.space_std().pipe(QTransforms.time_mean)
         range_ = self.qs.space_range().pipe(QTransforms.time_mean)
 
-        ax.scatter(x=variation, y=range_)
+        ax.scatter(x=std_, y=range_)
+        ax.set(xlabel="Std(Q*)", ylabel="Q*_max - Q*_min")
         return ax
 
-    def plot(self):
+    def make_plot(self):
         fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(7, 4))
         self.loc_plot(ax1)
         self.scale_plot(ax2)

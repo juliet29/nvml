@@ -1,6 +1,7 @@
 import matplotlib
 import matplotlib.pyplot as plt
 import xarray as xr
+from utils4plots import set_dynamic_params
 
 from nvml._study._root.study_paths import StudyPaths
 from nvml.constants import FileNames
@@ -45,9 +46,10 @@ def qsummary():
 
 @qoi_explore_app.command()
 def qvarplt():
+    set_dynamic_params()
     data = get_data().pipe(QTransforms.drn_select, drn="N")
     qsp = Q_Summary_Plots(data)
-    qsp.plot()
+    qsp.make_plot()
     plt.show()
 
 

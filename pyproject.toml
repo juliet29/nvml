@@ -35,6 +35,7 @@ dependencies = [
   "joblib>=1.5.3",
   "iplotx>=1.8.0",
   "grakel>=0.1.11",
+  "utils4plots",
 ]
 
 [build-system]
@@ -44,6 +45,7 @@ build-backend = "uv_build"
 [tool.uv.sources]
 plyze = { path = "../plyze", editable = true }
 utils4plans = { path = "../utils4plans/", editable = true }
+utils4plots = { path = "../utils4plots/", editable = true }
 
 [project.scripts]
 # nvml = "nvml.cli.make.main:main"
