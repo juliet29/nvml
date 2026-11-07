@@ -33,6 +33,8 @@ dependencies = [
   "patsy>=1.0.3",
   "statsmodels>=0.15.0",
   "joblib>=1.5.3",
+  "iplotx>=1.8.0",
+  "grakel>=0.1.11",
 ]
 
 [build-system]

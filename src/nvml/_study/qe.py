@@ -15,7 +15,11 @@ qoi_explore_app = App("qe")
 
 def get_data():
     d = xr.open_dataarray(StudyPaths.data.reg.aug20v2 / FileNames.qoi_dataArray)
+    return d
 
+
+def get_temp_data():
+    d = xr.open_dataarray(StudyPaths.data.reg.aug20v2 / FileNames.tdim_dataArray)
     return d
 
 
@@ -23,6 +27,13 @@ def get_data():
 def fa():
     data = get_data()
     return data
+
+
+@qoi_explore_app.command()
+def fb():
+    qda = get_data()
+    tda = get_temp_data()
+    return qda, tda
 
 
 @qoi_explore_app.command()
