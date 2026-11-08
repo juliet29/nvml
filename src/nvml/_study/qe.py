@@ -14,6 +14,9 @@ from cyclopts import App
 qoi_explore_app = App("qe")
 
 
+set_dynamic_params()
+
+
 def get_data():
     d = xr.open_dataarray(StudyPaths.data.reg.aug20v2 / FileNames.qoi_dataArray)
     return d
@@ -46,7 +49,6 @@ def qsummary():
 
 @qoi_explore_app.command()
 def qvarplt():
-    set_dynamic_params()
     data = get_data().pipe(QTransforms.drn_select, drn="N")
     qsp = Q_Summary_Plots(data)
     qsp.make_plot()
@@ -56,4 +58,5 @@ def qvarplt():
 @qoi_explore_app.command()
 def qthetaplt():
     data = get_data()
-    return q_theta_plot(data)
+    fig = q_theta_plot(data)
+    plt.show()
