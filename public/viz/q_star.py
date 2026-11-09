@@ -1,4 +1,5 @@
 import os
+from functools import cached_property
 from pathlib import Path
 from typing import Callable, Literal
 
@@ -7,13 +8,13 @@ import xarray as xr
 from cyclopts import App
 from dotenv import load_dotenv
 from matplotlib.figure import Figure
+from nvml.qoi_study.q_variations import Q_Summary_Plots
 from utils4plots import save_mpl_fig, set_dynamic_params
 
 from nvml._study._root.study_paths import StudyPaths
 from nvml.constants import FileNames
 from nvml.qoi_study.q_richardson import q_ri_plot, q_tdim_plot_rooms, q_tdim_wind
 from nvml.qoi_study.q_theta import q_theta_plot
-from nvml.qoi_study.q_variations import Q_Summary_Plots
 
 BASE_PATH = pyprojroot.find_root(pyprojroot.has_dir(".git"))
 
@@ -27,15 +28,21 @@ FIG_SAVE_PATH = PATH_TO_TEMP / "viz" / "q_star"
 app = App("viz")
 
 
-@app.command()
-def get_data():
-    d = xr.open_dataarray(StudyPaths.data.reg.aug20v2 / FileNames.qoi_dataArray)
-    return d
+class FigureMaker:
+    def __init__(self, qda_path: Path | None = None, tda_path: Path | None = None):
+        default_path = StudyPaths.data.reg.aug20v2
+        self.tda_path = (
+            tda_path if tda_path else default_path / FileNames.tdim_dataArray
+        )
+        self.qda_path = qda_path if qda_path else default_path / FileNames.qoi_dataArray
 
+    @cached_property
+    def qda(self):
+        return xr.open_dataarray(self.qda_path)
 
-def get_temp_data():
-    d = xr.open_dataarray(StudyPaths.data.reg.aug20v2 / FileNames.tdim_dataArray)
-    return d
+    @cached_property
+    def tda(self):
+        return xr.open_dataarray(self.tda_path)
 
 
 def qvarplt():

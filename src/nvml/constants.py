@@ -40,6 +40,8 @@ class DataNames:
     label = "label"
     torch_geometric_graph_label = "y"
 
+    # generic
+
 
 class FileNames:
     metrics_path = "cons/metrics.csv"

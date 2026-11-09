@@ -1,12 +1,9 @@
 import matplotlib
-import matplotlib.pyplot as plt
 import xarray as xr
 from utils4plots import set_dynamic_params
 
 from nvml._study._root.study_paths import StudyPaths
 from nvml.constants import FileNames
-from nvml.qoi_study.q_theta import q_theta_plot
-from nvml.qoi_study.q_variations import Q_Summary_Plots, QTransforms
 
 matplotlib.use("module://matplotlib-backend-kitty")
 from cyclopts import App
@@ -40,23 +37,23 @@ def fb():
     return qda, tda
 
 
-@qoi_explore_app.command()
-def qsummary():
-    data = get_data()
-    qsp = Q_Summary_Plots(data)
-    return qsp
-
-
-@qoi_explore_app.command()
-def qvarplt():
-    data = get_data().pipe(QTransforms.drn_select, drn="N")
-    qsp = Q_Summary_Plots(data)
-    qsp.make_plot()
-    plt.show()
-
-
-@qoi_explore_app.command()
-def qthetaplt():
-    data = get_data()
-    fig = q_theta_plot(data)
-    plt.show()
+# @qoi_explore_app.command()
+# def qsummary():
+#     data = get_data()
+#     qsp = Q_Summary_Plots(data)
+#     return qsp
+#
+#
+# @qoi_explore_app.command()
+# def qvarplt():
+#     data = get_data().pipe(QTransforms.drn_select, drn="N")
+#     qsp = Q_Summary_Plots(data)
+#     qsp.make_plot()
+#     plt.show()
+#
+#
+# @qoi_explore_app.command()
+# def qthetaplt():
+#     data = get_data()
+#     fig = q_theta_plot(data)
+#     plt.show()
