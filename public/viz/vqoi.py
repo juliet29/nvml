@@ -14,12 +14,20 @@ from nvml.constants import DataNames as dn
 from nvml.constants import FileNames
 from nvml.public_paths import PATH_TO_VIZ
 from nvml.qoi_study.space.dist import make_dist_plot
+from nvml.qoi_study.space.statistics import Q_Summary_Plots
+from nvml.qoi_study.temperature.qt import make_qt_plot, make_qtw_plot
 
 matplotlib.use("module://matplotlib-backend-kitty")
 
 app = App("viz")
 
-FigNames = Literal["space_dist_q", "space_dist_t"]
+FigNames = Literal[
+    "space_dist_q",
+    "space_dist_t",
+    "space_statistics",
+    "temperature_qt",
+    "temperature_qtw",
+]
 
 
 class FigureMaker:
@@ -43,6 +51,14 @@ class FigureMaker:
     def get_method(self, name: FigNames):
         return self.__getattribute__(name)
 
+    def temperature_qtw(self):
+        fig = make_qtw_plot(self.qda, self.tda)
+        return fig
+
+    def temperature_qt(self):
+        fig = make_qt_plot(self.qda, self.tda)
+        return fig
+
     def space_dist_q(self):
         FigSizes.set_larger_figsize()
         fig = make_dist_plot(self.qda, dn.zone_dimless_flow)
@@ -51,6 +67,11 @@ class FigureMaker:
     def space_dist_t(self):
         FigSizes.set_larger_figsize()
         fig = make_dist_plot(self.tda, dn.zone_dimless_temp)
+        return fig
+
+    def space_statistics(self):
+        qsp = Q_Summary_Plots(self.qda)
+        fig = qsp.make_plot()
         return fig
 
 

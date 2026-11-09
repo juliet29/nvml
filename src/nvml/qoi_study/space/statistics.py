@@ -7,11 +7,18 @@ from matplotlib.axes import Axes
 from nvml.constants import DataNames as dn
 from nvml.qdim.wind import WindDirectionBinNames
 
+ALPHA = 0.5
+
+
+def style_ax(ax: Axes):
+    ax.axline(xy1=(0, 0), slope=1, color="r", lw=2)
+    ax.set(alpha=ALPHA)
+
 
 class QTransforms:
     @classmethod
-    def time_mean(cls, da: xr.DataArray):
-        return da.mean(dim=dn.wind_sector)
+    def time_median(cls, da: xr.DataArray):
+        return da.median(dim=dn.wind_sector)
 
     @classmethod
     def wind_sector_mean(cls, da: xr.DataArray):
@@ -47,19 +54,21 @@ class Q_Summary_Plots:
         self.qs = Q_Space_Summaries(self.da)
 
     def loc_plot(self, ax: Axes):
-        mean = self.qs.space_mean().pipe(QTransforms.time_mean)
-        median = self.qs.space_median().pipe(QTransforms.time_mean)
+        mean = self.qs.space_mean().pipe(QTransforms.time_median)
+        median = self.qs.space_median().pipe(QTransforms.time_median)
 
         ax.scatter(x=mean, y=median)
         ax.set(xlabel="Mean Q*", ylabel="Median Q*")
+        style_ax(ax)
         return ax
 
     def scale_plot(self, ax: Axes):
-        std_ = self.qs.space_std().pipe(QTransforms.time_mean)
-        range_ = self.qs.space_range().pipe(QTransforms.time_mean)
+        std_ = self.qs.space_std().pipe(QTransforms.time_median)
+        range_ = self.qs.space_range().pipe(QTransforms.time_median)
 
         ax.scatter(x=std_, y=range_)
-        ax.set(xlabel="Std(Q*)", ylabel="Q*_max - Q*_min")
+        ax.set(xlabel="Std Q*", ylabel="Q*_max - Q*_min")
+        style_ax(ax)
         return ax
 
     def make_plot(self):
