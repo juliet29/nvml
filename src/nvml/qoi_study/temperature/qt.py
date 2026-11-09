@@ -58,7 +58,6 @@ def make_qtw_plot(qda: xr.DataArray, tda: xr.DataArray):
         .groupby(dn.wind_sector)
         .median()
     )
-    print(ds2)
 
     fig, ax = plt.subplots()
     f = ds2.plot.scatter(

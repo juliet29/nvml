@@ -93,13 +93,13 @@ def process_tdim(cfg: MakeConfig, ix: int):
 
 
 def make_tdim_dataset(cfg, dir_path, true_run, save, njobs):
-    dir_path = handle_path(dir_path, FileNames.tdim_dataArray, save=save)
+    dir_path = handle_path(dir_path, FileNames.tdim_zone_dataArray, save=save)
     pass
 
     if true_run:
         rng = range(len(cfg))
     else:
-        rng = range(len(cfg))[0:20]
+        rng = range(len(cfg))[0:5]
 
     # arrs = [process(cfg, i) for i in rng]
 
@@ -118,8 +118,10 @@ def make_tdim_dataset(cfg, dir_path, true_run, save, njobs):
     da = add_temp_ambient_data_to_da(concat_arr, ambient_ds)
 
     # now make it dimensionless
-    da_space_average = da.mean(dim=dn.space_ix)
-    da_dim = (da_space_average - da[dn.t_out]) / da[dn.t_out]
+    # da_space_average = da.mean(dim=dn.space_ix)
+    da_dim = (da - da[dn.t_out]) / da[dn.t_out]
+    # print(da_dim)
+    # breakpoint()
 
     da_dim.name = dn.zone_dimless_temp
 

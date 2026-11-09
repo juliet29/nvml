@@ -62,6 +62,7 @@ class FileNames:
     regression_data = "data.csv"
     qoi_dataArray = "qoi.nc"
     tdim_dataArray = "tdim.nc"
+    tdim_zone_dataArray = "tdim_zone.nc"
 
     # down-sampled to 3hrs
     qoi_3h_dataArray = "qoi3h.nc"
