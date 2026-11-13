@@ -2,7 +2,6 @@ from pathlib import Path
 from typing import Any, Callable
 
 import matplotlib
-import networkx as nx
 from grakel import Graph as grk_graph
 from grakel import graph_from_networkx
 from plyze.flow_graph.interfaces import FlowGraph
@@ -10,6 +9,7 @@ from utils4plans.computation.loops2 import DatasetMaker
 
 from nvml._study.config.config import MakeConfig
 from nvml.io import read_graph
+from nvml.wl.kernel.labels import LABEL, label_graph_null
 
 matplotlib.use("module://matplotlib-backend-kitty")
 
@@ -17,22 +17,13 @@ matplotlib.use("module://matplotlib-backend-kitty")
 # def convert_graphs():
 
 
-LABEL = "label"
-
-
-def label_graph_null(G: FlowGraph):
-    d = {i: 1 for i in list(G.nodes)}
-    nx.set_node_attributes(G, d, LABEL)
-    return G
-
-
 class GklDatasetMaker(DatasetMaker):
     def __init__(
         self,
-        label_fx: Callable[[FlowGraph], FlowGraph],
         cfg: MakeConfig,
         dir_path: Path,
         file_name: str = "",
+        label_fx: Callable[[FlowGraph], FlowGraph] = label_graph_null,
         true_run: bool = False,
         save: bool = False,
         njobs: int = 3,

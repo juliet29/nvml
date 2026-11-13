@@ -1,4 +1,4 @@
-from nvml._study.wls import fc, fe  # noqa
+from nvml._study.wls import fe, ff  # noqa
 from nvml.wl.classify import SilhouettePlot  # noqa
 import matplotlib.pyplot as plt  # noqa
 import iplotx as ipx  # noqa
@@ -9,4 +9,5 @@ import matplotlib
 matplotlib.use("module://matplotlib-backend-kitty")
 
 # kern, model, graphs = fc()
-graphs = fe()
+graphs, kern = fe()
+fgraphs = ff()
