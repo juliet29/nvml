@@ -17,6 +17,7 @@ from nvml.features.qoi import (
 from nvml.io import get_ambient_ds_from_cfg, read_graph
 
 
+# Should go up to make config as eaier access thing..
 class DataMaker(NamedTuple):
     cfg: MakeConfig
     case_ix: int

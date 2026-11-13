@@ -14,13 +14,17 @@ from nvml.qdim.wind import add_wind_sector_coord
 
 def read_graph(x: Path | FlowGraph):
     if isinstance(x, Path):
+        if not x.exists():
+            return None
         return FlowGraphModel.read(x)
     return x
 
 
 def graph_to_ds(x: Path | FlowGraph):
-    def handle(x):
+    def handle(x: Path | FlowGraph):
         G = read_graph(x)
+        if not G:
+            return None
         ds = collate_zone_data(G)
         return ds
 

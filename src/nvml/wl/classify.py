@@ -1,5 +1,3 @@
-from dataclasses import dataclass
-
 import matplotlib.cm as cm
 import matplotlib.pyplot as plt
 import numpy as np
@@ -9,17 +7,24 @@ from sklearn.cluster import SpectralClustering
 from sklearn.metrics import silhouette_samples, silhouette_score
 
 
-@dataclass
 class SilhouettePlot:
     """
     Modified from [sklearn example](https://scikit-learn.org/stable/auto_examples/cluster/plot_kmeans_silhouette_analysis.html#sphx-glr-auto-examples-cluster-plot-kmeans-silhouette-analysis-py)
     """
 
-    X: np.ndarray  # this is actually the kernel with distances
-    n_clusters: int
-    random_state: int = 10
-    y_low = 10
-    color_map: Colormap = cm.nipy_spectral
+    def __init__(
+        self,
+        kernel: np.ndarray,
+        n_clusters: int,
+        color_map: Colormap = cm.nipy_spectral,
+    ) -> None:
+        pass
+
+        self.kernel = kernel  # this is actually the kernel with distances
+        self.n_clusters = n_clusters
+        self.color_map: Colormap = color_map
+        self.random_state: int = 10
+        self.y_low = 10
 
     def cluster(self):
         # this can happen on init if make this a real class..
@@ -29,47 +34,50 @@ class SilhouettePlot:
             random_state=self.random_state,
             assign_labels="cluster_qr",  # Todo look this up
         )
-        self.labels = self.model.fit_predict(self.X)
+        self.labels = self.model.fit_predict(self.kernel)
 
     def score(self):
-        return silhouette_score(self.X, self.labels)
+        return silhouette_score(self.kernel, self.labels)
 
     def sil_plot(self, ax: Axes):
-        def handle_cluster(i):
+        y_low = self.y_low
+
+        def handle_cluster(i: int, y_low: int):
             values: np.ndarray = sil_values[self.labels == i]
             values.sort()
             sz: int = values.shape[0]
 
-            y_upper = self.y_low + sz
+            y_upper = y_low + sz
             color = self.color_map(
                 float(i) / self.n_clusters
             )  # TODO: replace with own colormap
-            y_low = y_upper + self.y_low
 
             ax.fill_betweenx(
                 np.arange(y_low, y_upper),
                 0,
                 values,
                 facecolor=color,
-                edge_color=color,
+                edgecolor=color,
                 alpha=0.7,
             )
 
             ax.text(x=-0.05, y=y_low + 0.5 * sz, s=str(i))
 
-            y_low = y_upper + self.y_low
+            y_low = y_upper + y_low
             return y_low
 
-        ax.set_xlim(-1, 1)
-        y_space_for_clusters = len(self.X) + (self.n_clusters + 1) * self.y_low
+        ax.set_xlim(-0.1, 1)
+        y_space_for_clusters = len(self.kernel) + (self.n_clusters + 1) * self.y_low
         ax.set_ylim(0, y_space_for_clusters)
-        sil_values = silhouette_samples(self.X, self.labels)
+        sil_values = silhouette_samples(self.kernel, self.labels)
 
         for i in range(self.n_clusters):
-            handle_cluster(i)
+            y_low = handle_cluster(i, y_low)
 
         # plot average
         ax.axvline(x=self.score(), color="red", linestyle="--")
+        ax.set_yticks([])  # Clear the yaxis labels / ticks
+        ax.set_xticks([-0.1, 0, 0.2, 0.4, 0.6, 0.8, 1])
 
     # def cluster_plot(self, ax: Axes):
     #     # plot the data
@@ -87,6 +95,6 @@ class SilhouettePlot:
     #         ax.scatter(c[0], c[1], marker=f"{ix}", edgecolors="k", s=50)
     #
     def plot(self):
-        fig, (ax1, ax2) = plt.subplots(1, 2)
+        fig, ax1 = plt.subplots(1)
         fig.set_size_inches(18, 7)
         self.sil_plot(ax1)
