@@ -1,6 +1,5 @@
 import matplotlib
 import xarray as xr
-from utils4plots import set_dynamic_params
 
 from nvml._study._root.study_paths import StudyPaths
 from nvml.constants import FileNames
@@ -9,9 +8,6 @@ matplotlib.use("module://matplotlib-backend-kitty")
 from cyclopts import App
 
 qoi_explore_app = App("qe")
-
-
-set_dynamic_params()
 
 
 def get_data():

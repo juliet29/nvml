@@ -5,7 +5,9 @@ import matplotlib
 import matplotlib.pyplot as plt
 from grakel import ShortestPath, VertexHistogram, WeisfeilerLehman  # noqa
 
-from nvml.wl.kernel.prep import GklDatasetMaker
+# from nvml.wl.kernel.prep import GklDatasetMaker
+from nvml.wl.kernel.kern_study import plot_for_all_schemes
+from nvml.wl.kernel.prep_many import ManyLabelsGklDatasetMaker
 from nvml.wl.viz import plot_many_graphs
 
 matplotlib.use("module://matplotlib-backend-kitty")
@@ -36,14 +38,31 @@ def fb():
 
 
 @wls_app.command()
-def fe():
+def fe1():
     p = Path("")
     fn = "fake.csv"
     rng = (0, 30)
-    gkdm = GklDatasetMaker(cfg, p, fn, test_rng=rng)
+    gkdm = ManyLabelsGklDatasetMaker(cfg, p, fn, test_rng=rng)
     gkdm.run()
-    kern = WeisfeilerLehman(normalize=True).fit(gkdm.gk_graphs)
-    return gkdm.gk_graphs, kern  # graphs
+    # kern = WeisfeilerLehman(normalize=True).fit(gkdm.gk_graphs)
+    # df = gkdm.mod_df  # graphs
+    return gkdm
+    # gd = df.to_dict(orient="list")
+    # print(gd.keys())
+    # plot_for_all_schemes(gd)
+    # plt.show()
+    #
+
+
+@wls_app.command()
+def fe2():
+    gkdm = fe1()
+    # kern = WeisfeilerLehman(normalize=True).fit(gkdm.gk_graphs)
+    df = gkdm.mod_df  # graphs
+    gd = df.to_dict(orient="list")
+    print(gd.keys())
+    plot_for_all_schemes(gd)
+    plt.show()
 
 
 @wls_app.command()

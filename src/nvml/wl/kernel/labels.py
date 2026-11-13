@@ -3,6 +3,8 @@ from typing import Literal, get_args
 import networkx as nx
 from plyze.flow_graph.interfaces import FlowGraph
 
+# from copy import deepcopy
+
 
 class LabelTags:
     NODE_LABEL = "node_label"
@@ -90,7 +92,7 @@ def try_all_labels(G: FlowGraph):
     ls = LabelSchemes()
     for name in get_args(LabelSchemeNames):
         scheme_fx = ls.get_method(name)
-        res[name] = scheme_fx(G)
+        res[name] = scheme_fx(G.copy())
     return res
 
 

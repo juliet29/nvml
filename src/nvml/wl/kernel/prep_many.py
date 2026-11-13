@@ -18,7 +18,7 @@ matplotlib.use("module://matplotlib-backend-kitty")
 # def convert_graphs():
 
 
-class GklDatasetMaker(DatasetMaker):
+class ManyLabelsGklDatasetMaker(DatasetMaker):
     def __init__(
         self,
         cfg: MakeConfig,
@@ -44,7 +44,9 @@ class GklDatasetMaker(DatasetMaker):
         except Exception as e:
             print(f"Issue proccessing {ix}:{case_name} -- {e}")
 
-    def agglom_fx(self, labeled_graphs: list[dict[LabelSchemeNames, FlowGraph]]):
+    def agglom_fx(
+        self, labeled_graphs: list[dict[LabelSchemeNames, FlowGraph]]
+    ) -> pd.DataFrame:
         print("Transforming graphs!")
 
         def mk_grakel(gs: list[FlowGraph]):
@@ -58,9 +60,10 @@ class GklDatasetMaker(DatasetMaker):
             )
 
         df = pd.DataFrame(labeled_graphs)  # .to_dict(orient="list")
-        mod_df = df.apply(mk_grakel)
+        self.mod_df = df.apply(mk_grakel)
+        assert isinstance(self.mod_df, pd.DataFrame)
 
-        return mod_df
+        return self.mod_df
 
     def save_fx(self, grk_graphs: list[grk_graph]):
         # going to save different kernels
