@@ -24,6 +24,11 @@ def get_temp_data():
     return d
 
 
+def get_temp_zone_data():
+    d = xr.open_dataarray(StudyPaths.data.reg.aug20v2 / FileNames.tdim_zone_dataArray)
+    return d
+
+
 @qoi_explore_app.command()
 def fa():
     data = get_data()
@@ -34,7 +39,8 @@ def fa():
 def fb():
     qda = get_data()
     tda = get_temp_data()
-    return qda, tda
+    tza = get_temp_zone_data()
+    return qda, tda, tza
 
 
 # @qoi_explore_app.command()

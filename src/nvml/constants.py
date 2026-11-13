@@ -19,6 +19,7 @@ class DataNames:
     wind_dir = "wind_direction"
     wind_speed = "wind_speed"
     wind_sector = "wind_sector"
+    wind_code = "wind_code"
     t_out = "t_out"
 
     # coordinates

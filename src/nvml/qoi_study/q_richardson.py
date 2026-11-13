@@ -15,7 +15,9 @@ cmap_lst = [
     dc.frosted_blue,
     dc.royal_azure,
     dc.indigo,
-    dc.dim_grey,
+    dc.pacific,
+    dc.sky_blue,
+    # dc.dim_grey,
 ]
 
 CMAP = LinearSegmentedColormap.from_list("cyclical", cmap_lst)

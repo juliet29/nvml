@@ -7,4 +7,4 @@ import matplotlib
 
 matplotlib.use("module://matplotlib-backend-kitty")
 
-graphs = fc()
+res = fc()

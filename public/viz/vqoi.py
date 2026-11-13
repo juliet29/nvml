@@ -15,7 +15,8 @@ from nvml.constants import FileNames
 from nvml.public_paths import PATH_TO_VIZ
 from nvml.qoi_study.space.dist import make_dist_plot
 from nvml.qoi_study.space.statistics import Q_Summary_Plots
-from nvml.qoi_study.temperature.qt import make_qt_plot, make_qtw_plot
+from nvml.qoi_study.temperature.qtw import make_qt_plot, make_qtw_plot
+from nvml.qoi_study.temperature.scatter_zone import make_scatter_zone_plot
 
 matplotlib.use("module://matplotlib-backend-kitty")
 
@@ -27,6 +28,7 @@ FigNames = Literal[
     "space_statistics",
     "temperature_qt",
     "temperature_qtw",
+    "scatter_zone",
 ]
 
 
@@ -36,6 +38,7 @@ class FigureMaker:
         self.tda_path = (
             tda_path if tda_path else default_path / FileNames.tdim_dataArray
         )
+        self.tda_zone_path = default_path / FileNames.tdim_zone_dataArray
         self.qda_path = qda_path if qda_path else default_path / FileNames.qoi_dataArray
 
         self.FIG_SAVE_PATH = PATH_TO_VIZ / "vqoi"
@@ -48,8 +51,16 @@ class FigureMaker:
     def tda(self):
         return xr.open_dataarray(self.tda_path)
 
+    @cached_property
+    def tda_zone(self):
+        return xr.open_dataarray(self.tda_zone_path)
+
     def get_method(self, name: FigNames):
         return self.__getattribute__(name)
+
+    def scatter_zone(self):
+        fig = make_scatter_zone_plot(self.qda, self.tda_zone)
+        return fig
 
     def temperature_qtw(self):
         fig = make_qtw_plot(self.qda, self.tda)
