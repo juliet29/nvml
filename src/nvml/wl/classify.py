@@ -3,8 +3,12 @@ import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.axes import Axes
 from matplotlib.colors import Colormap
-from sklearn.cluster import SpectralClustering
-from sklearn.metrics import silhouette_samples, silhouette_score
+from sklearn.metrics import silhouette_samples
+
+
+class spc:
+    k = "k"
+    score = "score"
 
 
 class SilhouettePlot:
@@ -20,24 +24,10 @@ class SilhouettePlot:
     ) -> None:
         pass
 
-        self.kernel = kernel  # this is actually the kernel with distances
-        self.n_clusters = n_clusters
+        self.X = kernel  # this is actually the kernel with distances
         self.color_map: Colormap = color_map
         self.random_state: int = 10
         self.y_low = 10
-
-    def cluster(self):
-        # this can happen on init if make this a real class..
-        self.model = SpectralClustering(
-            n_clusters=self.n_clusters,
-            affinity="precomputed",
-            random_state=self.random_state,
-            assign_labels="cluster_qr",  # Todo look this up
-        )
-        self.labels = self.model.fit_predict(self.kernel)
-
-    def score(self):
-        return silhouette_score(self.kernel, self.labels)
 
     def sil_plot(self, ax: Axes):
         y_low = self.y_low
@@ -67,9 +57,9 @@ class SilhouettePlot:
             return y_low
 
         ax.set_xlim(-0.1, 1)
-        y_space_for_clusters = len(self.kernel) + (self.n_clusters + 1) * self.y_low
+        y_space_for_clusters = len(self.X) + (self.n_clusters + 1) * self.y_low
         ax.set_ylim(0, y_space_for_clusters)
-        sil_values = silhouette_samples(self.kernel, self.labels)
+        sil_values = silhouette_samples(self.X, self.labels)
 
         for i in range(self.n_clusters):
             y_low = handle_cluster(i, y_low)

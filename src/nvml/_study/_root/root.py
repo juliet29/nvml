@@ -10,6 +10,7 @@ from nvml._study.qoi import qoi_app
 # from nvml._study.reg import reg_app
 from nvml._study.reg_data import reg_data_app
 from nvml._study.reg_qoi import reg_qoi_app
+from nvml._study.wl2 import wl2_app
 from nvml._study.wls import wls_app
 
 # from nvml._study._root.modules.qdim import qdim
@@ -22,6 +23,7 @@ app.command(reg_data_app)
 app.command(reg_qoi_app)
 app.command(qoi_explore_app)
 app.command(wls_app)
+app.command(wl2_app)
 
 
 def main():

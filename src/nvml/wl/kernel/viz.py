@@ -11,10 +11,11 @@ def plot_kernel_dist(kernel: np.ndarray, ax: Axes):
 
 
 def plot_kernel_heat(kernel: np.ndarray, ax: Axes):
-    mask = np.triu(kernel)  # here has to be a mask because not flattening
+    small_kernel = kernel[0:20, 0:20]
+    mask = np.triu(small_kernel)  # here has to be a mask because not flattening
     # cmap = sns.diverging_palette(230, 20, as_cmap=True)  # later change
     sns.heatmap(
-        kernel,
+        small_kernel,
         mask=mask,
         ax=ax,
         # cmap=cmap,

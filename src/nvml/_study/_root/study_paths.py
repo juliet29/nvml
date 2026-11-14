@@ -27,6 +27,11 @@ class RegressionModels:
     aug20v2 = base / "aug20v2"
 
 
+class GraphKernels:
+    base = PATH_TO_TEMP / "kern"
+    nov13 = base / "nov13"
+
+
 class Data:
     base = PATH_TO_TEMP
     graphs_jun24 = base / "jun24"
@@ -35,7 +40,7 @@ class Data:
     tsne = base / "tsne/tests"
     gnn = GraphModels
     reg = RegressionModels
-    # gnn = base / "gnn/tests"
+    kern = GraphKernels
 
 
 class StudyPaths:  # for now assuming all are temp

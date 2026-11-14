@@ -59,32 +59,34 @@ def external_internal_edge_label(G: FlowGraph):
     return G
 
 
-LabelSchemeNames = Literal["null", "int_ext", "area_ratio", "discrete_area_ratio"]
+# LabelSchemeNames = Literal["null", "int_ext", "area_ratio", "discrete_area_ratio"]
+LabelSchemeNames = Literal["int_ext"]
 
 
 class LabelSchemes:
     def get_method(self, name: LabelSchemeNames):
         return self.__getattribute__(name)
 
-    @classmethod
-    def null(cls, G: FlowGraph):
-        g1 = null_node_labels(G)
-        return null_edge_labels(g1)
-
+    # @classmethod
+    # def null(cls, G: FlowGraph):
+    #     g1 = null_node_labels(G)
+    #     return null_edge_labels(g1)
+    #
     @classmethod
     def int_ext(cls, G: FlowGraph):
         g1 = external_internal_node_label(G)
         return external_internal_edge_label(g1)
 
-    @classmethod
-    def area_ratio(cls, G: FlowGraph):
-        g1 = area_ratio_node_label(G)
-        return external_internal_edge_label(g1)
-
-    @classmethod
-    def discrete_area_ratio(cls, G: FlowGraph):
-        g1 = discrete_area_ratio_node_label(G)
-        return external_internal_edge_label(g1)
+    # @classmethod
+    # def area_ratio(cls, G: FlowGraph):
+    #     g1 = area_ratio_node_label(G)
+    #     return external_internal_edge_label(g1)
+    #
+    # @classmethod
+    # def discrete_area_ratio(cls, G: FlowGraph):
+    #     g1 = discrete_area_ratio_node_label(G)
+    #     return external_internal_edge_label(g1)
+    #
 
 
 def try_all_labels(G: FlowGraph):

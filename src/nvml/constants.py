@@ -68,3 +68,8 @@ class FileNames:
     # down-sampled to 3hrs
     qoi_3h_dataArray = "qoi3h.nc"
     tdim_3h_dataArray = "tdim3h.nc"
+
+    # wl
+    sm_kernel_npy = "sm_kernel.npy"
+    sp_kernel_npy = "sp_kernel.npy"
+    sm_clusters_npy = "sm_clusters.npy"

@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 from grakel import ShortestPath, VertexHistogram, WeisfeilerLehman  # noqa
 
 # from nvml.wl.kernel.prep import GklDatasetMaker
-from nvml.wl.kernel.kern_study import plot_for_all_schemes
+from nvml.wl.kernel.kern_study import plots_for_all_kernels
 from nvml.wl.kernel.prep_many import ManyLabelsGklDatasetMaker
 from nvml.wl.viz import plot_many_graphs
 
@@ -55,14 +55,29 @@ def fe1():
 
 
 @wls_app.command()
+def fe15():
+    gkdm = fe1()
+    graph_list = gkdm.mod_df["int_ext"]
+    kern = WeisfeilerLehman(normalize=True).fit_transform(graph_list)
+    return gkdm, kern
+
+
+# @wls_app.command()
+# def fe151():
+#     gkdm, kern = fe1()
+#     return try_clustering_and_plot(kern, )
+
+
+@wls_app.command()
 def fe2():
     gkdm = fe1()
     # kern = WeisfeilerLehman(normalize=True).fit(gkdm.gk_graphs)
     df = gkdm.mod_df  # graphs
     gd = df.to_dict(orient="list")
     print(gd.keys())
-    plot_for_all_schemes(gd)
-    plt.show()
+    plots_for_all_kernels(gd)
+    # # plot_for_all_schemes(gd)
+    # plt.show()
 
 
 @wls_app.command()
