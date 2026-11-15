@@ -1,5 +1,13 @@
 from nvml.paths.file_names import Nov13KernDir, RegressionDir
-from nvml.paths.settings import settings
+from nvml.settings import settings
+
+
+class FlowGraphs:
+    base = settings.path_to_data / "flow_graphs"
+    test = base / "fg_test_1"
+    jun24_3 = base / "fg_260624_3"
+    jun30_50 = base / "fg_260630_50"
+    aug20 = base / "fg_260820"
 
 
 class GraphModels:
@@ -21,6 +29,7 @@ class GraphKernels:
 
 
 class DataPaths:
+    fg = FlowGraphs
     gnn = GraphModels
     reg = RegressionModels
     kern = GraphKernels

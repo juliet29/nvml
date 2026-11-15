@@ -12,8 +12,12 @@ FigProduct = Annotated[Path, Product]
 
 class Settings(BaseSettings):
     # TODO: move out of paths
-    long_term_storage: DirectoryPath
+    # long_term_storage: DirectoryPath
     artifacts: DirectoryPath
+    msd_eplus_v1: DirectoryPath
+    msd_eplus_v2: DirectoryPath
+    case_names_file: str
+    # flow_graphs: DirectoryPath
 
     # ------ figures ------
     figure_profile: Literal["journal", "slides"] = "slides"

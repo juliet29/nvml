@@ -1,40 +1,44 @@
 from typing import Literal
 
-from utils4plans.io import read_json
+import polars as pl
 
-from nvml._study._root.paths import PATH_TO_MSD_TEMP, PATH_TO_STORAGE, PATH_TO_TEMP
+# from nvml._study._root.paths import PATH_TO_MSD_TEMP, PATH_TO_TEMP
 from nvml._study.config.case_50 import case_names_50
 from nvml._study.config.config import MakeConfig
+from nvml.paths.data_paths import DataPaths
+from nvml.settings import settings
 
+# TODO: location of external data should be in .env and settings, not hard coded here!
 test_create_config = MakeConfig(
-    eplus_model_source=PATH_TO_STORAGE / "msherlock_v1/data",
+    eplus_model_source=settings.msd_eplus_v1,
     case_names=["100268"],
-    data_store=PATH_TO_TEMP / "test_create",
+    data_store=DataPaths.fg.test,
 )
 
 jun24config = MakeConfig(
-    eplus_model_source=PATH_TO_STORAGE / "msherlock_v1/data",
+    eplus_model_source=settings.msd_eplus_v1,
     case_names=["100268", "100275", "100306"],
-    data_store=PATH_TO_TEMP / "jun24",
+    data_store=DataPaths.fg.jun24_3,
 )
 
 case50 = MakeConfig(
-    eplus_model_source=PATH_TO_STORAGE / "msherlock_v1/data",
+    eplus_model_source=settings.msd_eplus_v1,
     case_names=case_names_50,
-    data_store=PATH_TO_TEMP / "jun30",
+    data_store=DataPaths.fg.jun30_50,
     # json_file_name=""
 )
 
 
 def get_msd_cases_config():
-    path = PATH_TO_MSD_TEMP / "test_msd"
-    case_json = read_json(path / "batch_reports/merged_quick.json")
-    cases = case_json["cases_by_category"]["SUCCEEDED"]
-    str_cases = [str(i) for i in cases]
+    path = settings.msd_eplus_v2
+    cases_file = path / settings.case_names_file
+    case_names = (
+        pl.read_csv(cases_file, has_header=False).to_series().cast(pl.String).to_list()
+    )
     msd_cases = MakeConfig(
-        eplus_model_source=path / "model",
-        case_names=str_cases,
-        data_store=PATH_TO_TEMP / "msd_aug20",
+        eplus_model_source=path,
+        case_names=case_names,
+        data_store=DataPaths.fg.aug20,
         sql_file_name="results/eplusout.sql",
     )
 
