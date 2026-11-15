@@ -2,10 +2,10 @@ lock-version = "1"
 
 [[task]]
 id = "public_2/figures/qoi/task_statistic.py::task_space_statistics"
-state = "0cd7b4196bd43e909e098221818537102f3af4383e6bbf6fe1b547def450f235"
+state = "b14797b3639071d3b857e67566cce815b62533ed3b0b3f896103b5ef2e92007d"
 
 [task.depends_on]
 "../../artifacts/nvml/data/anova/aug20v2/qoi.nc" = "0126f49b57d27defd0c04a62cb0637ac508797cfaec79f4665d456bacc0315a9"
 
 [task.produces]
-"../../artifacts/nvml/figures/qoi/statistics.pdf" = "a3825cfcc19950340bd9dacc41cac33647cf2555eb3f6794e5956e9853bac508"
+"../../artifacts/nvml/figures/slides/qoi/statistics.svg" = "ec3622effb01f494816b76c343a79cba984d88a6de6c60c6204215c98eb0139c"

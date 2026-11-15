@@ -75,4 +75,5 @@ class Q_Summary_Plots:
         fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(7, 4))
         self.loc_plot(ax1)
         self.scale_plot(ax2)
+
         return fig
