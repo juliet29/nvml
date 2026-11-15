@@ -21,6 +21,4 @@ def task_space_statistics(
     qda = xr.open_dataarray(data_path)
     qsp = Q_Summary_Plots(qda)
     fig = qsp.make_plot()
-
-    # fig.savefig(out_path, format="pdf")
     save_mpl_fig(fig, out_path)
