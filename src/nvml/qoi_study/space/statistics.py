@@ -57,7 +57,7 @@ class Q_Summary_Plots:
         mean = self.qs.space_mean().pipe(QTransforms.time_median)
         median = self.qs.space_median().pipe(QTransforms.time_median)
 
-        ax.scatter(x=mean, y=median)
+        ax.scatter(x=mean, y=median, rasterized=True)
         ax.set(xlabel="Mean Q*", ylabel="Median Q*")
         style_ax(ax)
         return ax
@@ -66,7 +66,7 @@ class Q_Summary_Plots:
         std_ = self.qs.space_std().pipe(QTransforms.time_median)
         range_ = self.qs.space_range().pipe(QTransforms.time_median)
 
-        ax.scatter(x=std_, y=range_)
+        ax.scatter(x=std_, y=range_, rasterized=True)
         ax.set(xlabel="Std Q*", ylabel="Q*_max - Q*_min")
         style_ax(ax)
         return ax

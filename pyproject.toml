@@ -38,6 +38,10 @@ dependencies = [
   "utils4plots",
   "h5netcdf>=1.8.2",
   "h5py>=3.16.0",
+  "pytask>=0.6.0",
+  "pygraphviz>=2.0.4",
+  "dot>=0.3.0",
+  "pydantic-settings>=2.14.2",
 ]
 
 [build-system]
@@ -50,6 +54,7 @@ utils4plans = { path = "../utils4plans/", editable = true }
 utils4plots = { path = "../utils4plots/", editable = true }
 
 [project.scripts]
-# nvml = "nvml.cli.make.main:main"
-# nvmlsmk = "nvml.cli.smk.main:main"
-nvmls = "nvml._study._root.root:main"
+ns = "nvml._study._root.root:main"
+
+[tool.pytask.ini_options]
+paths = ["public_2"]
