@@ -42,6 +42,7 @@ dependencies = [
   "pygraphviz>=2.0.4",
   "dot>=0.3.0",
   "pydantic-settings>=2.14.2",
+  "py-spy>=0.4.3",
 ]
 
 [build-system]
@@ -57,4 +58,4 @@ utils4plots = { path = "../utils4plots/", editable = true }
 ns = "nvml._study._root.root:main"
 
 [tool.pytask.ini_options]
-paths = ["public_2"]
+paths = ["public"]
