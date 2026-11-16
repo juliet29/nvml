@@ -1,4 +1,5 @@
-from nvml.paths.file_names import Nov13KernDir, RegressionDir
+from nvml._paths.file_names import Nov13KernDir, RegressionDir
+
 from nvml.settings import settings
 
 

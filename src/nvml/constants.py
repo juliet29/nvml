@@ -40,36 +40,37 @@ class DataNames:
     # clustering
     label = "label"
     torch_geometric_graph_label = "y"
-
+    # flow_graph
+    flow_graph_data = "data"
     # generic
 
 
-class FileNames:
-    metrics_path = "cons/metrics.csv"
-    qois_path = "cons/qois.csv"
-    graph_json_path = "data/out.json"
-
-    # cluster q_dim
-    zarr = "out.zarr"
-    ambient = "ambient.nc"
-    general_nc = "out.nc"
-    general_fig = "out.png"
-
-    # nn
-    gnn = "gnn.pt"
-    gnn_best = "gnn_best.pt"
-
-    # regression
-    regression_data = "data.csv"
-    qoi_dataArray = "qoi.nc"
-    tdim_dataArray = "tdim.nc"
-    tdim_zone_dataArray = "tdim_zone.nc"
-
-    # down-sampled to 3hrs
-    qoi_3h_dataArray = "qoi3h.nc"
-    tdim_3h_dataArray = "tdim3h.nc"
-
-    # wl
-    sm_kernel_npy = "sm_kernel.npy"
-    sp_kernel_npy = "sp_kernel.npy"
-    sm_clusters_npy = "sm_clusters.npy"
+# class FileNames:
+#     metrics_path = "cons/metrics.csv"
+#     qois_path = "cons/qois.csv"
+#     graph_json_path = "data/out.json"
+#
+#     # cluster q_dim
+#     zarr = "out.zarr"
+#     ambient = "ambient.nc"
+#     general_nc = "out.nc"
+#     general_fig = "out.png"
+#
+#     # nn
+#     gnn = "gnn.pt"
+#     gnn_best = "gnn_best.pt"
+#
+#     # regression
+#     regression_data = "data.csv"
+#     qoi_dataArray = "qoi.nc"
+#     tdim_dataArray = "tdim.nc"
+#     tdim_zone_dataArray = "tdim_zone.nc"
+#
+#     # down-sampled to 3hrs
+#     qoi_3h_dataArray = "qoi3h.nc"
+#     tdim_3h_dataArray = "tdim3h.nc"
+#
+#     # wl
+#     sm_kernel_npy = "sm_kernel.npy"
+#     sp_kernel_npy = "sp_kernel.npy"
+#     sm_clusters_npy = "sm_clusters.npy"

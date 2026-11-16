@@ -5,7 +5,7 @@ import polars as pl
 # from nvml._study._root.paths import PATH_TO_MSD_TEMP, PATH_TO_TEMP
 from nvml._study.config.case_50 import case_names_50
 from nvml._study.config.config import MakeConfig
-from nvml.paths.data_paths import DataPaths
+from nvml._paths import DataPaths
 from nvml.settings import settings
 
 # TODO: location of external data should be in .env and settings, not hard coded here!
