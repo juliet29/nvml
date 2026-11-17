@@ -3,7 +3,12 @@ from pathlib import Path
 _BasePath = type(Path())
 
 
-class Nov13KernDir(_BasePath):
+class GraphRepDir(_BasePath):
+    def gk_graphs_parquet(self, test: bool = True) -> Path:
+        if test:
+            return self / "test_gk_graphs.parquet"
+        return self / "gk_graphs.parquet"
+
     @property
     def sm_kernel_npy(self) -> Path:
         return self / "sm_kernel.npy"

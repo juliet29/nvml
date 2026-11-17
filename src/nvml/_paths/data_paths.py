@@ -1,5 +1,4 @@
-from nvml._paths.file_names import Nov13KernDir, RegressionDir
-
+from nvml._paths.file_names import GraphRepDir, RegressionDir
 from nvml.settings import settings
 
 
@@ -26,7 +25,8 @@ class RegressionModels:
 
 class GraphKernels:
     base = settings.path_to_data / "kern"
-    nov13 = Nov13KernDir(base / "nov13")
+    v1 = GraphRepDir(base / "v1")
+    v2 = GraphRepDir(base / "v2")
 
 
 class DataPaths:

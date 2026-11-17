@@ -13,7 +13,15 @@ class DataNames:
     zone_dimless_temp = "zone_dimless_temp"
     zone_inflow = "zone_inflow"
     q_dim_median = "q_dim_median"
+    zone_net_flow = "zone_net_flow"
     zone_temp = "temperature"
+
+    # alt qoi+names
+    q = "q"  # this is for a single opening
+    q_dim = "q_dim"
+    t_dim = "t_dim"
+    Ri = "Ri"
+    theta = "theta"
 
     # ambient qois
     wind_dir = "wind_direction"
@@ -21,6 +29,10 @@ class DataNames:
     wind_sector = "wind_sector"
     wind_code = "wind_code"
     t_out = "t_out"
+    # alt ambient names
+    U = "U"
+    theta = "theta"
+    T = "T"  # exterior
 
     # coordinates
     case_name = "case_name"
@@ -42,7 +54,6 @@ class DataNames:
     torch_geometric_graph_label = "y"
     # flow_graph
     flow_graph_data = "data"
-    # generic
 
 
 # class FileNames:

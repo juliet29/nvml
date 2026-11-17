@@ -4,10 +4,12 @@ from loguru import logger
 from utils4plans.logs import logset
 
 from nvml._study.buoy import by
+from nvml._study.wl import wl3_app
 
 app = App()
 
 app.command(by)
+app.command(wl3_app)
 
 
 def main():

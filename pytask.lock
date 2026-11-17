@@ -1,6 +1,65 @@
 lock-version = "1"
 
 [[task]]
+id = "public/data/task_gk_gaphs.py::task_make_gk_graphs"
+state = "a1a0b0676e46b5b464dd4526272eed26a537f1ce489d075ae1023c015d804b7e"
+
+[task.depends_on]
+
+[task.produces]
+"../../artifacts/nvml/data/kern/v2/gk_graphs.parquet" = "9b5f12adeee96c84ff265f4848e19477bd3e6d84dd81f55452b6731586137ce8"
+
+[[task]]
+id = "public/figures/qoi/task_buoy.py::task_corr_U_t_dim"
+state = "238f57c5142de2b23b4d5836e04813fe20ef85e1f2a56c36d366a0b69750fd8a"
+
+[task.depends_on]
+
+[task.produces]
+"../../artifacts/nvml/figures/slides/qoi/U_t_dim.svg" = "6e4b7bcd398f7fc0d83e2bd8fc38b99424c171b01ee44e441adcbfeb300e5869"
+
+[[task]]
+id = "public/figures/qoi/task_buoy.py::task_dists"
+state = "238f57c5142de2b23b4d5836e04813fe20ef85e1f2a56c36d366a0b69750fd8a"
+
+[task.depends_on]
+
+[task.produces]
+"../../artifacts/nvml/figures/slides/qoi/d_Ri.svg" = "d7655883bdb773d6397d5a09fee4848d5f35c6797fef13bf8335916811664034"
+"../../artifacts/nvml/figures/slides/qoi/d_U.svg" = "c96d65ef9a9fbbe055f52f51d28696539d9b7443e15332d969b61d413708ba00"
+"../../artifacts/nvml/figures/slides/qoi/d_q_dim.svg" = "7b81198be7a5e7d0527e1110f0f588365571cb9af873efa6c492e702fb184451"
+"../../artifacts/nvml/figures/slides/qoi/d_t_dim.svg" = "ce88deceac363bb6b17935647564e8f24d530c2e59104e5644d940b36e811656"
+
+[[task]]
+id = "public/figures/qoi/task_buoy.py::task_plot_q_ri"
+state = "5538805c979328ec20daa42344682fdf615246213304cc5be9ef0715b1f6d0d8"
+
+[task.depends_on]
+
+[task.produces]
+"../../artifacts/nvml/figures/slides/qoi/q_ri_tdim.svg" = "4f14f3d24d3fdd6bca083acfed089f76d15cd36c8264bbfe66fd108ea683370c"
+"../../artifacts/nvml/figures/slides/qoi/q_ri_u.svg" = "4c02daaabf79fbadd00ed70992970389236fa53a3febeba0001682665091173e"
+
+[[task]]
+id = "public/figures/qoi/task_buoy.py::task_plot_q_ri_facets"
+state = "238f57c5142de2b23b4d5836e04813fe20ef85e1f2a56c36d366a0b69750fd8a"
+
+[task.depends_on]
+
+[task.produces]
+"../../artifacts/nvml/figures/slides/qoi/q_ri_tdim.svg" = "afccfe939eb856992a8f6d0f79b6e74bc965e95693acb6c3743f25459751af3d"
+"../../artifacts/nvml/figures/slides/qoi/q_ri_u.svg" = "b71722cabb1c8cddf57186f3f9a59a3493fb7c15ba801e4744a755e0bf9eaf90"
+
+[[task]]
+id = "public/figures/qoi/task_buoy.py::task_plot_qdim"
+state = "238f57c5142de2b23b4d5836e04813fe20ef85e1f2a56c36d366a0b69750fd8a"
+
+[task.depends_on]
+
+[task.produces]
+"../../artifacts/nvml/figures/slides/qoi/qdim.svg" = "95559f6cba05f7a2e8a64c97896a45feb45f9ae172d9b5f4439f16dea5a3ab5d"
+
+[[task]]
 id = "public/figures/qoi/task_statistic.py::task_space_statistics"
 state = "5ae1a87d4fd3af7175864a7554118b0ce7df6264aaf700f46c9632f815c72932"
 

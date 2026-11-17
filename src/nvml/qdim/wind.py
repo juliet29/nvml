@@ -18,6 +18,7 @@ from nvml.qdim.incident import (
 from nvml.qdim.intext import get_normals_for_windows_across_zones, make_int_ext_series
 
 WindDirectionBinNames = Literal["N", "NE", "E", "SE", "S", "SW", "W", "NW"]
+WindPolarsEnum = pl.Enum(get_args(WindDirectionBinNames))
 
 
 class WindDirectionBins:

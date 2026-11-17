@@ -43,6 +43,7 @@ dependencies = [
   "dot>=0.3.0",
   "pydantic-settings>=2.14.2",
   "py-spy>=0.4.3",
+  "polars>=1.41.2",
 ]
 
 [build-system]

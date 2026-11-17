@@ -1,3 +1,5 @@
+pt *args="":
+  uv run ptpython {{args}}
 
 slides *args="":
     FIGURE_PROFILE=slides uv run pytask {{args}}
