@@ -1,3 +1,4 @@
+from functools import partial
 from typing import Callable, Literal, get_args
 
 import matplotlib.pyplot as plt
@@ -14,7 +15,7 @@ from grakel import (  # noqa
 from icecream import ic
 from matplotlib.axes import Axes
 
-from nvml.wl.kernel.labels import LabelSchemeNames
+from nvml.wl.dataset.labels import LabelSchemeNames
 from nvml.wl.kernel.viz import plot_kernel_dist, plot_kernel_heat
 from nvml.wl.sil import score_plot, sil_dist_plot, spc, study_sil_score
 
@@ -22,15 +23,14 @@ KFxType = Callable[[list[grk_graph]], np.ndarray]
 KernelNames = Literal["wl", "sp", "sm"]
 
 
-def mkf(grk_class: type[Kernel]):
-    return grk_class(normalize=True)
+def mkf(grk_class: type[Kernel], **kwargs):
+    return grk_class(normalize=True, **kwargs)
 
 
-kernel_fxs: dict[KernelNames, Kernel] = {
-    "wl": mkf(WeisfeilerLehman),
-    "sp": mkf(ShortestPath),
-    "sm": mkf(SubgraphMatching),
-    # "gs": mkf(GraphletSampling),
+kernel_fxs: dict[KernelNames, Callable[[], Kernel]] = {
+    "wl": partial(mkf, WeisfeilerLehman),
+    "sp": partial(mkf, ShortestPath),
+    "sm": partial(mkf, SubgraphMatching, k=4, n_jobs=12, verbose=True),
 }
 
 

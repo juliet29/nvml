@@ -1,6 +1,25 @@
 lock-version = "1"
 
 [[task]]
+id = "public/data/task_gk_data.py::task_make_gk_graphs"
+state = "ef82007ddf576b024babaaf5349c12cb4dbd7b0873e0da0a196a9b6d61d700d6"
+
+[task.depends_on]
+
+[task.produces]
+"../../artifacts/nvml/data/kern/v2/gk_graphs.joblib" = "9b5f12adeee96c84ff265f4848e19477bd3e6d84dd81f55452b6731586137ce8"
+
+[[task]]
+id = "public/data/task_gk_data.py::task_make_gk_kernel"
+state = "ef82007ddf576b024babaaf5349c12cb4dbd7b0873e0da0a196a9b6d61d700d6"
+
+[task.depends_on]
+"../../artifacts/nvml/data/kern/v2/gk_graphs.joblib" = "9b5f12adeee96c84ff265f4848e19477bd3e6d84dd81f55452b6731586137ce8"
+
+[task.produces]
+"../../artifacts/nvml/data/kern/v2/kernel_matrices.h5" = "b86885a175994db077db8fb4c328f34ec6687375261fd2bde4069458ac5ebd6f"
+
+[[task]]
 id = "public/data/task_gk_gaphs.py::task_make_gk_graphs"
 state = "a1a0b0676e46b5b464dd4526272eed26a537f1ce489d075ae1023c015d804b7e"
 

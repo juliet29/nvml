@@ -12,9 +12,12 @@ from utils4plans.computation.loops2 import DatasetMaker
 
 from nvml._study.config.config import MakeConfig
 from nvml.io import read_graph
-from nvml.wl.kernel.labels import LabelSchemeNames, LabelTags, try_all_labels
+from nvml.wl.dataset.labels import LabelSchemeNames, LabelTags, try_all_labels
 
 matplotlib.use("module://matplotlib-backend-kitty")
+
+
+GKDict = dict[LabelSchemeNames, list[grk_graph]]
 
 
 def mk_grakel(fg: FlowGraph) -> grk_graph:
@@ -65,9 +68,7 @@ class ManyLabelsGklDatasetMaker(DatasetMaker):
     def agglom_fx(self, labeled_graphs: list[dict[LabelSchemeNames, grk_graph]]):
         logger.info("Agglomerating data!")
 
-        self.graph_dict: dict[LabelSchemeNames, list[grk_graph]] = pd.DataFrame(
-            labeled_graphs
-        ).to_dict(orient="list")
+        self.graph_dict: GKDict = pd.DataFrame(labeled_graphs).to_dict(orient="list")
         return self.graph_dict
 
     def save_fx(self, gd: dict):

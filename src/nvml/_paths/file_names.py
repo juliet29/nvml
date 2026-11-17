@@ -4,10 +4,14 @@ _BasePath = type(Path())
 
 
 class GraphRepDir(_BasePath):
-    def gk_graphs_parquet(self, test: bool = True) -> Path:
+    def gk_graphs_joblib(self, test: bool = True) -> Path:
         if test:
-            return self / "test_gk_graphs.parquet"
-        return self / "gk_graphs.parquet"
+            return self / "test_gk_graphs.joblib"
+        return self / "gk_graphs.joblib"
+
+    @property
+    def kernel_matrices_h5(self) -> Path:
+        return self / "kernel_matrices.h5"
 
     @property
     def sm_kernel_npy(self) -> Path:
