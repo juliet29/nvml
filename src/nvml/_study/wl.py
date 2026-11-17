@@ -11,7 +11,7 @@ from nvml import DataPaths
 
 # from nvml.wl.kernel.prep import GklDatasetMaker
 from nvml._study.config.cstore import CONFIGS_DICT
-from nvml.wl.dataset.gk_dataset import ManyLabelsGklDatasetMaker
+from nvml.wl.graphs.gk_dataset import ManyLabelsGklDatasetMaker
 
 matplotlib.use("module://matplotlib-backend-kitty")
 wl3_app = App("wl3")

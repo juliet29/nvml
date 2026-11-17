@@ -1,8 +1,18 @@
 lock-version = "1"
 
 [[task]]
+id = "public/data/task_gk_data.py::task_make_gk_clusters"
+state = "2c055cfb21d93335798cf20d0ee34380b5ec2a9de45e9bafc13227786d86dbe7"
+
+[task.depends_on]
+"../../artifacts/nvml/data/kern/v2/kernel_matrices.h5" = "b86885a175994db077db8fb4c328f34ec6687375261fd2bde4069458ac5ebd6f"
+
+[task.produces]
+"../../artifacts/nvml/data/kern/v2/clusters.h5" = "489ea6a5169738311f7d63ca888bc9122c63daf690ead21b06867d69db47861d"
+
+[[task]]
 id = "public/data/task_gk_data.py::task_make_gk_graphs"
-state = "ef82007ddf576b024babaaf5349c12cb4dbd7b0873e0da0a196a9b6d61d700d6"
+state = "2c055cfb21d93335798cf20d0ee34380b5ec2a9de45e9bafc13227786d86dbe7"
 
 [task.depends_on]
 
@@ -11,7 +21,7 @@ state = "ef82007ddf576b024babaaf5349c12cb4dbd7b0873e0da0a196a9b6d61d700d6"
 
 [[task]]
 id = "public/data/task_gk_data.py::task_make_gk_kernel"
-state = "ef82007ddf576b024babaaf5349c12cb4dbd7b0873e0da0a196a9b6d61d700d6"
+state = "2c055cfb21d93335798cf20d0ee34380b5ec2a9de45e9bafc13227786d86dbe7"
 
 [task.depends_on]
 "../../artifacts/nvml/data/kern/v2/gk_graphs.joblib" = "9b5f12adeee96c84ff265f4848e19477bd3e6d84dd81f55452b6731586137ce8"

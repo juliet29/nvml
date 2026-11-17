@@ -6,7 +6,7 @@ from utils4plots.save import save_mpl_fig
 from nvml._study.config.cstore import CONFIGS_DICT
 from nvml.buoy.data import BuoyData
 from nvml.buoy.viz_q import corr_U_t_dim, dists, facet_q_ri, plot_q_dim
-from nvml.settings import FigProduct, settings
+from nvml.settings import TaskProduct, settings
 
 LOC = "qoi"
 cfg = CONFIGS_DICT["msd_aug20"]
@@ -15,7 +15,7 @@ set_dynamic_params(settings.figure_profile)
 
 
 def task_plot_qdim(
-    out_path: FigProduct = settings.fig_path(LOC, "qdim"),
+    out_path: TaskProduct = settings.fig_path(LOC, "qdim"),
 ):
     CASE_NAME = str(4969)
     ROOM_NAME = "room_2"
@@ -28,8 +28,8 @@ def task_plot_qdim(
 
 
 def task_plot_q_ri_facets(
-    p1: FigProduct = settings.fig_path(LOC, "q_ri_u"),
-    p2: FigProduct = settings.fig_path(LOC, "q_ri_tdim"),
+    p1: TaskProduct = settings.fig_path(LOC, "q_ri_u"),
+    p2: TaskProduct = settings.fig_path(LOC, "q_ri_tdim"),
 ):
     CASE_NAME = str(4969)
     ROOM_NAME = "room_2"
@@ -43,7 +43,7 @@ def task_plot_q_ri_facets(
 
 
 def task_corr_U_t_dim(
-    p1: FigProduct = settings.fig_path(LOC, "U_t_dim"),
+    p1: TaskProduct = settings.fig_path(LOC, "U_t_dim"),
 ):
     CASE_NAME = str(4969)
     ROOM_NAME = "room_2"
@@ -56,10 +56,10 @@ def task_corr_U_t_dim(
 
 
 def task_dists(
-    p1: FigProduct = settings.fig_path(LOC, "d_Ri"),
-    p2: FigProduct = settings.fig_path(LOC, "d_t_dim"),
-    p3: FigProduct = settings.fig_path(LOC, "d_U"),
-    p4: FigProduct = settings.fig_path(LOC, "d_q_dim"),
+    p1: TaskProduct = settings.fig_path(LOC, "d_Ri"),
+    p2: TaskProduct = settings.fig_path(LOC, "d_t_dim"),
+    p3: TaskProduct = settings.fig_path(LOC, "d_U"),
+    p4: TaskProduct = settings.fig_path(LOC, "d_q_dim"),
 ):
     CASE_NAME = str(4969)
     ROOM_NAME = "room_2"

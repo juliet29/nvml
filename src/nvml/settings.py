@@ -3,21 +3,45 @@ from typing import Annotated, Literal
 
 import pyprojroot
 from pydantic import DirectoryPath, computed_field
-from pydantic_settings import BaseSettings, SettingsConfigDict
+from pydantic_settings import BaseSettings, SettingsConfigDict, YamlConfigSettingsSource
 from pytask import Product
 
 BASE_DIR = pyprojroot.find_root(pyprojroot.has_dir(".git"))
-FigProduct = Annotated[Path, Product]
+TaskProduct = Annotated[Path, Product]
 
 
 class Settings(BaseSettings):
-    # TODO: move out of paths
-    # long_term_storage: DirectoryPath
+    # machine-specific paths
     artifacts: DirectoryPath
     msd_eplus_v1: DirectoryPath
     msd_eplus_v2: DirectoryPath
     case_names_file: str
-    # flow_graphs: DirectoryPath
+
+    # -- experimental config ---
+    random_state: int
+
+    # settings config -----
+    model_config = SettingsConfigDict(
+        env_file=BASE_DIR / ".env",
+        env_file_encoding="utf-8",
+        yaml_file=BASE_DIR / "config.yaml",
+        extra="ignore",
+    )
+
+    @classmethod
+    def settings_customise_sources(
+        cls,
+        settings_cls,
+        init_settings,
+        env_settings,
+        dotenv_settings,
+        file_secret_settings,
+    ):
+        return (
+            env_settings,
+            dotenv_settings,
+            YamlConfigSettingsSource(settings_cls),
+        )
 
     # ------ figures ------
     figure_profile: Literal["journal", "slides"] = "slides"
@@ -45,12 +69,6 @@ class Settings(BaseSettings):
     @property
     def path_to_results(self) -> Path:
         return self.artifacts / "data"
-
-    model_config = SettingsConfigDict(
-        env_file=(".env", ".env.local"),
-        env_file_encoding="utf-8",
-        extra="ignore",
-    )
 
 
 settings = Settings()  # pyright: ignore[reportCallIssue]

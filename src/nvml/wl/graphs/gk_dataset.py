@@ -12,7 +12,7 @@ from utils4plans.computation.loops2 import DatasetMaker
 
 from nvml._study.config.config import MakeConfig
 from nvml.io import read_graph
-from nvml.wl.dataset.labels import LabelSchemeNames, LabelTags, try_all_labels
+from nvml.wl.graphs.labels import LabelSchemeNames, LabelTags, try_all_labels
 
 matplotlib.use("module://matplotlib-backend-kitty")
 

@@ -5,14 +5,15 @@ import h5py
 import joblib
 from loguru import logger
 
-from nvml.wl.dataset.gk_dataset import GKDict
-from nvml.wl.dataset.labels import LabelSchemeNames
-from nvml.wl.kernel.kern_study import KernelNames, kernel_fxs
+from nvml.wl.graphs.gk_dataset import GKDict
+from nvml.wl.graphs.labels import LabelSchemeNames
+from nvml.wl.kernel.interfaces import KernelNames, kernel_fxs
 
 # try one of three kernels for each label scheme => 12 kernels total
 # save with h5py
 
 
+# TODO: can re-write to clean this up
 def save_kernels(gk_graph_path: Path, out_path: Path):
 
     def make_kernel_matrix(label: LabelSchemeNames, kernel: KernelNames):
