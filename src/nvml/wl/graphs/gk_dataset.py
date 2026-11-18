@@ -2,7 +2,6 @@ from pathlib import Path
 from typing import Any
 
 import joblib
-import matplotlib
 import pandas as pd
 from grakel import Graph as grk_graph
 from grakel import graph_from_networkx
@@ -13,9 +12,6 @@ from utils4plans.computation.loops2 import DatasetMaker
 from nvml._study.config.config import MakeConfig
 from nvml.io import read_graph
 from nvml.wl.graphs.labels import LabelSchemeNames, LabelTags, try_all_labels
-
-matplotlib.use("module://matplotlib-backend-kitty")
-
 
 GKDict = dict[LabelSchemeNames, list[grk_graph]]
 

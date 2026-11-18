@@ -32,6 +32,10 @@ class RegressionDir(_BasePath):
         return self / "qoi.nc"
 
     @property
+    def flow_qoi_dataset(self):
+        return self / "qoi.nc"
+
+    @property
     def tdim_dataArray(self):
         return self / "tdim.nc"
 

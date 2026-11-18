@@ -18,9 +18,10 @@ class GraphModels:
 
 
 class RegressionModels:
-    base = settings.path_to_data / "anova"
+    base = settings.path_to_data / "reg"
     aug20 = base / "aug20"
     aug20v2 = RegressionDir(base / "aug20v2")
+    v3 = RegressionDir(base / "v3")
 
 
 class GraphKernels:

@@ -23,6 +23,11 @@ class DataNames:
     Ri = "Ri"
     theta = "theta"
 
+    # flow qois
+    intake = "intake"
+    dist = "dist"
+    cv = "coeff_variation"
+
     # ambient qois
     wind_dir = "wind_direction"
     wind_speed = "wind_speed"
