@@ -3,10 +3,12 @@ from icecream import ic
 from loguru import logger
 from utils4plans.logs import logset
 
-from public.data.task_flow_qoi import fq
+from public.data.task_features import features
+from public.data.task_flow_qoi import qois
 
 app = App()
-app.command(fq)
+app.command(qois)
+app.command(features)
 
 
 def main():

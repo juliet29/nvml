@@ -24,22 +24,13 @@ class GraphRepDir(_BasePath):
 
 class RegressionDir(_BasePath):
     @property
-    def regression_data(self):
-        return self / "data.csv"
+    def const_features(self):
+        return self / "const_fea.parquet"
 
     @property
-    def qoi_dataArray(self):
-        return self / "qoi.nc"
+    def wdep_features(self):
+        return self / "wdep_fea.parquet"
 
     @property
     def flow_qoi_dataset(self):
         return self / "qoi.nc"
-
-    @property
-    def tdim_dataArray(self):
-        return self / "tdim.nc"
-
-    # TOD): opportunity to have this be a method and pass variable!
-    @property
-    def tdim_zone_dataArray(self):
-        return self / "tdim_zone.nc"

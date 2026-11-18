@@ -1,12 +1,10 @@
 from typing import NamedTuple
 
-from plan2eplus.geometry.directions import WallNormal
 from plyze.flow_graph.interfaces import FlowGraph
 from plyze.metrics.calculators import FlowMetricsCalculator, PlanMetricsCalculator
 from plyze.metrics.interfaces import MetricHolder
 from plyze.metrics.registries import FlowMetricRegistry as fmr
 from plyze.metrics.registries import PlanMetricRegistry as pmr
-from plyze.qoi.xarray_helpers import CardinalNames
 
 
 class BulkPlan(NamedTuple):
@@ -30,10 +28,9 @@ def calc_plan_area_metrics(G: FlowGraph):
     return BulkPlan(d[pmr.area.name], d[pmr.num_rooms.name])  # pyright: ignore[reportArgumentType]
 
 
-def calc_flow_data_metrics(G: FlowGraph, wall_normal: WallNormal):
+def calc_flow_data_metrics(G: FlowGraph):
     holder = MetricHolder()
-    assert wall_normal.name in CardinalNames
-    FlowMetricsCalculator(G, holder, wall_normal.name)()  # pyright: ignore[reportArgumentType]
+    FlowMetricsCalculator(G, holder, None)()  # pyright: ignore[reportArgumentType]
     d = holder.holder_dict
 
     return FlowPaths(

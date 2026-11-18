@@ -1,11 +1,12 @@
 from enum import Enum
-from typing import NamedTuple
+from typing import NamedTuple, get_args
 
 import polars as pl
 import xarray as xr
 from plan2eplus.ezcase.ez import EZ
 from plan2eplus.ops.zones.ezobject import WallNormal
 from plyze.flow_graph.interfaces import FlowGraph
+from plyze.qoi.xarray_helpers import CardinalNameLiteral
 
 from nvml.constants import DataNames as dn
 from nvml.qdim.angles import wind_angles_to_vector
@@ -60,11 +61,13 @@ def get_feature(ct_set: set[CoincidentType]):
 
 
 def calc_plan_coinc(
-    G: FlowGraph, case: EZ, incident_wind_drn: WallNormal
+    G: FlowGraph, case: EZ, incident_wind_drn: CardinalNameLiteral
 ) -> xr.DataArray:
     zons = get_normals_for_windows_across_zones(G, case)
     zone_da = make_zone_outward_normal_da(zons)
-    angle_drn = wind_angles_to_vector(incident_wind_drn.value)
+
+    wind_value = WallNormal[incident_wind_drn].value
+    angle_drn = wind_angles_to_vector(wind_value)
 
     angle_da = xr.DataArray(
         data=angle_drn, coords={dn.xy_vector: ["x", "y"]}, dims=dn.xy_vector
@@ -86,12 +89,9 @@ def tabulate_coinc_features(da: xr.DataArray):
 
 
 def get_coinc_for_all_normal_drns(G: FlowGraph, case: EZ):
-    wn = WallNormal
 
-    d: dict[type[WallNormal], CoincidenceTuple] = {}
-    for drn in [wn.NORTH, wn.SOUTH, wn.EAST, wn.WEST]:
+    def mk(drn):
         coinc_da = calc_plan_coinc(G, case, drn)
-        coinc_tuple = tabulate_coinc_features(coinc_da)
-        d[wn] = coinc_tuple
+        return tabulate_coinc_features(coinc_da)
 
-    return d
+    return {drn: mk(drn) for drn in get_args(CardinalNameLiteral)}

@@ -8,12 +8,11 @@ from nvml.settings import TaskProduct
 TRUE_RUN, SAVE = False, True
 N_JOBS = 3
 
-# TODO: cyclopts for data, pytask for figures.
 
-fq = App("fq")
+qois = App("fq")
 
 
-@fq.command()
+@qois.command()
 def make(
     true_run: bool = TRUE_RUN,
     save: bool = SAVE,

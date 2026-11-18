@@ -60,6 +60,9 @@ class DataNames:
     # flow_graph
     flow_graph_data = "data"
 
+    # features
+    degree_dom_node = "degree_dom_node"
+
 
 # class FileNames:
 #     metrics_path = "cons/metrics.csv"
