@@ -28,7 +28,6 @@ class RegDataId(NamedTuple):
 class RegDataPaths(NamedTuple):
     features_const: Path
     features_wdep: Path
-    qoi: Path
     pca: Path
 
     @property
@@ -39,30 +38,35 @@ class RegDataPaths(NamedTuple):
     def fw(self):
         return pl.read_parquet(self.features_wdep)
 
-    @property
-    def qo(self):
-        return xr.load_dataset(self.qoi)
-
     def pc(self, reg_data_id: RegDataId):
         f = h5py.File(self.pca, "r")
-        arr = np.array(f[reg_data_id.pca_id])
+        arr = np.array(f[reg_data_id.pca_id.name][dn.components])  # pyright: ignore[reportIndexIssue]
         return arr
 
 
-def collate_data(rdp: RegDataPaths, rdid: RegDataId):
-    # get the wind directions for rdid
+def prepare_qoi_df(qoi_path: Path):
+    ds = xr.load_dataset(qoi_path)
+    data = ds.groupby(dfc.wind_sector).median(dim=dn.datetime).to_dataframe()
+    df = pl.from_pandas(data, include_index=True)
+    return df
 
-    long_card_drn = direction_map.get(rdid.wind_dir)
-    wdf = rdp.fw.filter(pl.col(dfc.wind_sector) == long_card_drn)
 
-    df = rdp.fc.join(wdf, on=dfc.wind_sector)
-
-    # get the qois -> time median, wind dir of interest
-    qoi = (
-        rdp.qo.sel({dn.wind_sector: rdid.wind_dir}).median(dim=dn.datetime).to_pandas()
-    )
-    qoi_df = pl.from_pandas(qoi, include_index=True)
-    df2 = df.join(qoi_df)
+def collate_data(rdp: RegDataPaths, rdid: RegDataId, qoi_df: pl.DataFrame):
+    # wind dir dependent features
+    if rdid.wind_dir in direction_map.keys():
+        long_card_drn = direction_map.get(rdid.wind_dir)
+        wdf = rdp.fw.filter(pl.col(dfc.wind_sector) == long_card_drn)
+        df = rdp.fc.join(wdf, on=dfc.case_name)
+    else:
+        df = rdp.fc
 
     # get the pcas
     pca = rdp.pc(rdid)[:, : rdid.num_pcs]  # index of pca is index into cfg..?
+    pcns = [f"pc_{i}" for i in range(rdid.num_pcs)]
+    pca_df = pl.DataFrame(pca, schema=pcns)
+    df2 = pl.concat([df, pca_df], how="horizontal")
+
+    # get the qois at the  wind dir of interest
+    return df2.join(
+        qoi_df.filter(pl.col(dfc.wind_sector) == rdid.wind_dir), on=dfc.case_name
+    )

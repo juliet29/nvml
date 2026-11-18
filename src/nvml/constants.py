@@ -63,6 +63,10 @@ class DataNames:
     # features
     degree_dom_node = "degree_dom_node"
 
+    # pca / kernel # TODO: move here -> duplicate locally
+    components = "components"
+    eigenvalues = "eigenvalues"
+
 
 # class FileNames:
 #     metrics_path = "cons/metrics.csv"

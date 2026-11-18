@@ -13,12 +13,14 @@ direction_map: dict[WindDirectionBinNames, CardinalNameLiteral] = {
 
 class dfc:
     case_name = "case_name"
-
     wind_sector = dn.wind_sector
 
-    # inflow =
-    space_sum_time_mean = "space_sum_time_mean"
+    # qoi
+    intake = "intake"
+    cv = "coeff_variation"
+    dr = "dist"
 
+    # bulk
     area = "area"
     num_rooms = "num_rooms"
     num_paths = "num_paths"
@@ -30,7 +32,11 @@ class dfc:
     len_shortest_path = "len_shortest_path"
     degree_dom_node = "degree_dom_node"
 
-    # --- added on later
+    # coincidence
     ww = "ww"
     lw = "lw"
     sd = "sd"
+
+    @classmethod
+    def pc(cls, v: int):
+        return f"pc_{v}"
