@@ -54,7 +54,6 @@ class CoincidenceTuple(NamedTuple):
 
 
 def get_feature(ct_set: set[CoincidentType]):
-
     res = features.get(frozenset(ct_set))
     assert res, f"Could not find reature for this set: {ct_set}"
     return res
@@ -63,7 +62,6 @@ def get_feature(ct_set: set[CoincidentType]):
 def calc_plan_coinc(
     G: FlowGraph, case: EZ, incident_wind_drn: WallNormal
 ) -> xr.DataArray:
-
     zons = get_normals_for_windows_across_zones(G, case)
     zone_da = make_zone_outward_normal_da(zons)
     angle_drn = wind_angles_to_vector(incident_wind_drn.value)
@@ -87,7 +85,13 @@ def tabulate_coinc_features(da: xr.DataArray):
     return CoincidenceTuple(windward, leeward, side)
 
 
-def get_coinc(G: FlowGraph, case: EZ, wall_normal: WallNormal):
-    coinc_da = calc_plan_coinc(G, case, wall_normal)
-    coinc_feature = tabulate_coinc_features(coinc_da)
-    return coinc_feature.name
+def get_coinc_for_all_normal_drns(G: FlowGraph, case: EZ):
+    wn = WallNormal
+
+    d: dict[type[WallNormal], CoincidenceTuple] = {}
+    for drn in [wn.NORTH, wn.SOUTH, wn.EAST, wn.WEST]:
+        coinc_da = calc_plan_coinc(G, case, drn)
+        coinc_tuple = tabulate_coinc_features(coinc_da)
+        d[wn] = coinc_tuple
+
+    return d
