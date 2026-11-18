@@ -125,6 +125,19 @@ state = "fa949278eda914da0b8afe6c359f92d3fca7a88184c0cb1bc09c22cca48896b7"
 "../../artifacts/nvml/figures/slides/cluster/wl_int_ext_3.svg" = "3ee1e09022296854a2c47bbcb4a3a97f8eeac20c2830a0b7e33399d9fc76b9fe"
 
 [[task]]
+id = "public/figures/graph_rep/task_pca.py::task_plot_graph_pca_components"
+state = "651b1b631ba0db7bb365406de38288549836ad6181261e82b32d941a54f01a3a"
+
+[task.depends_on]
+"../../artifacts/nvml/data/kern/v2/pca.h5" = "d56338e05b2b040618602d6152f56d4cec8f56989692d3d0c81c9e23ecccfc07"
+"task_plot_graph_clusters[5]::group" = "0"
+
+[task.produces]
+"../../artifacts/nvml/figures/slides/pca/wl_int_ext/ordered/comp_0.svg" = "57f1cbbab13f825fa3cf55dc98779cc102870a9cad42b00849050d3fdaa5b60a"
+"../../artifacts/nvml/figures/slides/pca/wl_int_ext/ordered/comp_1.svg" = "90b168759ac554d1dad272ceb172c7f525425a794e159e1ae98c459c7fa0e9de"
+"../../artifacts/nvml/figures/slides/pca/wl_int_ext/ordered/comp_2.svg" = "4c2f711e3cabe884e89b3e5d897147237e7607920677e65ef08d6902fed28bcf"
+
+[[task]]
 id = "public/figures/qoi/task_buoy.py::task_corr_U_t_dim"
 state = "238f57c5142de2b23b4d5836e04813fe20ef85e1f2a56c36d366a0b69750fd8a"
 

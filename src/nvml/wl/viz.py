@@ -2,6 +2,7 @@ import iplotx as ipx
 import matplotlib
 import matplotlib.pyplot as plt
 from icecream import ic
+from loguru import logger
 from matplotlib.axes import Axes
 from plyze.flow_graph.interfaces import FlowGraph
 
@@ -30,21 +31,26 @@ def wrap_subplots(num_plots: int, max_cols: int = 4):
 
 
 def plot_one(cfg: MakeConfig, ix: int, ax: Axes, label: str = ""):
-    G = read_graph(cfg.get_one_graph_path(ix))
-    assert G
-
     case_name = cfg.get_one_case(ix)
+    G = read_graph(cfg.get_one_graph_path(ix))
 
     if not label:
         label = case_name
 
+    if not G:
+        ax.set_title(label)
+        return ax
+    assert G
+
     try:
         res = ipx.plot(G, ax=ax, layout=G.layout)
     except AttributeError as e:
-        raise ValueError(
+        logger.critical(
             f"Invalid data for case {case_name}: {G.nodes}, {G.edges}, {G.layout}: {e}"
         )
-    ax.set_title(label)
+        ax.set_title(label)
+        return ax
+
     return res[0]
 
 

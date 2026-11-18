@@ -21,6 +21,11 @@ class PCAId(NamedTuple):
         cname = f"{self.kernel}/{self.scheme}"
         return cname
 
+    @property
+    def path_name(self):
+        cname = f"{self.kernel}_{self.scheme}"
+        return cname
+
 
 class PCANames:
     components = "components"

@@ -3,7 +3,9 @@ from typing import Literal, get_args
 
 import matplotlib.pyplot as plt
 import polars as pl
+from loguru import logger
 from matplotlib.axes import Axes
+from tqdm import tqdm
 
 from nvml._study.config.config import MakeConfig
 from nvml.settings import settings
@@ -18,7 +20,7 @@ from nvml.wl.viz import plot_one
 SampleGroups = Literal["low", "a1", "mid", "a2", "high"]
 
 
-def make_sample_indices(s: pl.Series, n_samples: int):
+def make_sample_indices_quartile(s: pl.Series, n_samples: int):
 
     quantiles = [0.125, 0.4375, 0.5625, 0.875]
     labels = get_args(SampleGroups)
@@ -33,11 +35,21 @@ def make_sample_indices(s: pl.Series, n_samples: int):
         .to_list()
         for label in labels
     }
-    return (d["low"], d["mid"], d["high"])
+    return (d["high"], d["mid"], d["low"])
+
+
+def make_sample_indices_ordered(s: pl.Series, n_samples: int):
+    high = s.arg_sort().head(n_samples).to_list()
+    low = s.arg_sort().tail(n_samples).reverse().to_list()
+    mid = s.abs().arg_sort().head(n_samples).to_list()
+    return high, low, mid
 
 
 def plot_quartile_group(
-    cfg: MakeConfig, s: pl.Series, indices: list[int], ax_group: list[Axes]
+    cfg: MakeConfig,
+    s: pl.Series,
+    indices: list[int],
+    ax_group: list[Axes],
 ):
 
     for ax, ix in zip(ax_group, indices):
@@ -45,7 +57,7 @@ def plot_quartile_group(
         value = s[ix]
         percentile = (s < value).mean()
 
-        plot_one(cfg, ix, ax, label=f"{case_name} | {int(percentile * 100)}")
+        plot_one(cfg, ix, ax, label=f"{case_name} | {int(percentile * 100)}th Perc.")
     pass
 
 
@@ -53,18 +65,28 @@ def plot_component_graphs(
     cfg: MakeConfig,
     pca_path: Path,
     pca_id: PCAId,
-    component_num: list[int],
-    n_samples: int = 3,
+    component_numbers: list[int],
+    n_samples: int,
+    method: Literal["ordered", "percentile"],
 ):
     pcd = get_pca_data(pca_path, pca_id)
 
+    ix_fx = (
+        make_sample_indices_ordered
+        if method == "ordered"
+        else make_sample_indices_quartile
+    )
+
     def handle_num(num: int):
+        logger.info(f"Beginning figure for component {num}")
         s = pl.Series(pcd.components[:, num])
-        bins = make_sample_indices(s, n_samples)
-        bin_names = ["low", "mid", "high"]
+        index_groups = ix_fx(s, n_samples)
+        bin_names = ["high", "mid", "low"]
 
-        fig, ax_groups = plt.subplots(nrows=len(bins), ncols=n_samples)
-        for name, bin in zip(bin_names, bins):
-            plot_quartile_group(cfg, s, bin)
+        fig, ax_groups = plt.subplots(nrows=len(index_groups), ncols=n_samples)
+        for name, bin, ax_group in tqdm(zip(bin_names, index_groups, ax_groups)):
+            ax_group[0].set_ylabel(f"{name.capitalize()} on Ax {num}")
+            plot_quartile_group(cfg, s, bin, ax_group)
+        return fig
 
-    pass
+    return [handle_num(i) for i in tqdm(component_numbers)]
