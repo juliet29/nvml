@@ -5,6 +5,10 @@ import polars as pl
 import xarray as xr
 from joblib import Parallel, delayed
 from loguru import logger
+from nvml.regression.area import calc_flow_data_metrics, calc_plan_area_metrics
+from nvml.regression.coinc import COINCIDENCE_POLARS_ENUM, get_coinc
+from nvml.regression.data.interfaces import TableEntry, dfc, direction_map
+from nvml.regression.qoi import calc_qdim_quantity
 from plan2eplus.ezcase.ez import EZ
 from plan2eplus.ops.zones.ezobject import WallNormal
 from plyze.metrics.registries import FlowMetricRegistry as fmr
@@ -16,10 +20,6 @@ from utils4plans.lists import filter_none
 from nvml._study.config.config import MakeConfig
 from nvml.constants import DataNames as dn
 from nvml.constants import FileNames
-from nvml.features.area import calc_flow_data_metrics, calc_plan_area_metrics
-from nvml.features.coinc import COINCIDENCE_POLARS_ENUM, get_coinc
-from nvml.features.data.interfaces import TableEntry, dfc, direction_map
-from nvml.features.qoi import calc_qdim_quantity
 from nvml.io import get_ambient_ds_from_cfg, read_graph
 from nvml.qdim.wind import WindDirectionBinNames
 

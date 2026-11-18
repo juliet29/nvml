@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import polars as pl
 import seaborn.objects as so
 
-from nvml.features.data.interfaces import dfc
+from nvml.regression.data.interfaces import dfc
 
 # class dfc:
 #     feature = "feature"

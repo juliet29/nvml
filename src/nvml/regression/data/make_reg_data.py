@@ -3,15 +3,15 @@ from typing import Any
 
 import polars as pl
 from loguru import logger
+from nvml.regression.data.interfaces import TableEntry, dfc
+from nvml.regression.data.single import FeaturesMaker
 from utils4plans.computation.loops2 import DatasetMaker
 
 from nvml._study.config.config import MakeConfig
-from nvml.features.data.interfaces import TableEntry, dfc
-from nvml.features.data.single import FeaturesMaker
 from nvml.io import get_ambient_ds_from_cfg
 
 
-class FlowQOIDatasetMaker(DatasetMaker):
+class RegDatasetMaker(DatasetMaker):
     def __init__(
         self,
         cfg: MakeConfig,

@@ -5,7 +5,7 @@ import xarray as xr
 from nvml._study._root.study_paths import StudyPaths
 from nvml._study.reg_arch import get_data, get_data_and_splits
 from nvml.constants import FileNames
-from nvml.features.visuals import plot_bar_compare, plot_space_sum_time_mean_hist
+from nvml.regression.visuals import plot_bar_compare, plot_space_sum_time_mean_hist
 
 matplotlib.use("module://matplotlib-backend-kitty")
 from cyclopts import App

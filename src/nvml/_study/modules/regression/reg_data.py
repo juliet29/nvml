@@ -8,7 +8,7 @@ matplotlib.use("module://matplotlib-backend-kitty")
 from nvml._study._root.study_paths import StudyPaths
 
 from nvml._study.config.cstore import CONFIGS_DICT
-from nvml.features.data.single import FeaturesMaker, save_data
+from nvml.regression.data.single import FeaturesMaker, save_data
 
 reg_data_app = App("rd")
 

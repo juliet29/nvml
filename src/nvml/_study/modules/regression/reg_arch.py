@@ -2,7 +2,7 @@ import matplotlib
 import polars as pl
 from icecream import ic
 
-from nvml.features.data.interfaces import dfc
+from nvml.regression.data.interfaces import dfc
 
 matplotlib.use("module://matplotlib-backend-kitty")
 

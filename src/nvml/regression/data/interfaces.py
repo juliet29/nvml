@@ -14,17 +14,25 @@ direction_map: dict[WindDirectionBinNames, WallNormal] = {
 
 class TableEntry(NamedTuple):
     case_name: str
-    space_mean_time_mean: float
-    space_sum_time_mean: float
-    coincidence: str
-    area: float
-    num_rooms: int
-    num_paths: int
-    avg_path_length: float
-    mode_path_length: int
-    len_longest_path: int
-    len_shortest_path: int
-    degree_dom_node: int
+    # space_mean_time_mean: float
+    # space_sum_time_mean: float
+    # coincidence: str
+    # area: float
+    # num_rooms: int
+    # num_paths: int
+    # avg_path_length: float
+    # mode_path_length: int
+    # len_longest_path: int
+    # len_shortest_path: int
+    # degree_dom_node: int
+
+    coincidence: Coincidence
+    bulk_plan: BulkPlan
+    flow_paths: FlowPaths
+
+    # builds a dict..
+    def make_entry(self):
+        pass
 
 
 class dfc:

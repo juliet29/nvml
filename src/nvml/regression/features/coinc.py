@@ -1,6 +1,6 @@
 from enum import Enum
+from typing import NamedTuple
 
-import numpy as np
 import polars as pl
 import xarray as xr
 from plan2eplus.ezcase.ez import EZ
@@ -47,7 +47,14 @@ COINCIDENCE_POLARS_ENUM = pl.Enum(
 )
 
 
+class CoincidenceTuple(NamedTuple):
+    windward: bool
+    leeward: bool
+    side: bool
+
+
 def get_feature(ct_set: set[CoincidentType]):
+
     res = features.get(frozenset(ct_set))
     assert res, f"Could not find reature for this set: {ct_set}"
     return res
@@ -70,15 +77,14 @@ def calc_plan_coinc(
 
 
 def tabulate_coinc_features(da: xr.DataArray):
-    # turn the data into a set
-    data = da.data.flatten()
-    clean_data = data[~np.isnan(data)]
-    number_set = set(clean_data.tolist())
+    data = da.data.flatten().tolist()
+    number_set = set(data)
 
-    # map set to CoincidentType enum
-    ct_set = {CoincidentType(i) for i in number_set}
-
-    return get_feature(ct_set)
+    ct = CoincidentType
+    windward = ct.windward.value in number_set
+    leeward = ct.leeward.value in number_set
+    side = ct.side.value in number_set
+    return CoincidenceTuple(windward, leeward, side)
 
 
 def get_coinc(G: FlowGraph, case: EZ, wall_normal: WallNormal):

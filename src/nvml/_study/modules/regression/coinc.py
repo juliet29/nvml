@@ -8,8 +8,8 @@ from plan2eplus.geometry.directions import WallNormal
 from nvml._study.config.config import MakeConfig
 from nvml._study.config.cstore import CONFIGS_DICT
 from nvml.constants import DataNames as dn
-from nvml.features.coinc import calc_plan_coinc, tabulate_coinc_features
-from nvml.features.qoi import calc_qdim_quantity
+from nvml.regression.coinc import calc_plan_coinc, tabulate_coinc_features
+from nvml.regression.qoi import calc_qdim_quantity
 from nvml.io import get_ambient_data_as_ds, read_graph
 from nvml.qdim.incident import make_zone_outward_normal_da
 from nvml.qdim.intext import get_normals_for_windows_across_zones
