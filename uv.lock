@@ -898,6 +898,17 @@ wheels = [
 ]
 
 [[package]]
+name = "filemover"
+version = "0.1.0"
+source = { directory = "../other_proj/filemover" }
+dependencies = [
+    { name = "click" },
+]
+
+[package.metadata]
+requires-dist = [{ name = "click", specifier = ">=7.0" }]
+
+[[package]]
 name = "flexcache"
 version = "0.3"
 source = { registry = "https://pypi.org/simple" }
@@ -2458,6 +2469,7 @@ dependencies = [
     { name = "cyclopts" },
     { name = "dask" },
     { name = "dot" },
+    { name = "filemover" },
     { name = "grakel" },
     { name = "h5netcdf" },
     { name = "h5py" },
@@ -2500,6 +2512,7 @@ requires-dist = [
     { name = "cyclopts", specifier = ">=4.18.0" },
     { name = "dask", specifier = ">=2026.6.0" },
     { name = "dot", specifier = ">=0.3.0" },
+    { name = "filemover", directory = "../other_proj/filemover" },
     { name = "grakel", specifier = ">=0.1.11" },
     { name = "h5netcdf", specifier = ">=1.8.2" },
     { name = "h5py", specifier = ">=3.16.0" },

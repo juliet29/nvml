@@ -7,7 +7,7 @@ from tqdm import tqdm
 from nvml._study.config.config import MakeConfig
 from nvml.constants import DataNames as dn
 from nvml.constants import FileNames
-from nvml.features.data_maker import handle_path
+from nvml.features.data.single import handle_path
 from nvml.features.qoi import (
     add_ambient_data_to_da,
     add_temp_ambient_data_to_da,

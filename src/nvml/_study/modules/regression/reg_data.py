@@ -6,8 +6,9 @@ from nvml.io import get_ambient_ds_from_cfg
 matplotlib.use("module://matplotlib-backend-kitty")
 
 from nvml._study._root.study_paths import StudyPaths
+
 from nvml._study.config.cstore import CONFIGS_DICT
-from nvml.features.data_maker import DataMaker, save_data
+from nvml.features.data.single import FeaturesMaker, save_data
 
 reg_data_app = App("rd")
 
@@ -17,7 +18,7 @@ def try_one():
     cfg = CONFIGS_DICT["msd_aug20"]
     direction = "N"
     ambient_ds = get_ambient_ds_from_cfg(cfg)
-    dm = DataMaker(ambient_ds, direction, cfg, 100)
+    dm = FeaturesMaker(ambient_ds, direction, cfg, 100)
     return dm.make_table_entry()
 
 

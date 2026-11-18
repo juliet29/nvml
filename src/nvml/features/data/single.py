@@ -18,58 +18,13 @@ from nvml.constants import DataNames as dn
 from nvml.constants import FileNames
 from nvml.features.area import calc_flow_data_metrics, calc_plan_area_metrics
 from nvml.features.coinc import COINCIDENCE_POLARS_ENUM, get_coinc
+from nvml.features.data.interfaces import TableEntry, dfc, direction_map
 from nvml.features.qoi import calc_qdim_quantity
 from nvml.io import get_ambient_ds_from_cfg, read_graph
 from nvml.qdim.wind import WindDirectionBinNames
 
-direction_map: dict[WindDirectionBinNames, WallNormal] = {
-    "N": WallNormal.NORTH,
-    "E": WallNormal.EAST,
-    "S": WallNormal.SOUTH,
-    "W": WallNormal.WEST,
-}
 
-
-class TableEntry(NamedTuple):
-    case_name: str
-    space_mean_time_mean: float
-    space_sum_time_mean: float
-    coincidence: str
-    area: float
-    num_rooms: int
-    num_paths: int
-    avg_path_length: float
-    mode_path_length: int
-    len_longest_path: int
-    len_shortest_path: int
-    degree_dom_node: int
-
-
-class dfc:
-    case_name = "case_name"
-    space_mean_time_mean = "space_mean_time_mean"
-    space_sum_time_mean = "space_sum_time_mean"
-
-    coincidence = "coincidence"
-
-    area = "area"
-    num_rooms = "num_rooms"
-    num_paths = "num_paths"
-
-    # paths
-    avg_path_length = "avg_path_length"
-    mode_path_length = "mode_path_length"
-    len_longest_path = "len_longest_path"
-    len_shortest_path = "len_shortest_path"
-    degree_dom_node = "degree_dom_node"
-
-    # --- added on later
-    ww = "ww"
-    lw = "lw"
-    sd = "sd"
-
-
-class DataMaker(NamedTuple):
+class FeaturesMaker(NamedTuple):
     ambient_ds: xr.Dataset
     direction: WindDirectionBinNames
     cfg: MakeConfig
@@ -103,6 +58,7 @@ class DataMaker(NamedTuple):
     def get_features(self):
         case_data = self.cfg.get_one_case_data(self.case_ix)
         case = EZ(case_data.idf)
+        assert self.graph
         coincidence = get_coinc(self.graph, case, self.wall_normal)
         plan_metrics = calc_plan_area_metrics(self.graph)
         flow_metrics = calc_flow_data_metrics(self.graph, self.wall_normal)
@@ -155,7 +111,7 @@ def save_data(
 
     def process(ix: int):
         try:
-            dm = DataMaker(ambient_ds, direction, cfg, ix)
+            dm = FeaturesMaker(ambient_ds, direction, cfg, ix)
             entry = dm.make_table_entry()
         except Exception as e:
             # TODO: tdqm print!

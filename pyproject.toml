@@ -44,6 +44,7 @@ dependencies = [
   "pydantic-settings[yaml]>=2.14.2",
   "py-spy>=0.4.3",
   "polars>=1.41.2",
+  "filemover",
 ]
 
 [build-system]
@@ -54,6 +55,7 @@ build-backend = "uv_build"
 plyze = { path = "../plyze", editable = true }
 utils4plans = { path = "../utils4plans/", editable = true }
 utils4plots = { path = "../utils4plots/", editable = true }
+filemover = { path = "../other_proj/filemover" }
 
 [project.scripts]
 ns = "nvml._study._root.root:main"

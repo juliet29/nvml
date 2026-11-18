@@ -1,7 +1,7 @@
 import polars as pl
 import statsmodels.formula.api as smf
 
-from nvml.features.data_maker import dfc
+from nvml.features.data.interfaces import dfc
 
 y = dfc.space_sum_time_mean
 
