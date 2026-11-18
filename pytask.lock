@@ -1,6 +1,15 @@
 lock-version = "1"
 
 [[task]]
+id = "public/data/task_flow_qoi.py::task_make_flow_qoi"
+state = "8bef5644897c275e267c7a2b501e6edd8b18fc478337a0505f14251811ff6d97"
+
+[task.depends_on]
+
+[task.produces]
+"../../artifacts/nvml/data/reg/v3/qoi.nc" = "32cac16066bfdf38c081887dfc77d6387d619996412918a32a1128852560dd0f"
+
+[[task]]
 id = "public/data/task_gk_data.py::task_make_gk_clusters"
 state = "2c055cfb21d93335798cf20d0ee34380b5ec2a9de45e9bafc13227786d86dbe7"
 

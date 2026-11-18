@@ -9,6 +9,7 @@ from nvml import dn
 from nvml._study.config.config import MakeConfig
 from nvml.flow_qoi.defns import calc_flow_qois
 from nvml.io import get_ambient_ds_from_cfg, read_graph
+from nvml.qdim.wind import wind_sector_as_str
 
 
 class FlowQOIDatasetMaker(DatasetMaker):
@@ -42,8 +43,10 @@ class FlowQOIDatasetMaker(DatasetMaker):
     def agglom_fx(self, datasets: list[xr.Dataset]):
         logger.info("Agglomerating data!")
         names = [str(i[dn.label]) for i in datasets]
-        self.ds = xr.concat(datasets, dim=dn.case_name).assign_coords(
-            {dn.case_name: names}
+        self.ds = (
+            xr.concat(datasets, dim=dn.case_name)
+            .assign_coords({dn.case_name: names})
+            .pipe(wind_sector_as_str)
         )
         return self.ds
 
