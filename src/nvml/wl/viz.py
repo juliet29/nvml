@@ -29,28 +29,32 @@ def wrap_subplots(num_plots: int, max_cols: int = 4):
     return fig, axes.flatten()
 
 
+def plot_one(cfg: MakeConfig, ix: int, ax: Axes, label: str = ""):
+    G = read_graph(cfg.get_one_graph_path(ix))
+    assert G
+
+    case_name = cfg.get_one_case(ix)
+
+    if not label:
+        label = case_name
+
+    try:
+        res = ipx.plot(G, ax=ax, layout=G.layout)
+    except AttributeError as e:
+        raise ValueError(
+            f"Invalid data for case {case_name}: {G.nodes}, {G.edges}, {G.layout}: {e}"
+        )
+    ax.set_title(label)
+    return res[0]
+
+
 def plot_many_graphs(cfg: MakeConfig, indices: list[int]):
-    def plot_one(ix: int, ax: Axes):
-        G = read_graph(cfg.get_one_graph_path(ix))
-        case_name = cfg.get_one_case(ix)
-
-        ic(ix)
-
-        try:
-            res = ipx.plot(G, ax=ax, layout=G.layout)
-        except AttributeError as e:
-            raise ValueError(
-                f"Invalid data for case {case_name}: {G.nodes}, {G.edges}, {G.layout}: {e}"
-            )
-        ax.set_title(case_name)
-        return res[0]
-
     fig, axes = wrap_subplots(len(indices))
     ic(axes)
     # ic(axes.flatten())
     # breakpoint()
 
     for ax, ix in zip(axes, indices):
-        plot_one(ix, ax)
+        plot_one(cfg, ix, ax)
 
     return fig

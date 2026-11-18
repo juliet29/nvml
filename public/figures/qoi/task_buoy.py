@@ -9,8 +9,8 @@ from nvml.buoy.viz_q import corr_U_t_dim, dists, facet_q_ri, plot_q_dim
 from nvml.settings import TaskProduct, settings
 
 LOC = "qoi"
-cfg = CONFIGS_DICT["msd_aug20"]
-BIG_SIZE = (15, 7.5)
+cfg = CONFIGS_DICT["msd_aug20"]  # TODO: move to config
+BIG_SIZE = (15, 7.5)  # TODO: move to utils4plots
 set_dynamic_params(settings.figure_profile)
 
 

@@ -19,6 +19,7 @@ class Settings(BaseSettings):
 
     # -- experimental config ---
     random_state: int
+    graph_cfg: str
 
     # settings config -----
     model_config = SettingsConfigDict(
@@ -69,6 +70,8 @@ class Settings(BaseSettings):
     @property
     def path_to_results(self) -> Path:
         return self.artifacts / "data"
+
+    # --- config for accessing graphs..
 
 
 settings = Settings()  # pyright: ignore[reportCallIssue]

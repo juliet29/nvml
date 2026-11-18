@@ -1,1 +1,2 @@
 random_state: 12345
+graph_cfg: "msd_aug20"

@@ -13,13 +13,13 @@ class GraphRepDir(_BasePath):
     def kernel_matrices_h5(self) -> Path:
         return self / "kernel_matrices.h5"
 
-    # @property
-    # def sm_kernel_npy(self) -> Path:
-    #     return self / "sm_kernel.npy"
-    #
     @property
     def clusters_h5(self) -> Path:
         return self / "clusters.h5"
+
+    @property
+    def pca_h5(self) -> Path:
+        return self / "pca.h5"
 
 
 class RegressionDir(_BasePath):

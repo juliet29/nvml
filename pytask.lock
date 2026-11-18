@@ -12,7 +12,7 @@ state = "2c055cfb21d93335798cf20d0ee34380b5ec2a9de45e9bafc13227786d86dbe7"
 
 [[task]]
 id = "public/data/task_gk_data.py::task_make_gk_graphs"
-state = "2c055cfb21d93335798cf20d0ee34380b5ec2a9de45e9bafc13227786d86dbe7"
+state = "e0ad8dff0600f45fe7c15e9ae7cd43fd93089720eb1f67e183b190ecc5bb5e9f"
 
 [task.depends_on]
 
@@ -21,13 +21,23 @@ state = "2c055cfb21d93335798cf20d0ee34380b5ec2a9de45e9bafc13227786d86dbe7"
 
 [[task]]
 id = "public/data/task_gk_data.py::task_make_gk_kernel"
-state = "2c055cfb21d93335798cf20d0ee34380b5ec2a9de45e9bafc13227786d86dbe7"
+state = "e0ad8dff0600f45fe7c15e9ae7cd43fd93089720eb1f67e183b190ecc5bb5e9f"
 
 [task.depends_on]
 "../../artifacts/nvml/data/kern/v2/gk_graphs.joblib" = "9b5f12adeee96c84ff265f4848e19477bd3e6d84dd81f55452b6731586137ce8"
 
 [task.produces]
 "../../artifacts/nvml/data/kern/v2/kernel_matrices.h5" = "b86885a175994db077db8fb4c328f34ec6687375261fd2bde4069458ac5ebd6f"
+
+[[task]]
+id = "public/data/task_gk_data.py::task_make_gk_pca"
+state = "f20e7c3ef325ca1b4e7a59182bc0edb5dac9a9eaa49279d55746dd86577c5e98"
+
+[task.depends_on]
+"../../artifacts/nvml/data/kern/v2/kernel_matrices.h5" = "b86885a175994db077db8fb4c328f34ec6687375261fd2bde4069458ac5ebd6f"
+
+[task.produces]
+"../../artifacts/nvml/data/kern/v2/pca.h5" = "d56338e05b2b040618602d6152f56d4cec8f56989692d3d0c81c9e23ecccfc07"
 
 [[task]]
 id = "public/data/task_gk_gaphs.py::task_make_gk_graphs"
@@ -37,6 +47,82 @@ state = "a1a0b0676e46b5b464dd4526272eed26a537f1ce489d075ae1023c015d804b7e"
 
 [task.produces]
 "../../artifacts/nvml/data/kern/v2/gk_graphs.parquet" = "9b5f12adeee96c84ff265f4848e19477bd3e6d84dd81f55452b6731586137ce8"
+
+[[task]]
+id = "public/figures/graph_rep/task_cluster.py::task_plot_graph_clusters"
+state = "7f579bc2f3cc9e12364bfc0b4c0021de31b26b9ff213562eb9d93c4d35d95c71"
+
+[task.depends_on]
+"../../artifacts/nvml/data/kern/v2/clusters.h5" = "489ea6a5169738311f7d63ca888bc9122c63daf690ead21b06867d69db47861d"
+
+[task.produces]
+"../../artifacts/nvml/figures/slides/cluster/sm_int_ext_4.svg" = "10f368d74a727cd2df77220f560cd944f575aca13d4e1d8c6fdbb906b0399999"
+
+[[task]]
+id = "public/figures/graph_rep/task_cluster.py::task_plot_graph_clusters[0]"
+state = "fa949278eda914da0b8afe6c359f92d3fca7a88184c0cb1bc09c22cca48896b7"
+
+[task.depends_on]
+"../../artifacts/nvml/data/kern/v2/clusters.h5" = "489ea6a5169738311f7d63ca888bc9122c63daf690ead21b06867d69db47861d"
+"task_plot_graph_clusters[5]::group" = "0"
+
+[task.produces]
+"../../artifacts/nvml/figures/slides/cluster/sm_int_ext_4.svg" = "d99e2a290654835c5b0fe428ef9b308f3114b66df9558c88a06940eff8d0b48e"
+
+[[task]]
+id = "public/figures/graph_rep/task_cluster.py::task_plot_graph_clusters[1]"
+state = "fa949278eda914da0b8afe6c359f92d3fca7a88184c0cb1bc09c22cca48896b7"
+
+[task.depends_on]
+"../../artifacts/nvml/data/kern/v2/clusters.h5" = "489ea6a5169738311f7d63ca888bc9122c63daf690ead21b06867d69db47861d"
+"task_plot_graph_clusters[5]::group" = "0"
+
+[task.produces]
+"../../artifacts/nvml/figures/slides/cluster/sm_int_ext_2.svg" = "b99a501d8cedda933046c9fdc64193cad30e048f9391dad32854c48b8d86ca0f"
+
+[[task]]
+id = "public/figures/graph_rep/task_cluster.py::task_plot_graph_clusters[2]"
+state = "fa949278eda914da0b8afe6c359f92d3fca7a88184c0cb1bc09c22cca48896b7"
+
+[task.depends_on]
+"../../artifacts/nvml/data/kern/v2/clusters.h5" = "489ea6a5169738311f7d63ca888bc9122c63daf690ead21b06867d69db47861d"
+"task_plot_graph_clusters[5]::group" = "0"
+
+[task.produces]
+"../../artifacts/nvml/figures/slides/cluster/sp_area_ratio_3.svg" = "8d2eda745372fcce129502d03e9334e408f1a08368c460615b9fadb3290bb3e6"
+
+[[task]]
+id = "public/figures/graph_rep/task_cluster.py::task_plot_graph_clusters[3]"
+state = "fa949278eda914da0b8afe6c359f92d3fca7a88184c0cb1bc09c22cca48896b7"
+
+[task.depends_on]
+"../../artifacts/nvml/data/kern/v2/clusters.h5" = "489ea6a5169738311f7d63ca888bc9122c63daf690ead21b06867d69db47861d"
+"task_plot_graph_clusters[5]::group" = "0"
+
+[task.produces]
+"../../artifacts/nvml/figures/slides/cluster/sp_int_ext_2.svg" = "42744e693eef8b66b22b019dcb054f39a1addd2b20666a77607dd7480c1be2a6"
+
+[[task]]
+id = "public/figures/graph_rep/task_cluster.py::task_plot_graph_clusters[4]"
+state = "fa949278eda914da0b8afe6c359f92d3fca7a88184c0cb1bc09c22cca48896b7"
+
+[task.depends_on]
+"../../artifacts/nvml/data/kern/v2/clusters.h5" = "489ea6a5169738311f7d63ca888bc9122c63daf690ead21b06867d69db47861d"
+"task_plot_graph_clusters[5]::group" = "0"
+
+[task.produces]
+"../../artifacts/nvml/figures/slides/cluster/wl_int_ext_2.svg" = "2e24decdd384b1e1bf0ccfde128405d148066882c78b32644ebe672c0baad485"
+
+[[task]]
+id = "public/figures/graph_rep/task_cluster.py::task_plot_graph_clusters[5]"
+state = "fa949278eda914da0b8afe6c359f92d3fca7a88184c0cb1bc09c22cca48896b7"
+
+[task.depends_on]
+"../../artifacts/nvml/data/kern/v2/clusters.h5" = "489ea6a5169738311f7d63ca888bc9122c63daf690ead21b06867d69db47861d"
+"task_plot_graph_clusters[5]::group" = "0"
+
+[task.produces]
+"../../artifacts/nvml/figures/slides/cluster/wl_int_ext_3.svg" = "3ee1e09022296854a2c47bbcb4a3a97f8eeac20c2830a0b7e33399d9fc76b9fe"
 
 [[task]]
 id = "public/figures/qoi/task_buoy.py::task_corr_U_t_dim"
