@@ -1,6 +1,7 @@
 from pathlib import Path
 from typing import Any
 
+import pandas as pd
 import xarray as xr
 from loguru import logger
 from utils4plans.computation.loops2 import DatasetMaker
@@ -35,19 +36,18 @@ class FlowQOIDatasetMaker(DatasetMaker):
             if not flow_graph:
                 return None
             flow_qois = calc_flow_qois(flow_graph, self.ambient_ds)
-            flow_qois[dn.label] = case_name
-            return flow_qois
+            return flow_qois.assign_coords({dn.case_name: case_name})
         except Exception as e:
             logger.critical(f"Issue proccessing {ix}:{case_name} -- {e}")
 
     def agglom_fx(self, datasets: list[xr.Dataset]):
         logger.info("Agglomerating data!")
-        names = [str(i[dn.label]) for i in datasets]
-        self.ds = (
-            xr.concat(datasets, dim=dn.case_name)
-            .assign_coords({dn.case_name: names})
-            .pipe(wind_sector_as_str)
+        names = pd.Index(
+            [ds.coords[dn.case_name].item() for ds in datasets],
+            name=dn.case_name,
         )
+        print(names)
+        self.ds = xr.concat(datasets, dim=names).pipe(wind_sector_as_str)
         return self.ds
 
     def save_fx(self, ds: xr.Dataset):

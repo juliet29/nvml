@@ -7,3 +7,6 @@ slides *args="":
 journal *args="":
     FIGURE_PROFILE=journal uv run pytask {{args}}
 
+
+nd *args:
+    uv run python -m public.shared {{args}}
