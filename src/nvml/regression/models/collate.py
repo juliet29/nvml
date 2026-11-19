@@ -51,22 +51,35 @@ def prepare_qoi_df(qoi_path: Path):
     return df
 
 
-def collate_data(rdp: RegDataPaths, rdid: RegDataId, qoi_df: pl.DataFrame):
-    # wind dir dependent features
-    if rdid.wind_dir in direction_map.keys():
-        long_card_drn = direction_map.get(rdid.wind_dir)
+def prepare_pca_df(pca_path: Path, pca_id: PCAId, n: int):
+    f = h5py.File(pca_path, "r")
+    arr = np.array(f[pca_id.name][dn.components])  # pyright: ignore[reportIndexIssue]
+
+    pca = arr[:, :n]
+    pcns = [f"pc_{i}" for i in range(n)]
+    pca_df = pl.DataFrame(pca, schema=pcns)
+    return pca_df
+
+
+def prepare_core_feature_df(rdp: RegDataPaths, wind_dir: WindDirectionBinNames):
+    if wind_dir in direction_map.keys():
+        long_card_drn = direction_map.get(wind_dir)
         wdf = rdp.fw.filter(pl.col(dfc.wind_sector) == long_card_drn)
         df = rdp.fc.join(wdf, on=dfc.case_name)
     else:
         df = rdp.fc
 
-    # get the pcas
-    pca = rdp.pc(rdid)[:, : rdid.num_pcs]  # index of pca is index into cfg..?
-    pcns = [f"pc_{i}" for i in range(rdid.num_pcs)]
-    pca_df = pl.DataFrame(pca, schema=pcns)
-    df2 = pl.concat([df, pca_df], how="horizontal")
+    return df
 
-    # get the qois at the  wind dir of interest
+
+def collate_data(
+    feature_df: pl.DataFrame,
+    pca_df: pl.DataFrame,
+    qoi_df: pl.DataFrame,
+    wind_dir: WindDirectionBinNames,
+):
+    df2 = pl.concat([feature_df, pca_df], how="horizontal")
+
     return df2.join(
-        qoi_df.filter(pl.col(dfc.wind_sector) == rdid.wind_dir), on=dfc.case_name
+        qoi_df.filter(pl.col(dfc.wind_sector) == wind_dir), on=dfc.case_name
     )
