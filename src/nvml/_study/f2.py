@@ -7,10 +7,13 @@ from nvml._study.config.cstore import CONFIGS_DICT
 from nvml.io import read_graph
 from nvml.regression.data.gather import gather_constant_data, gather_wind_dependent_data
 from nvml.regression.models.collate import (
-    RegDataId,
     RegDataPaths,
-    collate_data,
     prepare_qoi_df,
+)
+from nvml.regression.models.mlist import (
+    make_core_feature_ds,
+    make_pca_dfs,
+    prepare_many_models,
 )
 
 f2_app = App("f2")
@@ -33,11 +36,17 @@ def ff():
 
 @f2_app.command()
 def fg():
-    rdi = RegDataId("N", "wl", "int_ext", 5)
+    n = 5
     dp = DataPaths
     reg = dp.reg.v3
-    rdp = RegDataPaths(reg.const_features, reg.wdep_features, dp.kern.v2.pca_h5)
-    qoi_df = prepare_qoi_df(reg.flow_qoi_dataset)
-    df = collate_data(rdp, rdi, qoi_df)
 
-    embed(globals(), locals(), vi_mode=True)
+    # drns: WindDirectionBinNames = ["N", "E", "W", "S", "NW"]  # pyright: ignore[reportAssignmentType]
+
+    drns = ["N", "E", "W", "S"]
+    qoi_df = prepare_qoi_df(reg.flow_qoi_dataset)
+    rdp = RegDataPaths(reg.const_features, reg.wdep_features)
+    pca_dfs = make_pca_dfs(dp.kern.v2.pca_h5, n)
+    cdfs = make_core_feature_ds(rdp, drns)
+    rd, dfs = prepare_many_models(qoi_df, pca_dfs, cdfs, n, drns)
+
+    # embed(globals(), locals(), vi_mode=True)

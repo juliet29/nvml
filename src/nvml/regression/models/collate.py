@@ -28,7 +28,6 @@ class RegDataId(NamedTuple):
 class RegDataPaths(NamedTuple):
     features_const: Path
     features_wdep: Path
-    pca: Path
 
     @property
     def fc(self):
@@ -38,17 +37,13 @@ class RegDataPaths(NamedTuple):
     def fw(self):
         return pl.read_parquet(self.features_wdep)
 
-    def pc(self, reg_data_id: RegDataId):
-        f = h5py.File(self.pca, "r")
-        arr = np.array(f[reg_data_id.pca_id.name][dn.components])  # pyright: ignore[reportIndexIssue]
-        return arr
-
 
 def prepare_qoi_df(qoi_path: Path):
     ds = xr.load_dataset(qoi_path)
     data = ds.groupby(dfc.wind_sector).median(dim=dn.datetime).to_dataframe()
     df = pl.from_pandas(data, include_index=True)
-    return df
+    filt_df = df.filter(pl.col(dfc.intake) < 2).filter(pl.col(dfc.cv) < 2)
+    return filt_df
 
 
 def prepare_pca_df(pca_path: Path, pca_id: PCAId, n: int):

@@ -22,6 +22,10 @@ class PCAId(NamedTuple):
         return cname
 
     @property
+    def as_tuple(self):
+        return (self.kernel, self.scheme)
+
+    @property
     def path_name(self):
         cname = f"{self.kernel}_{self.scheme}"
         return cname

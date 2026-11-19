@@ -33,9 +33,9 @@ class dfc:
     degree_dom_node = "degree_dom_node"
 
     # coincidence
-    ww = "ww"
-    lw = "lw"
-    sd = "sd"
+    ww = "windward"
+    lw = "leeward"
+    sd = "side"
 
     @classmethod
     def pc(cls, v: int):
@@ -45,13 +45,13 @@ class dfc:
     def all_params(cls, v: int):
         b = [cls.area, cls.num_rooms]
         p = [
-            cls.num_paths,
+            # cls.num_paths,
             cls.avg_path_length,
-            cls.mode_path_length,
-            cls.len_longest_path,
-            cls.len_shortest_path,
+            # cls.mode_path_length,
+            # cls.len_longest_path,
+            # cls.len_shortest_path,
             cls.degree_dom_node,
         ]
-        c = [cls.ww, cls.lw, cls.sd]
+        c = [cls.ww]
         pcs = [cls.pc(i) for i in range(v)]
         return b + p + c + pcs
