@@ -41,7 +41,7 @@ def prepare_model(
     gamma_log = sm.families.Gamma(sm.families.links.Log())
     fstr = " + ".join(features)
     formula = f"{target} ~ {fstr}"
-    model = smf.ols(formula, data=df, family=gamma_log).fit()
+    model = smf.glm(formula, data=df, family=gamma_log).fit()
 
     return model
 
@@ -63,12 +63,15 @@ def prepare_many_models(
         base_df = core_feature_dfs[drn]
         df = collate_data(base_df, pca_df, qoi_df, drn).to_pandas()  # pyright: ignore[reportArgumentType]
         try:
-            model = prepare_model(df, dfc.all_params(n), dfc.dr)
+            model = prepare_model(df, dfc.all_params(n), dfc.intake)
 
         except Exception as e:
             logger.critical(f"{e} for {name}")
             return name, {}
-        logger.info(f"{name}: {model.rsquared}")
+        exp_dev = 1 - (model.deviance / model.null_deviance)
+
+        logger.info(f"{name}: {exp_dev}")
+
         return name, model
 
     res = [mk(drn, pca_tuple) for drn, pca_tuple in combos]

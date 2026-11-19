@@ -42,8 +42,7 @@ def prepare_qoi_df(qoi_path: Path):
     ds = xr.load_dataset(qoi_path)
     data = ds.groupby(dfc.wind_sector).median(dim=dn.datetime).to_dataframe()
     df = pl.from_pandas(data, include_index=True)
-    filt_df = df.filter(pl.col(dfc.intake) < 2).filter(pl.col(dfc.cv) < 2)
-    return filt_df
+    return df
 
 
 def prepare_pca_df(pca_path: Path, pca_id: PCAId, n: int):

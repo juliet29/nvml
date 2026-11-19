@@ -45,13 +45,13 @@ class dfc:
     def all_params(cls, v: int):
         b = [cls.area, cls.num_rooms]
         p = [
-            # cls.num_paths,
+            cls.num_paths,
             cls.avg_path_length,
-            # cls.mode_path_length,
-            # cls.len_longest_path,
-            # cls.len_shortest_path,
+            cls.mode_path_length,
+            cls.len_longest_path,
+            cls.len_shortest_path,
             cls.degree_dom_node,
         ]
-        c = [cls.ww]
+        c = [cls.ww, cls.sd, cls.lw]
         pcs = [cls.pc(i) for i in range(v)]
         return b + p + c + pcs
