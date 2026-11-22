@@ -2,7 +2,7 @@ from plyze import FlowGraphModel
 
 from nvml._study.config.cstore import CONFIGS_DICT
 from nvml.io import get_ambient_data_as_ds, graph_to_ds
-from nvml.qdim.wind import (
+from nvml.xr_helpers import (
     add_wind_sector_coord,
 )
 

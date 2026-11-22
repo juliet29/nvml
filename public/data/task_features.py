@@ -2,7 +2,7 @@ from cyclopts import App
 
 from nvml import DataPaths
 from nvml._study.config.cstore import CONFIGS_DICT
-from nvml.regression.data.make_reg_data import RegDatasetMaker
+from nvml.fexp.make_fexp.rrun_data import RegDatasetMaker
 from nvml.settings import TaskProduct
 
 TRUE_RUN, SAVE = False, True

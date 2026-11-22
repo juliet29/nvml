@@ -34,3 +34,17 @@ class RegressionDir(_BasePath):
     @property
     def flow_qoi_dataset(self):
         return self / "qoi.nc"
+
+
+class RegModelRunDir(_BasePath):
+    @property
+    def metrics(self) -> Path:
+        return self / "model_comparison.csv"
+
+    @property
+    def coefficients(self) -> Path:
+        return self / "all_coefficients.csv"
+
+    @property
+    def data_spec(self) -> Path:
+        return self / "data_spec.json"

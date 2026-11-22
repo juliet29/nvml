@@ -30,8 +30,13 @@ class GraphKernels:
     v2 = GraphRepDir(base / "v2")
 
 
+class Temp:
+    base = settings.path_to_data / "temp_data"
+
+
 class DataPaths:
     fg = FlowGraphs
     gnn = GraphModels
     reg = RegressionModels
     kern = GraphKernels
+    temp = Temp

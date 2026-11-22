@@ -60,6 +60,9 @@ class Settings(BaseSettings):
     def fig_path(self, *parts: str | Path) -> Path:
         return self.path_to_figures.joinpath(*parts).with_suffix(f".{self.figure_ext}")
 
+    def results_path(self, *parts: str | Path, ext: str) -> Path:
+        return self.path_to_results.joinpath(*parts).with_suffix(f".{ext}")
+
     # ------ other artifacts ----------
     @computed_field
     @property
@@ -69,7 +72,7 @@ class Settings(BaseSettings):
     @computed_field
     @property
     def path_to_results(self) -> Path:
-        return self.artifacts / "data"
+        return self.artifacts / "results"
 
     # --- config for accessing graphs..
 

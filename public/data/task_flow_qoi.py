@@ -2,7 +2,7 @@ from cyclopts import App
 
 from nvml import DataPaths
 from nvml._study.config.cstore import CONFIGS_DICT
-from nvml.flow_qoi.make_flow_data import FlowQOIDatasetMaker
+from nvml.qoi.make_flow_data import FlowQOIDatasetMaker
 from nvml.settings import TaskProduct
 
 TRUE_RUN, SAVE = False, True

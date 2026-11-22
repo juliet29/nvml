@@ -4,7 +4,7 @@ import pandas as pd  # noqa
 from nvml.constants import DataNames as dn  # noqa
 import matplotlib.pyplot as plt  # noqa
 import xarray as xr  # noqa
-from nvml.qoi_study.temperature.scatter_zone import add_wind_sector_codes  # noqa
+from nvml.qoi_studies.temperature.scatter_zone import add_wind_sector_codes  # noqa
 
 import matplotlib
 

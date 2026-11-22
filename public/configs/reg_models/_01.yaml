@@ -1,0 +1,7 @@
+cluster_col: null
+
+models:
+  - name: "base"
+    outcomes: ["intake", "coeff_variation", "dist"]
+    formula_rhs: "area + num_rooms + num_paths + windward + side"
+    link: "log"

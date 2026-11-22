@@ -6,7 +6,7 @@ from nvml._study.config.config import MakeConfig
 from nvml._study.config.cstore import CONFIGS_DICT
 from nvml._study._root.paths import ProjectPaths
 from nvml.io import get_ambient_data_as_ds, graph_to_ds
-from nvml.qdim.wind import (
+from nvml.xr_helpers import (
     add_incidence_data,
     add_wind_sector_coord,
     prep_comparison_data,

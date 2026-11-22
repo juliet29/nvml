@@ -4,8 +4,8 @@ from utils4plots import set_dynamic_params
 from utils4plots.save import save_mpl_fig
 
 from nvml._study.config.cstore import CONFIGS_DICT
-from nvml.buoy.data import BuoyData
-from nvml.buoy.viz_q import corr_U_t_dim, dists, facet_q_ri, plot_q_dim
+from nvml.qoi_studies.buoy.data import BuoyData
+from nvml.qoi_studies.buoy.viz_q import corr_U_t_dim, dists, facet_q_ri, plot_q_dim
 from nvml.settings import TaskProduct, settings
 
 LOC = "qoi"

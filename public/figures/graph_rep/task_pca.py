@@ -9,8 +9,8 @@ from utils4plots.save import save_mpl_fig
 from nvml import DataPaths
 from nvml._study.config.cstore import CONFIGS_DICT
 from nvml.settings import settings
-from nvml.wl.pca.pca_data import PCAId
-from nvml.wl.pca.viz_align import plot_component_graphs
+from nvml.flearn.pca.make_pca import PCAId
+from nvml.flearn.pca.viz_align import plot_component_graphs
 
 LOC = "pca"
 cfg = CONFIGS_DICT["msd_aug20"]

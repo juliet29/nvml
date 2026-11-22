@@ -7,7 +7,7 @@ from plyze.qoi.xarray_helpers import CardinalNameLiteral
 
 from nvml import dn  # noqa
 from nvml._study.buoy import TEST_CASE, TEST_ROOM, cfg
-from nvml.buoy.data import BuoyData
+from nvml.qoi_studies.buoy.data import BuoyData
 from nvml.io import read_graph
 
 matplotlib.use("module://matplotlib-backend-kitty")

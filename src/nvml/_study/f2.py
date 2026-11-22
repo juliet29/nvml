@@ -1,22 +1,25 @@
 import matplotlib
 import matplotlib.pyplot as plt  # noqa
+import numpy as np  # noqa
 import polars as pl  # noqa
 import polars.selectors as cs  # noqa
 import seaborn as sns  # noqa
+import xarray as xr
 from cyclopts import App
 from plan2eplus.ezcase.ez import EZ
 from ptpython.repl import embed
 
 from nvml import DataPaths as dp
+from nvml import dn  # noqa
 from nvml._study.config.cstore import CONFIGS_DICT
-from nvml.io import read_graph
-from nvml.regression.data.gather import gather_constant_data, gather_wind_dependent_data
-from nvml.regression.models.collate import (
+from nvml.fexp.make_fexp.gather import gather_constant_data, gather_wind_dependent_data
+from nvml.io import get_ambient_ds_from_cfg, read_graph
+from nvml.rprep.collate import (
     RegDataPaths,
     prepare_qoi_df,
 )
-from nvml.regression.models.interfaces import dfc  # noqa
-from nvml.regression.models.mlist import (
+from nvml.rprep.df_names import dfc  # noqa
+from nvml.rprep.mlist import (
     make_core_feature_ds,
     make_pca_dfs,
     prepare_many_models,
@@ -27,7 +30,7 @@ f2_app = App("f2")
 
 
 cfg = CONFIGS_DICT["msd_aug20"]
-reg = dp.reg.v3
+REG = dp.reg.v3
 
 
 @f2_app.command()
@@ -48,17 +51,20 @@ def fg():
     # drns: WindDirectionBinNames = ["N", "E", "W", "S", "NW"]  # pyright: ignore[reportAssignmentType]
 
     drns = ["N", "E", "W", "S"]
-    qoi_df = prepare_qoi_df(reg.flow_qoi_dataset)
-    rdp = RegDataPaths(reg.const_features, reg.wdep_features)
+    qoi_df = prepare_qoi_df(REG.flow_qoi_dataset)
+    rdp = RegDataPaths(REG.const_features, REG.wdep_features)
     pca_dfs = make_pca_dfs(dp.kern.v2.pca_h5, n)
     cdfs = make_core_feature_ds(rdp, drns)
     rd, dfs = prepare_many_models(qoi_df, pca_dfs, cdfs, n, drns)
 
     # embed(globals(), locals(), vi_mode=True)
     #
+    #
 
 
 @f2_app.command()
-def fh():
-    qoi_df = prepare_qoi_df(reg.flow_qoi_dataset)
+def fg1():
+    roi_df = xr.open_dataset(REG.flow_qoi_dataset)
+    ads = get_ambient_ds_from_cfg(cfg)
+
     embed(globals(), locals(), vi_mode=True)

@@ -6,7 +6,7 @@ from nvml._study.config.cstore import CONFIGS_DICT
 from nvml.constants import DataNames
 from nvml.flow_paths.main import PathGraph, prep_edge_da
 from nvml.io import get_ambient_data_as_ds
-from nvml.qdim.wind import add_wind_sector_coord
+from nvml.xr_helpers import add_wind_sector_coord
 
 flow = App("flow")
 

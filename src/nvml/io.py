@@ -7,7 +7,7 @@ from plyze.flow_graph.interfaces import FlowGraph
 from plyze.qoi_flow_graph.zone_data import collate_ambient_data, collate_zone_data
 
 from nvml._study.config.config import MakeConfig
-from nvml.qdim.wind import add_wind_sector_coord
+from nvml.xr_helpers import add_wind_sector_coord
 
 # PathOrData = Data | str | Path
 

@@ -11,9 +11,9 @@ from nvml.constants import DataNames as dn
 from nvml.regression.coinc import calc_plan_coinc, tabulate_coinc_features
 from nvml.regression.qoi import calc_qdim_quantity
 from nvml.io import get_ambient_data_as_ds, read_graph
-from nvml.qdim.incident import make_zone_outward_normal_da
-from nvml.qdim.intext import get_normals_for_windows_across_zones
-from nvml.qdim.wind import add_wind_sector_coord
+from nvml.fexp.coinc_helpers.incident import make_zone_outward_normal_da
+from nvml.fexp.coinc_helpers.intext import get_normals_for_windows_across_zones
+from nvml.xr_helpers import add_wind_sector_coord
 
 coinc_app = App("coinc")
 

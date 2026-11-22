@@ -5,10 +5,10 @@ import pytask
 from nvml import DataPaths
 from nvml._study.config.cstore import CONFIGS_DICT
 from nvml.settings import TaskProduct
-from nvml.wl.cluster_data import save_clusters
-from nvml.wl.graphs.gk_dataset import ManyLabelsGklDatasetMaker
-from nvml.wl.kernel.kern_data import save_kernels
-from nvml.wl.pca.pca_data import save_pcas
+from nvml.flearn.cluster.make_cluster import save_clusters
+from nvml.flearn.graphs.make_grk import ManyLabelsGklDatasetMaker
+from nvml.flearn.kernel.kern_data import save_kernels
+from nvml.flearn.pca.make_pca import save_pcas
 
 
 @pytask.mark.persist(reason="Already generated and renamed manually")

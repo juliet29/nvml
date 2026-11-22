@@ -1,0 +1,37 @@
+# ==============================================================================
+# Gamma GLM Experiment Configuration Template
+# Copy this file to `config.yaml` and update variables and formulas.
+# ==============================================================================
+
+# Optional: Column name for cluster-robust standard errors (set to null to disable)
+cluster_col: "cluster_id"
+
+# Candidate Gamma GLM specifications. Each entry is a GROUP that expands into one
+# fitted model per outcome, all sharing the same right-hand side (formula_rhs).
+# - name:        base name. With >1 outcome, models are named "<name>_<outcome>";
+#                with a single outcome the model keeps exactly <name>.
+# - outcomes:    one outcome (scalar) or a list of outcomes (LHS of the formula).
+# - formula_rhs: Patsy/statsmodels right-hand side (interactions, C() all allowed).
+# - link:        "log" (default), "inverse", or "identity"
+#
+# required_vars is no longer listed by hand: the columns to complete-case on are
+# derived from the formulas (union of every outcome + RHS variable that exists in
+# the data), so BIC and AIC stay comparable across all candidate models.
+models:
+  # one group -> three models (base_outcome_y, base_other_y, base_third_y)
+  - name: "base"
+    outcomes: ["outcome_y", "other_y", "third_y"]
+    formula_rhs: "predictor_1 + predictor_2"
+    link: "log"
+
+  # one at a time -> a single model named exactly "with_fixed_effects"
+  - name: "with_fixed_effects"
+    outcomes: "outcome_y"
+    formula_rhs: "predictor_1 + predictor_2 + C(fixed_effect_group)"
+    link: "log"
+
+  # interactions / custom RHS -> just put them in formula_rhs
+  - name: "interaction"
+    outcomes: "outcome_y"
+    formula_rhs: "predictor_1 * predictor_2 + C(fixed_effect_group)"
+    link: "log"

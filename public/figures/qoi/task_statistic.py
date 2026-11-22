@@ -7,7 +7,7 @@ from utils4plots import set_dynamic_params
 from utils4plots.save import save_mpl_fig
 
 from nvml._paths import DataPaths
-from nvml.qoi_study.space.statistics import Q_Summary_Plots
+from nvml.qoi_studies.space.statistics import Q_Summary_Plots
 from nvml.settings import settings
 
 LOC = "qoi"

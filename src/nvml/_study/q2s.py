@@ -4,9 +4,9 @@ import seaborn as sns  # noqa
 from cyclopts import App
 from ptpython.repl import embed
 
-# from nvml.wl.kernel.prep import GklDatasetMaker
+# from nvml.flearn.kernel.prep import GklDatasetMaker
 from nvml._study.config.cstore import CONFIGS_DICT
-from nvml.flow_qoi.defns import (  # noqa
+from nvml.qoi.defns import (  # noqa
     calc_coeff_var,
     calc_distribution_ratio,
     calc_flow_qois,

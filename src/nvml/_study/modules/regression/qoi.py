@@ -5,7 +5,7 @@ from nvml._study.config.cstore import CONFIGS_DICT
 from nvml.regression.area import calc_plan_area_metrics
 from nvml.regression.qoi import calc_qdim_quantity, gather_qdim
 from nvml.io import get_ambient_data_as_ds, read_graph
-from nvml.qdim.wind import add_wind_sector_coord
+from nvml.xr_helpers import add_wind_sector_coord
 
 qoi_app = App("qoi")
 

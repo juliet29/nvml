@@ -4,7 +4,7 @@ from cyclopts import App
 
 from nvml.constants import DataNames as dn
 from nvml.constants import FileNames
-from nvml.regression.dataset_maker import make_dataset, make_tdim_dataset
+from nvml.fexp.make_fexpset_maker import make_dataset, make_tdim_dataset
 
 matplotlib.use("module://matplotlib-backend-kitty")
 

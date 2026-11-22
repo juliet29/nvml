@@ -10,11 +10,11 @@ from ptpython.repl import embed
 
 from nvml import DataPaths
 
-# from nvml.wl.kernel.prep import GklDatasetMaker
+# from nvml.flearn.kernel.prep import GklDatasetMaker
 from nvml._study.config.cstore import CONFIGS_DICT
-from nvml.wl.graphs.gk_dataset import ManyLabelsGklDatasetMaker
-from nvml.wl.pca.pca_data import PCAId
-from nvml.wl.pca.viz_scree import get_pca_data
+from nvml.flearn.graphs.make_grk import ManyLabelsGklDatasetMaker
+from nvml.flearn.pca.make_pca import PCAId
+from nvml.flearn.pca.viz_scree import get_pca_data
 
 matplotlib.use("module://matplotlib-backend-kitty")
 wl_app = App("wl")
