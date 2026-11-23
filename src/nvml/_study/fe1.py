@@ -32,3 +32,10 @@ def ff():
     co = get_coinc_for_all_normal_drns(G, case)
     fm = calc_dom_node_flow_metrics_for_all_drns(G)
     embed(globals(), locals(), vi_mode=True)
+
+
+@fe1_app.command()
+def fg():
+    G = read_graph(cfg.get_one_graph_path(0))
+    assert G
+    embed(globals(), locals(), vi_mode=True)

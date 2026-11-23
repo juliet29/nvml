@@ -1,5 +1,6 @@
 from typing import NamedTuple
 
+import numpy as np
 from plyze.flow_graph.interfaces import FlowGraph
 from plyze.metrics.calculators import PlanMetricsCalculator
 from plyze.metrics.interfaces import MetricHolder
@@ -11,11 +12,10 @@ class BulkPlan(NamedTuple):
     num_rooms: int
 
 
-# class FlowPaths(NamedTuple):
-#     num_paths: int
-#     avg_path_length: float
-#     len_shortest_path: int
-#
+class GraphTheory(NamedTuple):
+    avg_edges_per_node: float
+    max_degree: float  # hi
+    avg_degree: float  # hi
 
 
 def calc_plan_area_metrics(G: FlowGraph):
@@ -25,15 +25,12 @@ def calc_plan_area_metrics(G: FlowGraph):
     return BulkPlan(d[pmr.area.name], d[pmr.num_rooms.name])  # pyright: ignore[reportArgumentType]
 
 
-# def calc_flow_data_metrics(G: FlowGraph):
-#     holder = MetricHolder()
-#     FlowMetricsCalculator(G, holder, None)()  # pyright: ignore[reportArgumentType]
-#     d = holder.holder_dict
+# calc graph metrics..
 #
-#     return FlowPaths(
-#         d[fmr.num_paths.name],  # pyright: ignore[reportArgumentType]
-#         d[fmr.avg_path_length.name],
-#         d[fmr.mode_path_length.name],  # pyright: ignore[reportArgumentType]
-#         d[fmr.len_longest_path.name],  # pyright: ignore[reportArgumentType]
-#         d[fmr.len_shortest_path.name],  # pyright: ignore[reportArgumentType]
-#     )
+def calc_graph_theory_metrics(G: FlowGraph):
+    epn = len(G.edges) / len(G.nodes)
+    dg = np.array([G.degree(i) for i in G.nodes])
+    max_deg = np.max(dg)
+    avg_deg = np.max(dg)
+
+    return GraphTheory(epn, max_deg, avg_deg)
