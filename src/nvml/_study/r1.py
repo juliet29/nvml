@@ -11,8 +11,9 @@ from nvml._study.utils import *
 from nvml.rprep.collate import DataSpec, collate_data_from_files
 from nvml.rprep.df_names import dfc  # noqa
 from nvml.rrun.defn import simple
-from nvml.rrun.make_summary import summary_save
-from nvml.rrun.run import gamma_model, multi_model_save
+from nvml.rrun.make_summary import coeff_and_sumamry_save
+from nvml.rrun.run import gamma_model, multi_model_save_joblib
+from nvml.rrun.viz_coeffs import plot_coeffs
 
 matplotlib.use("module://matplotlib-backend-kitty")
 r1_app = App("r1")
@@ -37,7 +38,7 @@ def ff():
     defns, name = simple()
     logger.debug(defns)
     models = [gamma_model(i, df) for i in defns]
-    multi_model_save(TEST_NAME, defns, models, TEMP)
+    multi_model_save_joblib(TEST_NAME, defns, models, TEMP)
 
 
 @r1_app.command()
@@ -45,7 +46,7 @@ def ff2():
     df = collate_data_from_files(dsp)
     defns, name = simple()
     logger.debug(defns)
-    p = summary_save(df, TEST_NAME, defns, TEMP)
+    p = coeff_and_sumamry_save(df, TEST_NAME, defns, TEMP)
     return p
 
 
@@ -55,3 +56,15 @@ def fg():
     res = joblib.load(p)
 
     embed(globals(), locals(), vi_mode=True)
+
+
+@r1_app.command()
+def fg1():
+    p = TEMP / f"{TEST_NAME}_coeffs_036.csv"
+    df = pl.read_csv(p)
+    defn = "intake ~ degree_dom_node + avg_path_length"
+    fig, ax = plt.subplots()
+    ax = plot_coeffs(df, defn, ax)
+    plt.show()
+
+    # embed(globals(), locals(), vi_mode=True)

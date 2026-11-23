@@ -15,7 +15,7 @@ def gamma_model(model_def: str, df: pl.DataFrame):
     return model
 
 
-def multi_model_save(
+def multi_model_save_joblib(
     batch_name: str, defs: list[str], models: list[sm.GLM], path: Path
 ):
     d = {d: m for d, m in zip(defs, models)}
