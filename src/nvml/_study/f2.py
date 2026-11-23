@@ -6,14 +6,18 @@ import polars.selectors as cs  # noqa
 import seaborn as sns  # noqa
 import xarray as xr
 from cyclopts import App
-from plan2eplus.ezcase.ez import EZ
 from ptpython.repl import embed
 
 from nvml import DataPaths as dp
 from nvml import dn  # noqa
 from nvml._study.config.cstore import CONFIGS_DICT
-from nvml.fexp.make_fexp.gather import gather_constant_data, gather_wind_dependent_data
 from nvml.io import get_ambient_ds_from_cfg, read_graph
+from nvml.qoi.defns import (
+    calc_flow_qois,
+    calc_interzonal_ratio,
+    calc_uniformity_index,
+    plan_qdim,
+)
 from nvml.rprep.collate import (
     RegDataPaths,
     prepare_qoi_df,
@@ -36,11 +40,19 @@ REG = dp.reg.v3
 @f2_app.command()
 def ff():
     G = read_graph(cfg.get_one_graph_path(0))
-    case = EZ(cfg.get_one_case_data().idf)
+    # case = EZ(cfg.get_one_case_data().idf)
     assert G
+    U = get_ambient_ds_from_cfg(cfg)[dn.wind_speed]
+    ads = get_ambient_ds_from_cfg(cfg)
 
-    df = gather_wind_dependent_data(case, G, "hi")
-    cd = gather_constant_data(G, "hi")
+    return calc_flow_qois(G, ads)
+    return calc_uniformity_index(G, U)
+    da = plan_qdim(G, U)
+    # plan_da = calc_zone_inflow_across_plan(G, U)
+    return calc_interzonal_ratio(da)
+
+    # df = gather_wind_dependent_data(case, G, "hi")
+    # cd = gather_constant_data(G, "hi")
 
     embed(globals(), locals(), vi_mode=True)
 
@@ -64,7 +76,7 @@ def fg():
 
 @f2_app.command()
 def fg1():
-    roi_df = xr.open_dataset(REG.flow_qoi_dataset)
+    ds = xr.open_dataset(REG.flow_qoi_dataset)
     ads = get_ambient_ds_from_cfg(cfg)
 
     embed(globals(), locals(), vi_mode=True)

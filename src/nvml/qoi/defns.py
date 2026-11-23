@@ -1,5 +1,5 @@
 import xarray as xr
-from plyze.flow_graph.interfaces import Edge, FlowGraph
+from plyze.flow_graph.interfaces import Edge, FlowGraph, ZoneNode
 
 from nvml import dn
 
@@ -23,7 +23,7 @@ def plan_qdim(graph: FlowGraph, U: xr.DataArray):
     is_ext = [1 if i.is_external else 0 for i in graph.edges_with_data]
     edge_nums = list(range(len(flows)))
     da = xr.concat(flows, dim=dn.edge_num).assign_coords(
-        {dn.edge_num: edge_nums, dn.is_external: ("edge_num", is_ext)}
+        {dn.edge_num: edge_nums, dn.is_external: (dn.edge_num, is_ext)}
     )
 
     return da
@@ -34,16 +34,48 @@ def calc_intake(da: xr.DataArray):
     return da1
 
 
-def calc_distribution_ratio(da: xr.DataArray):
+def calc_interzonal_ratio(da: xr.DataArray):
     intake = calc_intake(da)
     internal = da.sel({dn.is_external: 0}).sum(dim=dn.edge_num)
-    return internal / intake
+    return internal / (intake + internal)
 
 
-def calc_coeff_var(da: xr.DataArray):
-    mu = da.mean(dim=dn.edge_num)
-    std = da.std(dim=dn.edge_num)
-    return mu / std
+def calc_zone_inflow_across_plan(G: FlowGraph, U: xr.DataArray):
+    def calc(zone: ZoneNode):
+        # get all edges
+        edge_names = G.get_edges_of_zone(zone)
+        edges = [
+            i
+            for i in G.edges_with_data
+            if i.as_tuple in edge_names or i.as_tuple_reverse in edge_names
+        ]
+        edge_qdims = [calc_qdim_edge(i, U_1) for i in edges]
+        edge_nums = list(range(len(edge_qdims)))
+
+        qdim_da = xr.concat(edge_qdims, dim=dn.edge_num).assign_coords(
+            {dn.edge_num: edge_nums}
+        )
+
+        net_inflow_per_area = qdim_da.sum(dim=dn.edge_num) / zone.data.area
+        return net_inflow_per_area
+
+    U_1 = U.where(
+        cond=U >= 1, drop=True
+    )  # NOTE: dropping U < 1 m/s -> can do some quantile analysis later
+    inflows = [calc(i) for i in G.zone_nodes]
+    zone_ix = list(range(len(inflows)))
+    plan_da = xr.concat(inflows, dim=dn.space_ix).assign_coords({dn.space_ix: zone_ix})
+    return plan_da
+
+
+def calc_uniformity_index(G: FlowGraph, U: xr.DataArray):
+    da = calc_zone_inflow_across_plan(G, U)
+
+    p75 = da.quantile(0.75, dim=dn.space_ix)
+    p25 = da.quantile(0.25, dim=dn.space_ix)
+    variation = (p75 - p25) / (p75 + p25)
+    uniformity = 1 - variation
+    return uniformity
 
 
 def calc_flow_qois(
@@ -55,7 +87,7 @@ def calc_flow_qois(
 
     vals = {
         dn.intake: calc_intake(da),
-        dn.dist: calc_distribution_ratio(da),
-        dn.cv: calc_coeff_var(da),
+        dn.dist: calc_interzonal_ratio(da),
+        dn.cv: calc_uniformity_index(graph, U),
     }
     return xr.Dataset(vals)
