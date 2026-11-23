@@ -7,8 +7,9 @@ from utils4plots.save import save_mpl_fig
 
 from nvml import DataPaths
 from nvml._study.config.cstore import CONFIGS_DICT
+from nvml.flearn.cluster.interfaces import ClusterId
+from nvml.flearn.cluster.viz_clusters import plot_similar_graphs
 from nvml.settings import TaskProduct, settings
-from nvml.flearn.cluster.viz_clusters import ClusterId, plot_similar_graphs
 
 LOC = "cluster"
 cfg = CONFIGS_DICT["msd_aug20"]

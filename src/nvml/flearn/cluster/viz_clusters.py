@@ -1,7 +1,5 @@
 from pathlib import Path
-from typing import NamedTuple
 
-import h5py
 import matplotlib.pyplot as plt
 import numpy as np
 import polars as pl
@@ -9,16 +7,10 @@ from loguru import logger
 from matplotlib.axes import Axes
 
 from nvml._study.config.config import MakeConfig
-from nvml.flearn.cluster.quick_check import ClusterData
+from nvml.flearn.cluster.interfaces import ClusterData
 from nvml.flearn.graphs.labels import LabelSchemeNames
-from nvml.flearn.kernel.interfaces import KernelNames
 from nvml.flearn.graphs.viz_graphs import plot_one
-
-
-class ClusterId(NamedTuple):
-    kernel: KernelNames
-    scheme: LabelSchemeNames
-    k: int
+from nvml.flearn.kernel.interfaces import KernelNames
 
 
 # TODO: check that kernels are all different
@@ -38,11 +30,8 @@ def plot_similar_graphs(
     scheme: LabelSchemeNames,
     k: int,
 ):
-    cluster_file = h5py.File(cluster_path, "r")
-    cname = f"{kernel}/{scheme}/{k}"
-    d = cluster_file[cname]
-    assert isinstance(d, h5py.Dataset)
-    cd = ClusterData(d)
+    cd = ClusterData(cluster_path, kernel, scheme, k)
+    cname = cd.name
 
     logger.info(f"Plotting for {cname}")
     cnts = pl.Series(cd.labels).value_counts(sort=True)

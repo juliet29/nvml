@@ -12,6 +12,8 @@ from nvml import DataPaths
 
 # from nvml.flearn.kernel.prep import GklDatasetMaker
 from nvml._study.config.cstore import CONFIGS_DICT
+from nvml.flearn.cluster.get_features import create_features
+from nvml.flearn.cluster.interfaces import ClusterData
 from nvml.flearn.graphs.make_grk import ManyLabelsGklDatasetMaker
 from nvml.flearn.pca.make_pca import PCAId
 from nvml.flearn.pca.viz_scree import get_pca_data
@@ -41,3 +43,18 @@ def ff():
     pair = PCAId("wl", "int_ext")
     pcd = get_pca_data(p, pair)
     embed(globals(), locals(), vi_mode=True)
+
+
+@wl_app.command()
+def fg():
+    p = DataPaths.kern.v2.clusters_h5
+    cd = ClusterData(p, "wl", "int_ext", 4)
+    embed(globals(), locals(), vi_mode=True)
+
+
+@wl_app.command()
+def fg1():
+    p = DataPaths.kern.v2.clusters_h5
+    cd = ClusterData(p, "wl", "int_ext", 4)
+    features = create_features(cd)
+    return features

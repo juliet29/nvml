@@ -40,6 +40,8 @@ class DataNames:
     T = "T"  # exterior
 
     # coordinates
+
+    case_ix = "case_ix"
     case_name = "case_name"
     space_name = "space_names"
     space_ix = "space_ix"
