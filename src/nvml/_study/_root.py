@@ -8,6 +8,7 @@ from utils4plans.logs import logset
 
 from nvml._study.f2 import f2_app
 from nvml._study.q2s import q2_app
+from nvml._study.r1 import r1_app
 from nvml._study.wl import wl_app
 
 matplotlib.use("module://matplotlib-backend-kitty")
@@ -16,6 +17,7 @@ app = App()
 app.command(wl_app)
 app.command(q2_app)
 app.command(f2_app)
+app.command(r1_app)
 
 
 def main():
