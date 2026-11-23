@@ -2,6 +2,7 @@ import xarray as xr
 from plyze.flow_graph.interfaces import Edge, FlowGraph, ZoneNode
 
 from nvml import dn
+from nvml.df_names import dfc
 
 
 # class FlowQOI(NamedTuple):
@@ -86,8 +87,8 @@ def calc_flow_qois(
     da = plan_qdim(graph, U)
 
     vals = {
-        dn.intake: calc_intake(da),
-        dn.dist: calc_interzonal_ratio(da),
-        dn.cv: calc_uniformity_index(graph, U),
+        dfc.intake: calc_intake(da),
+        dfc.iz_ratio: calc_interzonal_ratio(da),
+        dfc.ui: calc_uniformity_index(graph, U),
     }
     return xr.Dataset(vals)

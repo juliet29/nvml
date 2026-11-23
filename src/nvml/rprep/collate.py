@@ -11,7 +11,7 @@ from nvml import dn
 from nvml.flearn.graphs.labels import LabelSchemeNames
 from nvml.flearn.kernel.interfaces import KernelNames
 from nvml.flearn.pca.make_pca import PCAId
-from nvml.rprep.df_names import dfc, direction_map
+from nvml.nvml.df_names import dfc, direction_map
 from nvml.xr_helpers import WindDirectionBinNames
 
 

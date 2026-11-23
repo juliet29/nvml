@@ -17,8 +17,8 @@ class dfc:
 
     # qoi
     intake = "intake"
-    cv = "coeff_variation"
-    dr = "dist"
+    iz_ratio = "interzonal_ratio"
+    ui = "uniformity_index"
 
     # bulk
     area = "area"
@@ -58,7 +58,7 @@ class dfc:
 
     @classmethod
     def get_qois(cls):
-        return [cls.intake, cls.cv, cls.dr]
+        return [cls.intake, cls.iz_ratio, cls.ui]
 
     @classmethod
     def pc(cls, v: int):

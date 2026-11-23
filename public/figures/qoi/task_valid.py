@@ -15,7 +15,7 @@ from nvml.qoi.viz_amb import (
     plot_ambient_dep_scatter_per_qoi,
 )
 from nvml.qoi.viz_no_corr import plot_no_qoi_corr
-from nvml.rprep.df_names import dfc
+from nvml.nvml.df_names import dfc
 from nvml.settings import settings
 
 BIG_SIZE = (15, 7.5)  # TODO: move to utils4plots

@@ -22,7 +22,7 @@ from nvml.rprep.collate import (
     RegDataPaths,
     prepare_qoi_df,
 )
-from nvml.rprep.df_names import dfc  # noqa
+from nvml.nvml.df_names import dfc  # noqa
 from nvml.rprep.mlist import (
     make_core_feature_ds,
     make_pca_dfs,

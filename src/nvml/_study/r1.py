@@ -9,7 +9,7 @@ from ptpython.repl import embed
 from nvml._study.config.cstore import CONFIGS_DICT
 from nvml._study.utils import *
 from nvml.rprep.collate import DataSpec, collate_data_from_files
-from nvml.rprep.df_names import dfc  # noqa
+from nvml.nvml.df_names import dfc  # noqa
 from nvml.rrun.defn import simple
 from nvml.rrun.make_summary import coeff_and_sumamry_save
 from nvml.rrun.run import gamma_model, multi_model_save_joblib
