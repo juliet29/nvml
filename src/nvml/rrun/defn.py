@@ -1,7 +1,7 @@
 from itertools import chain, combinations
 from typing import Iterable
 
-from nvml.nvml.df_names import dfc
+from nvml.df_names import dfc
 
 # eventually this goes into public or a cli..
 

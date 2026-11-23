@@ -62,7 +62,7 @@ def calc_zone_inflow_across_plan(G: FlowGraph, U: xr.DataArray):
 
     U_1 = U.where(
         cond=U >= 1, drop=True
-    )  # NOTE: dropping U < 1 m/s -> can do some quantile analysis later
+    )  # NOTE: dropping U < 1 m/s -> can do some quantile analysis later, need to put in config
     inflows = [calc(i) for i in G.zone_nodes]
     zone_ix = list(range(len(inflows)))
     plan_da = xr.concat(inflows, dim=dn.space_ix).assign_coords({dn.space_ix: zone_ix})
@@ -91,4 +91,6 @@ def calc_flow_qois(
         dfc.iz_ratio: calc_interzonal_ratio(da),
         dfc.ui: calc_uniformity_index(graph, U),
     }
-    return xr.Dataset(vals)
+    return xr.Dataset(
+        vals
+    )  # NEED TO CHECK ALL PLACES THIS IS CALLED FOR DN REF.. OR JUST BREAK

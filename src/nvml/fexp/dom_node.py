@@ -1,8 +1,8 @@
 from typing import get_args
 
 import networkx as nx
+from plyze.flow_graph.interfaces import FlowGraph
 from plyze.metrics.helpers.flow_paths import organize_external_nodes
-from plyze.metrics.interfaces import FlowGraph
 from plyze.qoi.xarray_helpers import CardinalNameLiteral
 
 

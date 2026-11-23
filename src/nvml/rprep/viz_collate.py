@@ -4,7 +4,7 @@ import polars as pl  # noqa
 import polars.selectors as cs  # noqa
 import seaborn as sns  # noqa
 
-from nvml.nvml.df_names import dfc  # noqa
+from nvml.df_names import dfc  # noqa
 
 
 def plot_corr(

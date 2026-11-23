@@ -15,7 +15,7 @@ from nvml.rprep.collate import (
     prepare_core_feature_df,
     prepare_pca_df,
 )
-from nvml.nvml.df_names import dfc
+from nvml.df_names import dfc
 from nvml.flearn.pca.make_pca import PCAId
 
 
